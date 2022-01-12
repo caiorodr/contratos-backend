@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Contrato {
+  id          Int       @id @default(autoincrement())
+  diretor     String
+  gerente     String
+  supervisor  String
+  cr          Int
+  dataInicio  String
+  dataFim     String
+  documento   String    @unique
+  natureza    String
+  cliente     String
+  empresa     String
+  negocio     String
+  reajuste    String
+  faturamento String
+  status      String
+  lgpd        Boolean
+  valor       Decimal   @db.Decimal(9, 2)
+  docContrato String?   @db.VarChar(60000)
+  aditivos    Aditivo[]
+}
+
+model Aditivo {
+  id           Int       @id @default(autoincrement())
+  diretor      String
+  gerente      String
+  supervisor   String
+  cr           Int
+  dataInicio   String
+  dataFim      String
+  natureza     String
+  cliente      String
+  empresa      String
+  negocio      String
+  reajuste     String
+  faturamento  String
+  status       String
+  lgpd         Boolean
+  valor        Decimal   @db.Decimal(9, 2)
+  docAditivo   String?   @db.VarChar(60000)
+  documento    Contrato? @relation(fields: [numDocumento], references: [documento])
+  numDocumento String
+}
