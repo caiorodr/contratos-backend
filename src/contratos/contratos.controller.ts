@@ -1,5 +1,5 @@
 // eslint-disable-next-line prettier/prettier
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ContratosService } from './contratos.service';
 import { CreateContratoDto } from './dto/create-contrato.dto';
 import { UpdateContratoDto } from './dto/update-contrato.dto';
@@ -9,22 +9,36 @@ export class ContratosController {
   constructor(private readonly contratosService: ContratosService) {}
 
   @Post()
-  create(@Body() createContratoDto: CreateContratoDto) {
+  async create(@Body() createContratoDto: CreateContratoDto) {
     return this.contratosService.create(createContratoDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.contratosService.findAll();
   }
 
+  @Get('documento')
+  async findDesc() {
+    return this.contratosService.findDesc();
+  }
+  
+  @Get('findFilters?')
+  async findFilter(
+      @Query('filter') filter: string,
+      @Query('search') search: string,
+  ) {
+    return this.contratosService.findFilter(filter,search);
+  }
+
+
   @Get(':id')
-  findOne(@Param('id') documento: string) {
+  async findOne(@Param('id') documento: string) {
     return this.contratosService.findOne(documento);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateContratoDto: UpdateContratoDto,
   ) {
@@ -32,7 +46,7 @@ export class ContratosController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.contratosService.remove(+id);
   }
 }

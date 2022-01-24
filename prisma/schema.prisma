@@ -11,45 +11,57 @@ datasource db {
 }
 
 model Contrato {
-  id          Int       @id @default(autoincrement())
-  diretor     String
-  gerente     String
-  supervisor  String
-  cr          Int
-  dataInicio  String
-  dataFim     String
-  documento   String    @unique
-  natureza    String
-  cliente     String
-  empresa     String
-  negocio     String
-  reajuste    String
-  faturamento String
-  status      String
-  lgpd        Boolean
-  valor       Decimal   @db.Decimal(9, 2)
-  docContrato String?   @db.VarChar(60000)
-  aditivos    Aditivo[]
+  id                     Int       @id @default(autoincrement())
+  diretor                String
+  gerente                String
+  supervisor             String
+  cr                     String
+  dataInicio             String
+  dataFim                String
+  documento              String    @unique
+  natureza               String
+  grupoCliente           String
+  empresa                String
+  negocio                String
+  docSolid               String
+  retencaoContrato       String
+  faturamento            String
+  seguros                String
+  reajuste               String
+  dataReajuste           String
+  tipoAss                String
+  status                 String
+  lgpd                   Boolean
+  limiteResponsabilidade Boolean
+  valor                  Decimal   @db.Decimal(9, 2)
+  docContrato            String?   @db.VarChar(60000) // Sera obrigatorio quando for tratar o pdf como encode64.
+  D_E_L_E_T_             String?   @default("")
+  aditivos               Aditivo[]
 }
 
 model Aditivo {
-  id           Int       @id @default(autoincrement())
-  diretor      String
-  gerente      String
-  supervisor   String
-  cr           Int
-  dataInicio   String
-  dataFim      String
-  natureza     String
-  cliente      String
-  empresa      String
-  negocio      String
-  reajuste     String
-  faturamento  String
-  status       String
-  lgpd         Boolean
-  valor        Decimal   @db.Decimal(9, 2)
-  docAditivo   String?   @db.VarChar(60000)
-  documento    Contrato? @relation(fields: [numDocumento], references: [documento])
-  numDocumento String
+  id                     Int       @id @default(autoincrement())
+  diretor                String
+  gerente                String
+  supervisor             String
+  cr                     String
+  dataInicio             String
+  dataFim                String
+  natureza               String
+  grupoCliente           String
+  empresa                String
+  negocio                String
+  docSolid               String
+  retencaoContrato       String
+  faturamento            String
+  reajuste               String
+  dataReajuste           String
+  tipoAss                String
+  status                 String
+  lgpd                   Boolean
+  limiteResponsabilidade Boolean
+  valor                  Decimal   @db.Decimal(9, 2)
+  docAditivo             String?   @db.VarChar(60000)
+  documento              Contrato? @relation(fields: [numDocumento], references: [documento])
+  numDocumento           String
 }
