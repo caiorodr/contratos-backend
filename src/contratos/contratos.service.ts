@@ -32,57 +32,29 @@ export class ContratosService {
   }
 
 
-  async findFilter(fil: string, find: string) { //cr, grupoCliente, 
+  async findFilter(cr: string, grupoCliente: string, diretor: string, gerente: string, supervisor: string) {
     
-    const filter = fil
-    const search = find
-    let result = ''
+    const valorCr = cr;
+    const valorGrupoCliente = grupoCliente;
+    const valorDiretor = diretor;
+    const valorGerente = gerente;
+    const valorSupervisor = supervisor;
+   
+    try { 
+      const ret = await this.prisma.$queryRaw<any>`
+      select  * from Contrato 
+      where D_E_L_E_T_  = ''
+      AND cr LIKE ${'%' + valorCr + '%'}
+      AND grupoCliente LIKE ${'%' + valorGrupoCliente + '%'} 
+      AND diretor LIKE ${'%' + valorDiretor + '%'}
+      AND gerente LIKE ${'%' + valorGerente + '%'}
+      AND supervisor LIKE ${'%' + valorSupervisor + '%'}
+      `
+      return ret;
 
-    
-    if (filter == "cr") {
-      
-      try { 
-        const ret = await this.prisma.$queryRaw<any>`select  * from Contrato where D_E_L_E_T_  = '' AND cr LIKE ${'%' + search + '%'} `
-        return ret;
-  
-      } catch (error) {
-        throw error;
-      }
-
-    }else if (filter == "grupoCliente"){
-
-      try { 
-        const ret = await this.prisma.$queryRaw<any>`select  * from Contrato where D_E_L_E_T_  = '' AND grupoCliente LIKE ${'%' + search + '%'} `
-        return ret;
-  
-      } catch (error) {
-        throw error;
-      }
-
-    }else if (filter == "diretor"){
-
-      try { 
-        const ret = await this.prisma.$queryRaw<any>`select  * from Contrato where D_E_L_E_T_  = '' AND diretor LIKE ${'%' + search + '%'} `
-        return ret;
-  
-      } catch (error) {
-        throw error;
-      }
-
-    }else if (filter == "gerente"){
-
-      try { 
-        const ret = await this.prisma.$queryRaw<any>`select  * from Contrato where D_E_L_E_T_  = '' AND gerente LIKE ${'%' + search + '%'} `
-        return ret;
-  
-      } catch (error) {
-        throw error;
-      }
-
-    }else{
+    } catch (error) {
       throw new HttpException('Parâmetro invalido.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
-     
   }
 
   async findOne(documento: string) {

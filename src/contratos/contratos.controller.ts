@@ -25,10 +25,14 @@ export class ContratosController {
   
   @Get('findFilters?')
   async findFilter(
-      @Query('filter') filter: string,
-      @Query('search') search: string,
+      @Query('cr') cr: string,
+      @Query('grupoCliente') grupoCliente: string,
+      @Query('diretor') diretor: string,
+      @Query('gerente') gerente: string,
+      @Query('supervisor') supervisor: string,
+
   ) {
-    return this.contratosService.findFilter(filter,search);
+    return this.contratosService.findFilter(cr,grupoCliente,diretor,gerente, supervisor);
   }
 
 
