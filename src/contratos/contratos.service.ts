@@ -39,6 +39,7 @@ export class ContratosService {
     const valorDiretor = diretor;
     const valorGerente = gerente;
     const valorSupervisor = supervisor;
+    let aRet: any = [];
    
     try { 
       const ret = await this.prisma.$queryRaw<any>`
@@ -50,7 +51,15 @@ export class ContratosService {
       AND gerente LIKE ${'%' + valorGerente + '%'}
       AND supervisor LIKE ${'%' + valorSupervisor + '%'}
       `
-      return ret;
+ 
+      function addAction(element, index, array) {
+        element.acoes = ['visualizar', 'alterar', 'baixar', 'aditivo',]
+        aRet.push(element)
+      }
+
+      ret.forEach(addAction);
+  
+      return aRet;
 
     } catch (error) {
       throw new HttpException('Parâmetro invalido.', HttpStatus.INTERNAL_SERVER_ERROR);
