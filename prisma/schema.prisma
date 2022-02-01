@@ -33,7 +33,7 @@ model Contrato {
   status                 String
   lgpd                   Boolean
   limiteResponsabilidade Boolean
-  valor                  Decimal   @db.Decimal(9, 2)
+  valor                  Decimal   @db.Decimal(11, 2)
   docContrato            String?   @db.VarChar(60000) // Sera obrigatorio quando for tratar o pdf como encode64.
   D_E_L_E_T_             String?   @default("")
   aditivos               Aditivo[]
@@ -60,7 +60,7 @@ model Aditivo {
   status                 String
   lgpd                   Boolean
   limiteResponsabilidade Boolean
-  valor                  Decimal   @db.Decimal(9, 2)
+  valor                  Decimal   @db.Decimal(11, 2)
   docAditivo             String?   @db.VarChar(60000)
   documento              Contrato? @relation(fields: [numDocumento], references: [documento])
   numDocumento           String

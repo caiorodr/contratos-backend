@@ -10,37 +10,24 @@ export class ContratosService {
 
   constructor(private prisma: PrismaService) {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async create(data: CreateContratoDto) {
+  async create(data: CreateContratoDto): Promise<Contrato> {
     return this.prisma.contrato.create({ data });
   }
 
-  async findAll() {
-    return this.prisma.contrato.findMany({});
-  }
+  async findAll(page: string, cr: string, grupoCliente: string, diretor: string, gerente: string, supervisor: string): Promise<any> {
 
-  // Pega o ultimo numero do documento Desc Contrato.
-  async findDesc() {
-    
-    try { 
-      const result = await this.prisma.$queryRaw<Contrato>`SELECT documento FROM Contrato ORDER BY id DESC LIMI 1` ;
-    return result;
-
-    } catch (error) {
-      throw error;
-    }
-  }
-
-
-  async findFilter(cr: string, grupoCliente: string, diretor: string, gerente: string, supervisor: string) {
-    
-    const valorCr = cr;
+    const valorCr           = cr;
     const valorGrupoCliente = grupoCliente;
-    const valorDiretor = diretor;
-    const valorGerente = gerente;
-    const valorSupervisor = supervisor;
-    let aRet: any = [];
-   
+    const valorDiretor      = diretor;
+    const valorGerente      = gerente;
+    const valorSupervisor   = supervisor;
+    let aRet      : any     = [];
+    let skipPage  : number  = 0;
+    
+    if (!(parseInt(page) === 0)) {
+      skipPage = (parseInt(page) * 11);
+    }
+
     try { 
       const ret = await this.prisma.$queryRaw<any>`
       select  * from Contrato 
@@ -49,8 +36,8 @@ export class ContratosService {
       AND grupoCliente LIKE ${'%' + valorGrupoCliente + '%'} 
       AND diretor LIKE ${'%' + valorDiretor + '%'}
       AND gerente LIKE ${'%' + valorGerente + '%'}
-      AND supervisor LIKE ${'%' + valorSupervisor + '%'}
-      `
+      AND supervisor LIKE ${'%' + valorSupervisor + '%'} 
+      ORDER BY id DESC LIMIT 11 OFFSET ${skipPage} `
  
       function addAction(element, index, array) {
         element.acoes = ['visualizar', 'alterar', 'baixar', 'aditivo',]
@@ -64,9 +51,22 @@ export class ContratosService {
     } catch (error) {
       throw new HttpException('Parâmetro invalido.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
   }
 
-  async findOne(documento: string) {
+  // Pega o ultimo numero do documento Desc Contrato.
+  async findDesc(): Promise<Contrato> {
+    
+    try { 
+      const result = await this.prisma.$queryRaw<Contrato>`SELECT documento FROM Contrato ORDER BY id DESC LIMI 1` ;
+    return result;
+
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findOne(documento: string): Promise<Contrato> {
     return this.prisma.contrato.findUnique({
       where: {
         documento,
@@ -74,15 +74,23 @@ export class ContratosService {
     });
   }
 
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async update(id: number, data: UpdateContratoDto) {
-    return this.prisma.contrato.update({
-      where: { id },
-      data,
-    });
+  async update(documento: string, data: UpdateContratoDto): Promise<Contrato> {
+
+    try {  
+      const ret = await this.prisma.contrato.update({
+        where: { documento },
+        data,
+      })
+     return ret
+    } catch (error) {
+      throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
-  async remove(id: number) {
+
+  async remove(id: number): Promise<Contrato>{
     return this.prisma.contrato.delete({
       where: {
         id,

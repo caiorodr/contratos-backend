@@ -14,27 +14,21 @@ export class ContratosController {
   }
 
   @Get()
-  async findAll() {
-    return this.contratosService.findAll();
+  async findAll(
+    @Query('page') page: string,
+    @Query('cr') cr: string,
+    @Query('grupoCliente') grupoCliente: string,
+    @Query('diretor') diretor: string,
+    @Query('gerente') gerente: string,
+    @Query('supervisor') supervisor: string,
+    ) {
+    return this.contratosService.findAll(page,cr,grupoCliente,diretor,gerente, supervisor);
   }
 
   @Get('documento')
   async findDesc() {
     return this.contratosService.findDesc();
   }
-  
-  @Get('findFilters?')
-  async findFilter(
-      @Query('cr') cr: string,
-      @Query('grupoCliente') grupoCliente: string,
-      @Query('diretor') diretor: string,
-      @Query('gerente') gerente: string,
-      @Query('supervisor') supervisor: string,
-
-  ) {
-    return this.contratosService.findFilter(cr,grupoCliente,diretor,gerente, supervisor);
-  }
-
 
   @Get(':id')
   async findOne(@Param('id') documento: string) {
@@ -43,10 +37,10 @@ export class ContratosController {
 
   @Patch(':id')
   async update(
-    @Param('id') id: string,
-    @Body() updateContratoDto: UpdateContratoDto,
+    @Param('documento') documento: string,
+    @Body() updateConrtatoDto: UpdateContratoDto,
   ) {
-    return this.contratosService.update(+id, updateContratoDto);
+    return this.contratosService.update(documento, updateConrtatoDto);
   }
 
   @Delete(':id')
