@@ -35,7 +35,7 @@ export class ContratosController {
     return this.contratosService.findOne(documento);
   }
 
-  @Patch(':id')
+  @Patch(':documento')
   async update(
     @Param('documento') documento: string,
     @Body() updateConrtatoDto: UpdateContratoDto,
