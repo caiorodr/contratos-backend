@@ -6,7 +6,7 @@ import { CreateContratoDto } from './dto/create-contrato.dto';
 import { UpdateContratoDto } from './dto/update-contrato.dto';
 
 @Injectable()
-export class ContratosService {
+export class  ContratosService {
 
   constructor(private prisma: PrismaService) {}
 
