@@ -74,7 +74,6 @@ export class  ContratosService {
     });
   }
 
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async update(documento: string, data: UpdateContratoDto): Promise<Contrato> {
 
@@ -83,6 +82,7 @@ export class  ContratosService {
         where: { documento },
         data,
       })
+      
      return ret
     } catch (error) {
       throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);

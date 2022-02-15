@@ -12,6 +12,7 @@ datasource db {
 
 model Contrato {
   id                     Int       @id @default(autoincrement())
+  chamado                String
   diretor                String
   gerente                String
   supervisor             String
@@ -31,6 +32,7 @@ model Contrato {
   dataReajuste           String
   tipoAss                String
   status                 String
+  resumos                String
   lgpd                   Boolean
   limiteResponsabilidade Boolean
   valor                  Decimal   @db.Decimal(11, 2)
