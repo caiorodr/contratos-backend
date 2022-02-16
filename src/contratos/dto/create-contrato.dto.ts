@@ -20,9 +20,12 @@ export class CreateContratoDto implements Prisma.ContratoCreateInput {
   dataReajuste: string;
   tipoAss: string;
   status: string;
+  chamado: string;
+  resumo: string;
   lgpd: boolean;
   limiteResponsabilidade: boolean;
   valor: string | number | Prisma.Decimal;
   docContrato?: string;
+  D_E_L_E_T_?: string;
   aditivos?: Prisma.AditivoCreateNestedManyWithoutDocumentoInput;
 }
