@@ -21,7 +21,7 @@ CREATE TABLE `Contrato` (
     `tipoAss` VARCHAR(191) NOT NULL,
     `status` VARCHAR(191) NOT NULL,
     `chamado` VARCHAR(191) NOT NULL,
-    `resumo` VARCHAR(191) NOT NULL,
+    `resumo` VARCHAR(191) NULL,
     `lgpd` BOOLEAN NOT NULL,
     `limiteResponsabilidade` BOOLEAN NOT NULL,
     `valor` DECIMAL(11, 2) NOT NULL,
@@ -61,5 +61,19 @@ CREATE TABLE `Aditivo` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `contractFileData` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `orignalName` VARCHAR(191) NOT NULL,
+    `mediaName` VARCHAR(191) NOT NULL,
+    `contentType` VARCHAR(191) NOT NULL,
+    `contratoId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `Aditivo` ADD CONSTRAINT `Aditivo_numDocumento_fkey` FOREIGN KEY (`numDocumento`) REFERENCES `Contrato`(`documento`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `contractFileData` ADD CONSTRAINT `contractFileData_contratoId_fkey` FOREIGN KEY (`contratoId`) REFERENCES `Contrato`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
