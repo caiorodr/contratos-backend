@@ -12,19 +12,18 @@ datasource db {
 
 model Contrato {
   id                     Int       @id @default(autoincrement())
-  chamado                String
-  diretor                String
-  gerente                String
-  supervisor             String
-  cr                     String
+  diretor                String    @db.VarChar(1200)
+  gerente                String    @db.VarChar(1200)
+  supervisor             String    @db.VarChar(1200)
+  cr                     String    @db.VarChar(1200)
   dataInicio             String
   dataFim                String
   documento              String    @unique
   natureza               String
   grupoCliente           String
-  empresa                String
+  empresa                String    @db.VarChar(1200)
   negocio                String
-  docSolid               String
+  docSolid               String    @db.VarChar(1200)
   retencaoContrato       String
   faturamento            String
   seguros                String
@@ -32,7 +31,8 @@ model Contrato {
   dataReajuste           String
   tipoAss                String
   status                 String
-  resumos                String
+  chamado                String
+  resumo                 String?
   lgpd                   Boolean
   limiteResponsabilidade Boolean
   valor                  Decimal   @db.Decimal(11, 2)
