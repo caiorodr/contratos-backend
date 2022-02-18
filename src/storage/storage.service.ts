@@ -1,4 +1,4 @@
-import {StorageFile} from "./storage-file";
+import { StorageFile } from "./storage-file";
 import { Injectable } from '@nestjs/common';
 import { DownloadResponse, Storage } from "@google-cloud/storage";
 import StorageConfig from "./storage-config";
@@ -6,6 +6,7 @@ import { extname } from 'path';
 import { PrismaService } from "src/prisma/prisma.service";
 import { contractFileData } from '@prisma/client';
 import { CreateFileDto } from './dto/create-file'
+import { constants } from "buffer";
 
 @Injectable()
 export class StorageService {
@@ -26,8 +27,8 @@ export class StorageService {
     this.bucket = StorageConfig.mediaBucket;
   }
 
-    async getFile(fileName: string): Promise<StorageFile> {
-    const fileResponse : DownloadResponse = await this.storage.bucket(this.bucket).file(fileName).download();
+  async getFile(fileName: string): Promise<StorageFile> {
+    const fileResponse: DownloadResponse = await this.storage.bucket(this.bucket).file(fileName).download();
     const [buffer] = fileResponse;
     const storageFile = new StorageFile();
     storageFile.buffer = buffer;
@@ -40,14 +41,28 @@ export class StorageService {
     fileName: string,
     contentType: string,
     media: Buffer,
-    data: CreateFileDto
+    numContrato: number
   ) {
-     try {
+    try {
       const fileEdit = editFileName(fileName);
-      const createMetadata =  this.prismaService.contractFileData.create({
-        data: []
+
+      const orignalName = fileName;
+      const mediaName = fileEdit;
+      const documento = numContrato;
+      const createMetadata = await this.prismaService.contractFileData.create({
+        data: {
+          orignalName,
+          mediaName,
+          contentType,
+          contrato: {
+            connect: {
+              id: numContrato
+            }
+          },
+        },
+
       })
-      const metadata: { [key: string]: string }[] = [{ mediaName: fileEdit} ]
+      const metadata: { [key: string]: string }[] = [{ mediaName: fileEdit }]
       const object = metadata.reduce(
         (obj, item) => Object.assign(obj, item), {});
       const file = this.storage.bucket(this.bucket).file(fileEdit);
@@ -57,13 +72,13 @@ export class StorageService {
           metadata: object,
         });
       });
-      stream.end(media); 
-     }
-     catch (error) {
-        throw new error
-     }
+      stream.end(media);
+    }
+    catch (error) {
+      throw new error
+    }
 
-    
+
   };
 };
 
@@ -71,13 +86,13 @@ function editFileName(fileName: string) {
   try {
     const name = fileName.split('.')[0];
     const fileExtName = extname(fileName);
-    const randomName = Array(4)
+    const randomName = Array(15)
       .fill(null)
       .map(() => Math.round(Math.random() * 16).toString(16))
       .join('');
-      const fileNameWithRandom = `${name}-${randomName}${fileExtName}`
+    const fileNameWithRandom = `${name}-${randomName}${fileExtName}`
     return fileNameWithRandom;
-  }catch (error) {
+  } catch (error) {
     throw error;
   };
 };

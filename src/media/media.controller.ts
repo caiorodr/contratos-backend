@@ -1,37 +1,31 @@
-import {Body,Controller,Get,NotFoundException,Param,Post,Res,ServiceUnavailableException,UploadedFile,UseInterceptors} from "@nestjs/common";
+import { Body, Controller, Get, NotFoundException, Param, Post, Req, Res, ServiceUnavailableException, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import {   diskStorage   } from "multer";
-import { Response } from 'express';
+import { diskStorage } from "multer";
+import { Response, Request } from 'express';
 import { StorageFile } from "src/storage/storage-file";
-import {  editFileName   } from "src/storage/storage-utils";
-import {  StorageService } from "src/storage/storage.service";
+import { editFileName } from "src/storage/storage-utils";
+import { StorageService } from "src/storage/storage.service";
 import { CreateFileDto } from "src/storage/dto/create-file";
 
 @Controller('media')
 export class MediaController {
-  constructor(private storageService: StorageService) {}
+  constructor(private storageService: StorageService) { }
 
   @Post()
   @UseInterceptors(
-    FileInterceptor('files',{
+    FileInterceptor('files', {
     })
   )
   async uploadMedia(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File, @Req() req: Request
   ) {
-    const data: any = JSON.stringify({
-      orignalName: file.originalname,
-      mediaName: 'teste.png',
-      contentType: file.mimetype,
-      contrato:  3 
-    })
 
-    file.originalname
+    const numContrato = Number(req.body.data)
     await this.storageService.save(
       file.originalname,
       file.mimetype,
       file.buffer,
-      data
+      numContrato
     );
   }
 
