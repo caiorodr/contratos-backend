@@ -1,5 +1,6 @@
 // eslint-disable-next-line prettier/prettier
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Decimal } from '@prisma/client/runtime';
 import { ContratosService } from './contratos.service';
 import { CreateContratoDto } from './dto/create-contrato.dto';
 import { UpdateContratoDto } from './dto/update-contrato.dto';
@@ -21,8 +22,31 @@ export class ContratosController {
     @Query('diretor') diretor: string,
     @Query('gerente') gerente: string,
     @Query('supervisor') supervisor: string,
-    ) {
-    return this.contratosService.findAll(page,cr,grupoCliente,diretor,gerente, supervisor);
+    @Query('dataInicio') dataInicio: string,
+    @Query('dataFim') dataFim: string,
+    @Query('dataReajuste') dataReajuste: string,
+    @Query('empresa') empresa: string,
+    @Query('chamado') chamado: string,
+    @Query('retencaoContrato') retencaoContrato: string,
+    @Query('negocio') negocio: string,
+    @Query('valor') valor: Decimal,
+  ) {
+    return this.contratosService.findAll(
+      page,
+      cr,
+      grupoCliente,
+      diretor,
+      gerente,
+      supervisor,
+      dataInicio,
+      dataFim,
+      dataReajuste,
+      empresa,
+      chamado,
+      retencaoContrato,
+      negocio,
+      valor,
+    );
   }
 
   @Get('documento')
