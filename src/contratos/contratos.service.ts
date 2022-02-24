@@ -71,6 +71,9 @@ export class  ContratosService {
       where: {
         documento,
       },
+      include: {
+        fileData: true
+      }
     });
   }
 

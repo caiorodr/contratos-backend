@@ -64,7 +64,7 @@ CREATE TABLE `Aditivo` (
 -- CreateTable
 CREATE TABLE `contractFileData` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `orignalName` VARCHAR(191) NOT NULL,
+    `originalName` VARCHAR(191) NOT NULL,
     `mediaName` VARCHAR(191) NOT NULL,
     `contentType` VARCHAR(191) NOT NULL,
     `contratoId` INTEGER NOT NULL,

@@ -30,8 +30,8 @@ export class ContratosController {
     return this.contratosService.findDesc();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') documento: string) {
+  @Get('/documento/:documento')
+  async findOne(@Param('documento') documento: string) {
     return this.contratosService.findOne(documento);
   }
 
