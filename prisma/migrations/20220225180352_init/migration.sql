@@ -72,6 +72,18 @@ CREATE TABLE `contractFileData` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `tableCr` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `cr` VARCHAR(191) NOT NULL,
+    `descricaoCr` VARCHAR(191) NOT NULL,
+    `supervisorCr` VARCHAR(191) NOT NULL,
+    `gerenteCr` VARCHAR(191) NOT NULL,
+    `diretorCr` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `Aditivo` ADD CONSTRAINT `Aditivo_numDocumento_fkey` FOREIGN KEY (`numDocumento`) REFERENCES `Contrato`(`documento`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
