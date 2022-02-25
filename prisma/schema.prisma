@@ -70,10 +70,10 @@ model Aditivo {
 }
 
 model contractFileData {
-  id          Int       @id @default(autoincrement())
-  orignalName String
-  mediaName   String
-  contentType String
-  contrato    Contrato? @relation(fields: [contratoId], references: [id])
-  contratoId  Int
+  id           Int       @id @default(autoincrement())
+  originalName String
+  mediaName    String
+  contentType  String
+  contrato     Contrato? @relation(fields: [contratoId], references: [id])
+  contratoId   Int
 }

@@ -6,7 +6,7 @@ import { UpdateContratoDto } from './dto/update-contrato.dto';
 
 @Controller('contratos')
 export class ContratosController {
-  constructor(private readonly contratosService: ContratosService) {}
+  constructor(private readonly contratosService: ContratosService) { }
 
   @Post()
   async create(@Body() createContratoDto: CreateContratoDto) {
@@ -21,8 +21,8 @@ export class ContratosController {
     @Query('diretor') diretor: string,
     @Query('gerente') gerente: string,
     @Query('supervisor') supervisor: string,
-    ) {
-    return this.contratosService.findAll(page,cr,grupoCliente,diretor,gerente, supervisor);
+  ) {
+    return this.contratosService.findAll(page, cr, grupoCliente, diretor, gerente, supervisor);
   }
 
   @Get('documento')
@@ -30,8 +30,8 @@ export class ContratosController {
     return this.contratosService.findDesc();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') documento: string) {
+  @Get('/documento/:documento')
+  async findOne(@Param('documento') documento: string) {
     return this.contratosService.findOne(documento);
   }
 

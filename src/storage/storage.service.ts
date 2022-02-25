@@ -7,6 +7,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { contractFileData } from '@prisma/client';
 import { CreateFileDto } from './dto/create-file'
 import { constants } from "buffer";
+import { Contrato } from "@prisma/client";
 
 @Injectable()
 export class StorageService {
@@ -27,14 +28,21 @@ export class StorageService {
     this.bucket = StorageConfig.mediaBucket;
   }
 
-  async getFile(fileName: string): Promise<StorageFile> {
-    const fileResponse: DownloadResponse = await this.storage.bucket(this.bucket).file(fileName).download();
-    const [buffer] = fileResponse;
-    const storageFile = new StorageFile();
-    storageFile.buffer = buffer;
-    storageFile.metadata = new Map<string, string>();
-    storageFile.contentType = 'image/png';
-    return storageFile;
+  async getFile(fileName: string, contentType: string, originalname: string): Promise<StorageFile> {
+
+    try {
+      const fileResponse: DownloadResponse = await this.storage.bucket(this.bucket).file(fileName).download();
+      const [buffer] = fileResponse;
+      const storageFile = new StorageFile();
+      storageFile.buffer = buffer;
+      storageFile.metadata = new Map<string, string>();
+      storageFile.contentType = contentType;
+      storageFile.originalname = originalname;
+      return storageFile;
+
+    } catch (error) {
+      throw error;
+    }
   }
 
   async save(
@@ -44,19 +52,19 @@ export class StorageService {
     numContrato: number
   ) {
     try {
-      const fileEdit = editFileName(fileName);
 
-      const orignalName = fileName;
+      const fileEdit = editFileName(fileName);
+      const originalName = fileName;
       const mediaName = fileEdit;
       const documento = numContrato;
       const createMetadata = await this.prismaService.contractFileData.create({
         data: {
-          orignalName,
+          originalName,
           mediaName,
           contentType,
           contrato: {
             connect: {
-              id: numContrato
+              id: documento
             }
           },
         },
