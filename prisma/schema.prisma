@@ -77,3 +77,14 @@ model contractFileData {
   contrato     Contrato? @relation(fields: [contratoId], references: [id])
   contratoId   Int
 }
+
+
+model tableCr {
+  id              Int       @id @default(autoincrement())
+  cr              String
+  descricaoCr     String
+  supervisorCr    String
+  gerenteCr       String
+  diretorCr       String
+}
+
