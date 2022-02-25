@@ -4,6 +4,9 @@ import { DownloadResponse, Storage } from "@google-cloud/storage";
 import StorageConfig from "./storage-config";
 import { extname } from 'path';
 import { PrismaService } from "src/prisma/prisma.service";
+import { contractFileData } from '@prisma/client';
+import { CreateFileDto } from './dto/create-file'
+import { constants } from "buffer";
 import { Contrato } from "@prisma/client";
 
 @Injectable()
@@ -25,7 +28,7 @@ export class StorageService {
     this.bucket = StorageConfig.mediaBucket;
   }
 
-  async getFile( fileName: string, contentType: string, originalname: string ): Promise<StorageFile> {
+  async getFile(fileName: string, contentType: string, originalname: string): Promise<StorageFile> {
 
     try {
       const fileResponse: DownloadResponse = await this.storage.bucket(this.bucket).file(fileName).download();
@@ -36,7 +39,7 @@ export class StorageService {
       storageFile.contentType = contentType;
       storageFile.originalname = originalname;
       return storageFile;
-      
+
     } catch (error) {
       throw error;
     }
@@ -49,7 +52,7 @@ export class StorageService {
     numContrato: number
   ) {
     try {
-      const fileExtName = extname(fileName);
+
       const fileEdit = editFileName(fileName);
       const originalName = fileName;
       const mediaName = fileEdit;

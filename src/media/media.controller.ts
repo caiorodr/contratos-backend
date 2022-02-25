@@ -31,14 +31,16 @@ export class MediaController {
 
   @Get()
   async downloadMedia(
-    @Query('fileName') fileName: string, 
-    @Query('contentType') contentType: string, 
-    @Query('originalName') originalName: string, 
-    @Res() res: Response) {
+    @Query('fileName') fileName: string,
+    @Query('contentType') contentType: string,
+    @Query('originalName') originalName: string,
+    @Res() res: Response,
+  ) {
+
     let storageFile: StorageFile;
 
     try {
-      storageFile = await this.storageService.getFile(fileName,contentType,originalName);
+      storageFile = await this.storageService.getFile(fileName, contentType, originalName);
     } catch (e) {
       if (e.message.toString().includes('No such object')) {
         throw new NotFoundException('image not found');
@@ -46,9 +48,9 @@ export class MediaController {
         throw new ServiceUnavailableException('internal error');
       }
     }
+
     res.setHeader('Content-Type', storageFile.contentType);
     res.setHeader('Cache-Control', 'max-age=60d');
-
     res.end(storageFile.buffer);
   }
 
