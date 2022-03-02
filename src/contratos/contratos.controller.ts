@@ -63,9 +63,9 @@ export class ContratosController {
   @Patch(':documento')
   async update(
     @Param('documento') documento: string,
-    @Body() updateConrtatoDto: UpdateContratoDto,
+    @Body() updateContratoDto: UpdateContratoDto,
   ) {
-    return this.contratosService.update(documento, updateConrtatoDto);
+    return this.contratosService.update(documento, updateContratoDto);
   }
 
   @Delete(':id')
