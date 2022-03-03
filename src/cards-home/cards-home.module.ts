@@ -7,4 +7,6 @@ import { CardsHomeService } from './cards-home.service';
   providers: [CardsHomeService, PrismaService],
   controllers: [CardsHomeController],
 })
-export class CardsHomeModule {}
+export class CardsHomeModule {
+  
+}
