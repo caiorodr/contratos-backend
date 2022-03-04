@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { tableCr } from '@prisma/client';
+//import { tableCr } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class SelectOptionsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
+ /* async findAll() {
     const selectOptionRetCr = await this.prisma.tableCr
       .findMany()
       .then((values: any) => {
@@ -19,5 +19,5 @@ export class SelectOptionsService {
         });
       });
     return JSON.stringify(selectOptionRetCr);
-  }
+  }*/
 }

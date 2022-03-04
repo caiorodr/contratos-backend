@@ -11,11 +11,9 @@ export class CardsHomeController {
   } 
 
   @Get() // ('preencher aqui') para declarar uma rota alternativa
-  async getVigentes(
-    @Query('qVigente')    qtdVigente: number,
-    @Query('qVencido')    qtdVencido: number,
-    @Query('qElaboracao') qtdElaboracao: number,
+  async getStatus(
+    @Query('status')    qtdStatus: number,
   ){
-    return this.cardsHomeService.getVigentes(qtdVigente, qtdVencido, qtdElaboracao); //pegando método da cards-home.service.ts
+    return this.cardsHomeService.getStatus(qtdStatus); //pegando método da cards-home.service.ts
   } 
 }

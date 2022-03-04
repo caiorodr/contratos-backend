@@ -11,23 +11,13 @@ export class CardsHomeService {
 
   //* Métodos
 
-  async getVigentes(vigente: number, vencido: number, elaboracao: number){
-    let quantidadeVigente     = vigente;
-    let quantidadeVencido     = vencido;
-    let quantidadeElaboracao  = elaboracao;
+  async getStatus(status: number){
 
     try{ 
-      const ret = await this.prisma.$queryRaw<any>`
-      select  * from Contrato 
-      where status  = 'vigente'`
-      for (let vigentes = 0; vigentes < ret.status.length; vigentes++) {
-        if(ret.status === 'vigente'){
-          quantidadeVigente += ret.status
-          console.log(quantidadeVigente)
-        }
-      }
+      const qtdStatus = await this.prisma.$queryRaw<any>`
+      SELECT COUNT(*) AS qtdStatus FROM contrato WHERE D_E_L_E_T_ = '' AND status = ${status}`
+      return qtdStatus
       
-      return 5
     }catch(Error){
       throw new Error
     }

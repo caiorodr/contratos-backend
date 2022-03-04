@@ -7,6 +7,6 @@ export class SelectOptionsController {
 
   @Get()
   async findAll() {
-    return this.selectOptionsService.findAll();
+    //return this.selectOptionsService.findAll();
   }
 }
