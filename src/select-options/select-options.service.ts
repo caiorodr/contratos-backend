@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
-import { tableCr } from '@prisma/client';
+import { CENTRO_CUSTO } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 
@@ -25,9 +25,9 @@ export class SelectOptionsService {
         resultCr.push(element.trim())
       });
 
-      selectOptionRetCr = await this.prisma.$queryRaw<any>`SELECT cr as CR, descricaoCr as Descrição FROM tableCr WHERE cr IN (${Prisma.join(resultCr)})`
+      selectOptionRetCr = await this.prisma.$queryRaw<any>`SELECT cr as CR, descricaoCr as Descrição FROM CENTRO_CUSTO WHERE cr IN (${Prisma.join(resultCr)})`
     } else {
-      selectOptionRetCr = await this.prisma.$queryRaw<any>`SELECT cr as CR, descricaoCr as Descrição FROM tableCr WHERE cr LIKE ${'%' + filterTeste + '%'}
+      selectOptionRetCr = await this.prisma.$queryRaw<any>`SELECT cr as CR, descricaoCr as Descrição FROM CENTRO_CUSTO WHERE cr LIKE ${'%' + filterTeste + '%'}
     OR descricaoCr LIKE ${'%' + filterTeste + '%'} ORDER BY id LIMIT 11 OFFSET ${skipPage}`;
     }
 
@@ -37,7 +37,5 @@ export class SelectOptionsService {
     return JSON.stringify({ items: selectOptionRetCr, hasNext: validHasNext });
   }
 
-  async findAllCr(cr: any) {
-    return
-  }
+
 }

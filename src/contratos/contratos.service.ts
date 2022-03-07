@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Contrato, Prisma } from '@prisma/client';
+import { CONTRATO, Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateContratoDto } from './dto/create-contrato.dto';
@@ -11,8 +11,8 @@ export class ContratosService {
 
   constructor(private prisma: PrismaService) { }
 
-  async create(data: CreateContratoDto): Promise<Contrato> {
-    return this.prisma.contrato.create({ data });
+  async create(data: CreateContratoDto): Promise<CONTRATO> {
+    return this.prisma.cONTRATO.create({ data });
   }
 
   async findAll(page: string, cr: string, grupoCliente: string, diretor: string, gerente: string, supervisor: string, dataInicio: string, dataFim:string, dataReajuste:string, empresa:string, chamado:string, retencaoContrato:string, negocio:string, valor: Decimal): Promise<any> {
@@ -38,13 +38,11 @@ export class ContratosService {
 
     try {
       const ret = await this.prisma.$queryRaw<any>`
-      select  * from Contrato 
+      select  * from CONTRATO as contrat
+      inner join CR_CONTRATO as cr on cr.numContratoId = contrat.id
       where D_E_L_E_T_  = ''
-      AND cr LIKE ${'%' + valorCr + '%'}
+      AND cr.cr LIKE ${'%' + valorCr + '%'}
       AND grupoCliente LIKE ${'%' + valorGrupoCliente + '%'} 
-      AND diretor LIKE ${'%' + valorDiretor + '%'}
-      AND gerente LIKE ${'%' + valorGerente + '%'}
-      AND supervisor LIKE ${'%' + valorSupervisor + '%'} 
       AND dataInicio LIKE ${'%' + valorDataInicio + '%'}
       AND dataFim LIKE ${'%' + valorDataFim + '%'}
       AND dataReajuste LIKE ${'%' + valorDataReajuste + '%'}
@@ -53,7 +51,7 @@ export class ContratosService {
       AND retencaoContrato LIKE ${'%' + valorRetencaoContrato + '%'}
       AND negocio LIKE ${'%' + valorNegocio + '%'}
       AND CAST(valor AS VARCHAR (64)) LIKE ${'%' + valorValor + '%'}
-      ORDER BY id DESC LIMIT 11 OFFSET ${skipPage}`
+      ORDER BY contrat.id DESC LIMIT 11 OFFSET ${skipPage}`
       .then((values: any) => {
         return values.map((value: any) => {
           return {
@@ -81,10 +79,10 @@ export class ContratosService {
   }
 
   // Pega o ultimo numero do documento Desc Contrato.
-  async findDesc(): Promise<Contrato> {
+  async findDesc(): Promise<CONTRATO> {
 
     try {
-      const result = await this.prisma.$queryRaw<Contrato>`SELECT documento FROM Contrato ORDER BY id DESC LIMI 1`;
+      const result = await this.prisma.$queryRaw<CONTRATO>`SELECT documento FROM CONTRATO ORDER BY id DESC LIMI 1`;
       return result;
 
     } catch (error) {
@@ -92,8 +90,8 @@ export class ContratosService {
     }
   }
 
-  async findOne(documento: string): Promise<Contrato> {
-    return this.prisma.contrato.findUnique({
+  async findOne(documento: string): Promise<CONTRATO> {
+    return this.prisma.cONTRATO.findUnique({
       where: {
         documento,
       },
@@ -104,10 +102,10 @@ export class ContratosService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async update(documento: string, data: UpdateContratoDto): Promise<Contrato> {
+  async update(documento: string, data: UpdateContratoDto): Promise<CONTRATO> {
 
     try {
-      const ret = await this.prisma.contrato.update({
+      const ret = await this.prisma.cONTRATO.update({
         where: { documento },
         data,
       })
@@ -117,10 +115,8 @@ export class ContratosService {
       throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
-
-  async remove(id: number): Promise<Contrato> {
-    return this.prisma.contrato.delete({
+  async remove(id: number): Promise<CONTRATO> {
+    return this.prisma.cONTRATO.delete({
       where: {
         id,
       },

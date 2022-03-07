@@ -1,10 +1,6 @@
 -- CreateTable
-CREATE TABLE `Contrato` (
+CREATE TABLE `CONTRATO` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `diretor` VARCHAR(1200) NOT NULL,
-    `gerente` VARCHAR(1200) NOT NULL,
-    `supervisor` VARCHAR(1200) NOT NULL,
-    `cr` VARCHAR(1200) NOT NULL,
     `dataInicio` VARCHAR(191) NOT NULL,
     `dataFim` VARCHAR(191) NOT NULL,
     `documento` VARCHAR(191) NOT NULL,
@@ -28,12 +24,12 @@ CREATE TABLE `Contrato` (
     `docContrato` VARCHAR(60000) NULL,
     `D_E_L_E_T_` VARCHAR(191) NULL DEFAULT '',
 
-    UNIQUE INDEX `Contrato_documento_key`(`documento`),
+    UNIQUE INDEX `CONTRATO_documento_key`(`documento`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Aditivo` (
+CREATE TABLE `ADITIVO` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `diretor` VARCHAR(191) NOT NULL,
     `gerente` VARCHAR(191) NOT NULL,
@@ -62,7 +58,7 @@ CREATE TABLE `Aditivo` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `contractFileData` (
+CREATE TABLE `DADO_ARQUIVO` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `originalName` VARCHAR(191) NOT NULL,
     `mediaName` VARCHAR(191) NOT NULL,
@@ -73,7 +69,7 @@ CREATE TABLE `contractFileData` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `tableCr` (
+CREATE TABLE `CENTRO_CUSTO` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `cr` VARCHAR(191) NOT NULL,
     `descricaoCr` VARCHAR(191) NOT NULL,
@@ -84,8 +80,24 @@ CREATE TABLE `tableCr` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- AddForeignKey
-ALTER TABLE `Aditivo` ADD CONSTRAINT `Aditivo_numDocumento_fkey` FOREIGN KEY (`numDocumento`) REFERENCES `Contrato`(`documento`) ON DELETE RESTRICT ON UPDATE CASCADE;
+-- CreateTable
+CREATE TABLE `CR_CONTRATO` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `cr` VARCHAR(191) NOT NULL,
+    `descricaoCr` VARCHAR(191) NOT NULL,
+    `supervisorCr` VARCHAR(191) NOT NULL,
+    `gerenteCr` VARCHAR(191) NOT NULL,
+    `diretorCr` VARCHAR(191) NOT NULL,
+    `numContratoId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `contractFileData` ADD CONSTRAINT `contractFileData_contratoId_fkey` FOREIGN KEY (`contratoId`) REFERENCES `Contrato`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `ADITIVO` ADD CONSTRAINT `ADITIVO_numDocumento_fkey` FOREIGN KEY (`numDocumento`) REFERENCES `CONTRATO`(`documento`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `DADO_ARQUIVO` ADD CONSTRAINT `DADO_ARQUIVO_contratoId_fkey` FOREIGN KEY (`contratoId`) REFERENCES `CONTRATO`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `CR_CONTRATO` ADD CONSTRAINT `CR_CONTRATO_numContratoId_fkey` FOREIGN KEY (`numContratoId`) REFERENCES `CONTRATO`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -4,10 +4,10 @@ import { DownloadResponse, Storage } from "@google-cloud/storage";
 import StorageConfig from "./storage-config";
 import { extname } from 'path';
 import { PrismaService } from "src/prisma/prisma.service";
-import { contractFileData } from '@prisma/client';
+import { DADO_ARQUIVO } from '@prisma/client';
 import { CreateFileDto } from './dto/create-file'
 import { constants } from "buffer";
-import { Contrato } from "@prisma/client";
+import { CONTRATO } from "@prisma/client";
 
 @Injectable()
 export class StorageService {
@@ -57,7 +57,7 @@ export class StorageService {
       const originalName = fileName;
       const mediaName = fileEdit;
       const documento = numContrato;
-      const createMetadata = await this.prismaService.contractFileData.create({
+      const createMetadata = await this.prismaService.dADO_ARQUIVO.create({
         data: {
           originalName,
           mediaName,
@@ -81,8 +81,7 @@ export class StorageService {
         });
       });
       stream.end(media);
-    }
-    catch (error) {
+    } catch (error) {
       throw new error
     }
 

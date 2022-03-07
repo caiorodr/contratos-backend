@@ -1,9 +1,10 @@
 import { Prisma } from '@prisma/client';
 
 
-export class CreateFileDto implements Prisma.contractFileDataCreateInput {
+export class CreateFileDto implements Prisma.DADO_ARQUIVOCreateInput {
   originalName: string;
   mediaName: string;
   contentType: string;
-  contrato?: Prisma.ContratoCreateNestedOneWithoutFileDataInput;
+  contrato?: Prisma.CONTRATOCreateNestedOneWithoutFileDataInput;
+
 }

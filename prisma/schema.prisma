@@ -10,20 +10,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Contrato {
-  id                     Int                @id @default(autoincrement())
-  diretor                String             @db.VarChar(1200)
-  gerente                String             @db.VarChar(1200)
-  supervisor             String             @db.VarChar(1200)
-  cr                     String             @db.VarChar(1200)
+model CONTRATO {
+  id                     Int            @id @default(autoincrement())
   dataInicio             String
   dataFim                String
-  documento              String             @unique
+  documento              String         @unique
   natureza               String
   grupoCliente           String
-  empresa                String             @db.VarChar(1200)
+  empresa                String         @db.VarChar(1200)
   negocio                String
-  docSolid               String             @db.VarChar(1200)
+  docSolid               String         @db.VarChar(1200)
   retencaoContrato       String
   faturamento            String
   seguros                String
@@ -35,14 +31,15 @@ model Contrato {
   resumo                 String?
   lgpd                   Boolean
   limiteResponsabilidade Boolean
-  valor                  Decimal            @db.Decimal(11, 2)
-  docContrato            String?            @db.VarChar(60000) // Sera obrigatorio quando for tratar o pdf como encode64.
-  D_E_L_E_T_             String?            @default("")
-  aditivos               Aditivo[]
-  fileData               contractFileData[]
+  valor                  Decimal        @db.Decimal(11, 2)
+  docContrato            String?        @db.VarChar(60000) // Sera obrigatorio quando for tratar o pdf como encode64.
+  D_E_L_E_T_             String?        @default("")
+  aditivos               ADITIVO[]
+  fileData               DADO_ARQUIVO[]
+  crContrato             CR_CONTRATO[]
 }
 
-model Aditivo {
+model ADITIVO {
   id                     Int       @id @default(autoincrement())
   diretor                String
   gerente                String
@@ -65,26 +62,35 @@ model Aditivo {
   limiteResponsabilidade Boolean
   valor                  Decimal   @db.Decimal(11, 2)
   docAditivo             String?   @db.VarChar(60000)
-  documento              Contrato? @relation(fields: [numDocumento], references: [documento])
+  documento              CONTRATO? @relation(fields: [numDocumento], references: [documento])
   numDocumento           String
 }
 
-model contractFileData {
+model DADO_ARQUIVO {
   id           Int       @id @default(autoincrement())
   originalName String
   mediaName    String
   contentType  String
-  contrato     Contrato? @relation(fields: [contratoId], references: [id])
+  contrato     CONTRATO? @relation(fields: [contratoId], references: [id])
   contratoId   Int
 }
 
-
-model tableCr {
-  id              Int       @id @default(autoincrement())
-  cr              String
-  descricaoCr     String
-  supervisorCr    String
-  gerenteCr       String
-  diretorCr       String
+model CENTRO_CUSTO {
+  id           Int    @id @default(autoincrement())
+  cr           String
+  descricaoCr  String
+  supervisorCr String
+  gerenteCr    String
+  diretorCr    String
 }
 
+model CR_CONTRATO {
+  id            Int       @id @default(autoincrement())
+  cr            String
+  descricaoCr   String
+  supervisorCr  String
+  gerenteCr     String
+  diretorCr     String
+  numContrato   CONTRATO? @relation(fields: [numContratoId], references: [id])
+  numContratoId Int
+}
