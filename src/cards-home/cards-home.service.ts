@@ -14,8 +14,12 @@ export class CardsHomeService {
   async getStatus(status: number){
 
     try{ 
-      const qtdStatus = await this.prisma.$queryRaw<any>`
-      SELECT COUNT(*) AS qtdStatus FROM contrato WHERE D_E_L_E_T_ = '' AND status = ${status}`
+      const qtdStatus = await this.prisma.contrato.groupBy({
+        by:['status'],
+        _count:{
+          status: true
+        }
+      })
       return qtdStatus
       
     }catch(Error){

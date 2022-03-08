@@ -16,4 +16,4 @@ export class CardsHomeController {
   ){
     return this.cardsHomeService.getStatus(qtdStatus); //pegando método da cards-home.service.ts
   } 
-}
+} 
