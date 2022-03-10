@@ -1,11 +1,8 @@
 import { Body, Controller, Get, NotFoundException, Param, Post, Query, Req, Res, ServiceUnavailableException, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { diskStorage } from "multer";
 import { Response, Request } from 'express';
 import { StorageFile } from "src/storage/storage-file";
-import { editFileName } from "src/storage/storage-utils";
 import { StorageService } from "src/storage/storage.service";
-import { CreateFileDto } from "src/storage/dto/create-file";
 
 @Controller('media')
 export class MediaController {

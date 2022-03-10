@@ -4,10 +4,6 @@ import { DownloadResponse, Storage } from "@google-cloud/storage";
 import StorageConfig from "./storage-config";
 import { extname } from 'path';
 import { PrismaService } from "src/prisma/prisma.service";
-import { DADO_ARQUIVO } from '@prisma/client';
-import { CreateFileDto } from './dto/create-file'
-import { constants } from "buffer";
-import { CONTRATO } from "@prisma/client";
 
 @Injectable()
 export class StorageService {
@@ -57,7 +53,7 @@ export class StorageService {
       const originalName = fileName;
       const mediaName = fileEdit;
       const documento = numContrato;
-      const createMetadata = await this.prismaService.dADO_ARQUIVO.create({
+      const createMetadata = await this.prismaService.contractFileData.create({
         data: {
           originalName,
           mediaName,

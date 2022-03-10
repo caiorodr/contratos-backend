@@ -10,16 +10,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model CONTRATO {
-  id                     Int            @id @default(autoincrement())
+model Contrato {
+  id                     Int                @id @default(autoincrement())
   dataInicio             String
   dataFim                String
-  documento              String         @unique
+  documento              String             @unique
   natureza               String
   grupoCliente           String
-  empresa                String         @db.VarChar(1200)
+  empresa                String             @db.VarChar(1200)
   negocio                String
-  docSolid               String         @db.VarChar(1200)
+  docSolid               String             @db.VarChar(1200)
   retencaoContrato       String
   faturamento            String
   seguros                String
@@ -31,15 +31,17 @@ model CONTRATO {
   resumo                 String?
   lgpd                   Boolean
   limiteResponsabilidade Boolean
-  valor                  Decimal        @db.Decimal(11, 2)
-  docContrato            String?        @db.VarChar(60000) // Sera obrigatorio quando for tratar o pdf como encode64.
-  D_E_L_E_T_             String?        @default("")
-  aditivos               ADITIVO[]
-  fileData               DADO_ARQUIVO[]
-  crContrato             CR_CONTRATO[]
+  valor                  Decimal            @db.Decimal(11, 2)
+  docContrato            String?            @db.VarChar(60000) // Sera obrigatorio quando for tratar o pdf como encode64.
+  D_E_L_E_T_             String?            @default("")
+  aditivos               Aditivo[]
+  fileData               ContractFileData[]
+  crContrato             CrContrato[]
+
+  @@map("CONTRATO")
 }
 
-model ADITIVO {
+model Aditivo {
   id                     Int       @id @default(autoincrement())
   diretor                String
   gerente                String
@@ -62,35 +64,45 @@ model ADITIVO {
   limiteResponsabilidade Boolean
   valor                  Decimal   @db.Decimal(11, 2)
   docAditivo             String?   @db.VarChar(60000)
-  documento              CONTRATO? @relation(fields: [numDocumento], references: [documento])
+  documento              Contrato? @relation(fields: [numDocumento], references: [documento])
   numDocumento           String
+
+
+  @@map("ADITIVO")
 }
 
-model DADO_ARQUIVO {
+model ContractFileData {
   id           Int       @id @default(autoincrement())
   originalName String
   mediaName    String
   contentType  String
-  contrato     CONTRATO? @relation(fields: [contratoId], references: [id])
+  contrato     Contrato? @relation(fields: [contratoId], references: [id])
   contratoId   Int
+
+  @@map("DADOS_ARQUIVO")
 }
 
-model CENTRO_CUSTO {
+model CentroCusto {
   id           Int    @id @default(autoincrement())
   cr           String
   descricaoCr  String
   supervisorCr String
   gerenteCr    String
   diretorCr    String
+
+  @@map("CENTRO_CUSTO")
 }
 
-model CR_CONTRATO {
+model CrContrato {
   id            Int       @id @default(autoincrement())
-  cr            String
-  descricaoCr   String
-  supervisorCr  String
-  gerenteCr     String
-  diretorCr     String
-  numContrato   CONTRATO? @relation(fields: [numContratoId], references: [id])
+  cr            String?
+  descricaoCr   String?
+  supervisorCr  String?
+  gerenteCr     String?
+  diretorCr     String?
+  numContrato   Contrato? @relation(fields: [numContratoId], references: [id])
   numContratoId Int
+
+
+  @@map("CR_CONTRATO")
 }

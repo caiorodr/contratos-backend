@@ -1,10 +1,6 @@
 import { Prisma } from '@prisma/client';
 
-export class CreateContratoDto implements Prisma.CONTRATOCreateInput {
-  diretor: string;
-  gerente: string;
-  supervisor: string;
-  cr: string;
+export class CreateContratoDto implements Prisma.ContratoCreateInput {
   dataInicio: string;
   dataFim: string;
   documento: string;
@@ -27,7 +23,8 @@ export class CreateContratoDto implements Prisma.CONTRATOCreateInput {
   valor: string | number | Prisma.Decimal;
   docContrato?: string;
   D_E_L_E_T_?: string;
-  aditivos?: Prisma.ADITIVOCreateNestedManyWithoutDocumentoInput;
-  fileData?: Prisma.DADO_ARQUIVOCreateNestedManyWithoutContratoInput;
-  crContrato?: Prisma.CR_CONTRATOCreateNestedManyWithoutNumContratoInput;
+  aditivos?: Prisma.AditivoCreateNestedManyWithoutDocumentoInput;
+  fileData?: Prisma.ContractFileDataCreateNestedManyWithoutContratoInput;
+  crContrato?: Prisma.CrContratoCreateNestedManyWithoutNumContratoInput;
+  
 }
