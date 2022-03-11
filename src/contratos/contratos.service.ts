@@ -30,28 +30,33 @@ export class ContratosService {
     const valorNegocio          = negocio;
     const valorValor            = valor;
     const aRet      : any       = [];
+    let crInnerJoin             = `` 
     let skipPage                = 0;
     
     if (!(parseInt(page) === 0)) {
       skipPage = (parseInt(page) * 11);
     }
 
+    if (valorCr.length > 0) {
+      crInnerJoin = `AND cr.cr LIKE ${"'%" + valorCr + "%'"}`
+    }
+
     try {
-      const ret = await this.prisma.$queryRaw<any>`
+      const ret = await this.prisma.$queryRawUnsafe<any>(`
       select * from CONTRATO as contrat
-      inner join CR_CONTRATO as cr on cr.numContratoId = contrat.id
+      left join CR_CONTRATO as cr on cr.numContratoId = contrat.id
       where D_E_L_E_T_  = ''
-      AND cr.cr LIKE ${'%' + valorCr + '%'}
-      AND grupoCliente LIKE ${'%' + valorGrupoCliente + '%'} 
-      AND dataInicio LIKE ${'%' + valorDataInicio + '%'}
-      AND dataFim LIKE ${'%' + valorDataFim + '%'}
-      AND dataReajuste LIKE ${'%' + valorDataReajuste + '%'}
-      AND empresa LIKE ${'%' + valorEmpresa + '%'}
-      AND chamado LIKE ${'%' + valorChamado + '%'}
-      AND retencaoContrato LIKE ${'%' + valorRetencaoContrato + '%'}
-      AND negocio LIKE ${'%' + valorNegocio + '%'}
-      AND CAST(valor AS VARCHAR (64)) LIKE ${'%' + valorValor + '%'}
-      ORDER BY contrat.id DESC LIMIT 11 OFFSET ${skipPage}`
+      ${crInnerJoin}
+      AND grupoCliente LIKE ${"'%" + valorGrupoCliente + "%'"} 
+      AND dataInicio LIKE ${"'%" + valorDataInicio + "%'"}
+      AND dataFim LIKE ${"'%" + valorDataFim + "%'"}
+      AND dataReajuste LIKE ${"'%" + valorDataReajuste + "%'"}
+      AND empresa LIKE ${"'%" + valorEmpresa + "%'"}
+      AND chamado LIKE ${"'%" + valorChamado + "%'"}
+      AND retencaoContrato LIKE ${"'%" + valorRetencaoContrato + "%'"}
+      AND negocio LIKE ${"'%" + valorNegocio + "%'"}
+      AND CAST(valor AS VARCHAR (64)) LIKE ${"'%" + valorValor + "%'"}
+      ORDER BY contrat.id DESC LIMIT 11 OFFSET ${skipPage}`)
       .then((values: any) => {
         return values.map((value: any) => {
           return {
