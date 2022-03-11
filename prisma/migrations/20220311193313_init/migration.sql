@@ -71,23 +71,34 @@ CREATE TABLE `DADOS_ARQUIVO` (
 -- CreateTable
 CREATE TABLE `CENTRO_CUSTO` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `pecCr` VARCHAR(191) NOT NULL,
+    `descricaoPecCr` VARCHAR(191) NOT NULL,
     `cr` VARCHAR(191) NOT NULL,
     `descricaoCr` VARCHAR(191) NOT NULL,
-    `supervisorCr` VARCHAR(191) NOT NULL,
-    `gerenteCr` VARCHAR(191) NOT NULL,
+    `regionalCr` VARCHAR(191) NOT NULL,
     `diretorCr` VARCHAR(191) NOT NULL,
+    `diretorExecCr` VARCHAR(191) NOT NULL,
+    `gerenteRegCr` VARCHAR(191) NOT NULL,
+    `gerenteCr` VARCHAR(191) NOT NULL,
+    `supervisorCr` VARCHAR(191) NOT NULL,
 
+    UNIQUE INDEX `CENTRO_CUSTO_cr_key`(`cr`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `CR_CONTRATO` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `pecCr` VARCHAR(191) NULL,
+    `descricaoPecCr` VARCHAR(191) NULL,
     `cr` VARCHAR(191) NULL,
     `descricaoCr` VARCHAR(191) NULL,
-    `supervisorCr` VARCHAR(191) NULL,
-    `gerenteCr` VARCHAR(191) NULL,
+    `regionalCr` VARCHAR(191) NULL,
     `diretorCr` VARCHAR(191) NULL,
+    `diretorExecCr` VARCHAR(191) NULL,
+    `gerenteRegCr` VARCHAR(191) NULL,
+    `gerenteCr` VARCHAR(191) NULL,
+    `supervisorCr` VARCHAR(191) NULL,
     `numContratoId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)

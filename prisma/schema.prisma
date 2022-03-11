@@ -83,25 +83,35 @@ model ContractFileData {
 }
 
 model CentroCusto {
-  id           Int    @id @default(autoincrement())
-  cr           String
-  descricaoCr  String
-  supervisorCr String
-  gerenteCr    String
-  diretorCr    String
+  id             Int    @id @default(autoincrement())
+  pecCr          String
+  descricaoPecCr String
+  cr             String @unique
+  descricaoCr    String
+  regionalCr     String
+  diretorCr      String
+  diretorExecCr  String
+  gerenteRegCr   String
+  gerenteCr      String
+  supervisorCr   String
 
   @@map("CENTRO_CUSTO")
 }
 
 model CrContrato {
-  id            Int       @id @default(autoincrement())
-  cr            String?
-  descricaoCr   String?
-  supervisorCr  String?
-  gerenteCr     String?
-  diretorCr     String?
-  numContrato   Contrato? @relation(fields: [numContratoId], references: [id])
-  numContratoId Int
+  id             Int       @id @default(autoincrement())
+  pecCr          String?
+  descricaoPecCr String?
+  cr             String?
+  descricaoCr    String?
+  regionalCr     String?
+  diretorCr      String?
+  diretorExecCr  String?
+  gerenteRegCr   String?
+  gerenteCr      String?
+  supervisorCr   String?
+  numContrato    Contrato? @relation(fields: [numContratoId], references: [id])
+  numContratoId  Int
 
 
   @@map("CR_CONTRATO")
