@@ -30,6 +30,8 @@ export class ContratosController {
     @Query('retencaoContrato') retencaoContrato: string,
     @Query('negocio') negocio: string,
     @Query('valor') valor: Decimal,
+    @Query('tipoAss') tipoAss: string,
+    @Query('status') status: string,
   ) {
     return this.contratosService.findAll(
       page,
@@ -46,6 +48,8 @@ export class ContratosController {
       retencaoContrato,
       negocio,
       valor,
+      tipoAss,
+      status
     );
   }
 

@@ -15,7 +15,7 @@ export class ContratosService {
     return this.prisma.contrato.create({ data });
   }
 
-  async findAll(page: string, cr: string, grupoCliente: string, diretor: string, gerente: string, supervisor: string, dataInicio: string, dataFim:string, dataReajuste:string, empresa:string, chamado:string, retencaoContrato:string, negocio:string, valor: Decimal): Promise<any> {
+  async findAll(page: string, cr: string, grupoCliente: string, diretor: string, gerente: string, supervisor: string, dataInicio: string, dataFim:string, dataReajuste:string, empresa:string, chamado:string, retencaoContrato:string, negocio:string, valor: Decimal, tipoAss: string, status: string): Promise<any> {
     const valorCr               = cr;
     const valorGrupoCliente     = grupoCliente;
     const valorDiretor          = diretor;
@@ -29,6 +29,8 @@ export class ContratosService {
     const valorRetencaoContrato = retencaoContrato;
     const valorNegocio          = negocio;
     const valorValor            = valor;
+    const valorAssinatura       = tipoAss;
+    const valorStatus           = status;
     const aRet      : any       = [];
     let crInnerJoin             = `` 
     let skipPage                = 0;
@@ -55,6 +57,8 @@ export class ContratosService {
       AND chamado LIKE ${"'%" + valorChamado + "%'"}
       AND retencaoContrato LIKE ${"'%" + valorRetencaoContrato + "%'"}
       AND negocio LIKE ${"'%" + valorNegocio + "%'"}
+      AND tipoAss LIKE ${"'%" + valorAssinatura + "%'"}
+      AND status LIKE ${"'%" + valorStatus + "%'"}
       AND CAST(valor AS VARCHAR (64)) LIKE ${"'%" + valorValor + "%'"}
       ORDER BY contrat.id DESC LIMIT 11 OFFSET ${skipPage}`)
       .then((values: any) => {

@@ -1,33 +1,11 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
-<<<<<<< HEAD
-//import { tableCr } from '@prisma/client';
-=======
 import { CentroCusto } from '@prisma/client';
->>>>>>> Igor
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class SelectOptionsService {
-<<<<<<< HEAD
-  constructor(private prisma: PrismaService) {}
-
- /* async findAll() {
-    const selectOptionRetCr = await this.prisma.tableCr
-      .findMany()
-      .then((values: any) => {
-        return values.map((value: any) => {
-          return {
-            label: value.cr + ' - ' + value.descricaoCr,
-            value: value.cr,
-            ID: value.id,
-          };
-        });
-      });
-    return JSON.stringify(selectOptionRetCr);
-  }*/
-=======
   constructor(private prisma: PrismaService) { }
 
   async findAll(filter: any, page: any, pageSize: any, cr: any) {
@@ -60,5 +38,4 @@ export class SelectOptionsService {
   }
 
 
->>>>>>> Igor
 }
