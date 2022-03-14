@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 
 
-export class CreateFileDto implements Prisma.contractFileDataCreateInput {
+export class CreateFileDto implements Prisma.ContractFileDataCreateInput {
   originalName: string;
   orignalName: string;
   mediaName: string;

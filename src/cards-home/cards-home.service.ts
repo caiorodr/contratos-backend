@@ -4,13 +4,10 @@ import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class CardsHomeService {
-
-  constructor(private prisma: PrismaService) {
-    
-  }
+ 
+  constructor(private prisma: PrismaService) {}
 
   //* Métodos
-
   async getStatus(status: number){
 
     try{ 

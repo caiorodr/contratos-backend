@@ -12,10 +12,6 @@ datasource db {
 
 model Contrato {
   id                     Int                @id @default(autoincrement())
-  diretor                String             @db.VarChar(1200)
-  gerente                String             @db.VarChar(1200)
-  supervisor             String             @db.VarChar(1200)
-  cr                     String             @db.VarChar(1200)
   dataInicio             String
   dataFim                String
   documento              String             @unique
@@ -39,7 +35,10 @@ model Contrato {
   docContrato            String?            @db.VarChar(60000) // Sera obrigatorio quando for tratar o pdf como encode64.
   D_E_L_E_T_             String?            @default("")
   aditivos               Aditivo[]
-  fileData               contractFileData[]
+  fileData               ContractFileData[]
+  crContrato             CrContrato[]
+
+  @@map("CONTRATO")
 }
 
 model Aditivo {
@@ -67,24 +66,53 @@ model Aditivo {
   docAditivo             String?   @db.VarChar(60000)
   documento              Contrato? @relation(fields: [numDocumento], references: [documento])
   numDocumento           String
+
+
+  @@map("ADITIVO")
 }
 
-model contractFileData {
+model ContractFileData {
   id           Int       @id @default(autoincrement())
   originalName String
   mediaName    String
   contentType  String
   contrato     Contrato? @relation(fields: [contratoId], references: [id])
   contratoId   Int
+
+  @@map("DADOS_ARQUIVO")
 }
 
+model CentroCusto {
+  id             Int    @id @default(autoincrement())
+  pecCr          String
+  descricaoPecCr String
+  cr             String @unique
+  descricaoCr    String
+  regionalCr     String
+  diretorCr      String
+  diretorExecCr  String
+  gerenteRegCr   String
+  gerenteCr      String
+  supervisorCr   String
 
-model tableCr {
-  id              Int       @id @default(autoincrement())
-  cr              String
-  descricaoCr     String
-  supervisorCr    String
-  gerenteCr       String
-  diretorCr       String
+  @@map("CENTRO_CUSTO")
 }
 
+model CrContrato {
+  id             Int       @id @default(autoincrement())
+  pecCr          String?
+  descricaoPecCr String?
+  cr             String?
+  descricaoCr    String?
+  regionalCr     String?
+  diretorCr      String?
+  diretorExecCr  String?
+  gerenteRegCr   String?
+  gerenteCr      String?
+  supervisorCr   String?
+  numContrato    Contrato? @relation(fields: [numContratoId], references: [id])
+  numContratoId  Int
+
+
+  @@map("CR_CONTRATO")
+}
