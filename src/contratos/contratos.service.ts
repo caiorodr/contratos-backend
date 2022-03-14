@@ -11,8 +11,30 @@ export class ContratosService {
 
   constructor(private prisma: PrismaService) { }
 
-  async create(data: CreateContratoDto): Promise<Contrato> {
-    return this.prisma.contrato.create({ data });
+  async create(data: CreateContratoDto, bodyCr: any): Promise<Contrato> {
+    return this.prisma.contrato.create({data:{
+      dataInicio: data.dataInicio,
+      dataFim: data.dataFim,
+      documento: data.documento,
+      natureza: data.natureza,
+      grupoCliente: data.grupoCliente,
+      empresa: data.empresa,
+      docSolid: data.docSolid,
+      retencaoContrato: data.retencaoContrato,
+      negocio: data.negocio,
+      faturamento: data.faturamento,
+      seguros: data.seguros,
+      reajuste: data.reajuste,
+      dataReajuste: data.dataReajuste,
+      tipoAss: data.tipoAss,
+      chamado: data.chamado,
+      resumo: data.resumo,
+      status: data.status,
+      valor: data.valor,
+      lgpd: data.lgpd,
+      limiteResponsabilidade: data.limiteResponsabilidade,
+      crContrato: {createMany: {data:bodyCr}}
+    }},)
   }
 
   async findAll(page: string, cr: string, grupoCliente: string, diretor: string, gerente: string, supervisor: string, dataInicio: string, dataFim:string, dataReajuste:string, empresa:string, chamado:string, retencaoContrato:string, negocio:string, valor: Decimal): Promise<any> {

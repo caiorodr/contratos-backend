@@ -99,6 +99,7 @@ CREATE TABLE `CR_CONTRATO` (
     `gerenteRegCr` VARCHAR(191) NULL,
     `gerenteCr` VARCHAR(191) NULL,
     `supervisorCr` VARCHAR(191) NULL,
+    `valorCr` DECIMAL(11, 2) NULL,
     `numContratoId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)

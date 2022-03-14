@@ -11,7 +11,9 @@ export class ContratosController {
 
   @Post()
   async create(@Body() createContratoDto: CreateContratoDto) {
-    return this.contratosService.create(createContratoDto);
+    let bodyCr = createContratoDto.crContrato;
+    
+    return this.contratosService.create(createContratoDto, bodyCr);
   }
 
   @Get()
