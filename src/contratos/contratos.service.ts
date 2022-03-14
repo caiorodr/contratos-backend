@@ -30,30 +30,33 @@ export class ContratosService {
     const valorNegocio          = negocio;
     const valorValor            = valor;
     const aRet      : any       = [];
+    let crInnerJoin             = `` 
     let skipPage                = 0;
     
     if (!(parseInt(page) === 0)) {
       skipPage = (parseInt(page) * 11);
     }
 
+    if (valorCr.length > 0) {
+      crInnerJoin = `AND cr.cr LIKE ${"'%" + valorCr + "%'"}`
+    }
+
     try {
-      const ret = await this.prisma.$queryRaw<any>`
-      select  * from Contrato 
+      const ret = await this.prisma.$queryRawUnsafe<any>(`
+      select * from CONTRATO as contrat
+      left join CR_CONTRATO as cr on cr.numContratoId = contrat.id
       where D_E_L_E_T_  = ''
-      AND cr LIKE ${'%' + valorCr + '%'}
-      AND grupoCliente LIKE ${'%' + valorGrupoCliente + '%'} 
-      AND diretor LIKE ${'%' + valorDiretor + '%'}
-      AND gerente LIKE ${'%' + valorGerente + '%'}
-      AND supervisor LIKE ${'%' + valorSupervisor + '%'} 
-      AND dataInicio LIKE ${'%' + valorDataInicio + '%'}
-      AND dataFim LIKE ${'%' + valorDataFim + '%'}
-      AND dataReajuste LIKE ${'%' + valorDataReajuste + '%'}
-      AND empresa LIKE ${'%' + valorEmpresa + '%'}
-      AND chamado LIKE ${'%' + valorChamado + '%'}
-      AND retencaoContrato LIKE ${'%' + valorRetencaoContrato + '%'}
-      AND negocio LIKE ${'%' + valorNegocio + '%'}
-      AND CAST(valor AS VARCHAR (64)) LIKE ${'%' + valorValor + '%'}
-      ORDER BY id DESC LIMIT 11 OFFSET ${skipPage}`
+      ${crInnerJoin}
+      AND grupoCliente LIKE ${"'%" + valorGrupoCliente + "%'"} 
+      AND dataInicio LIKE ${"'%" + valorDataInicio + "%'"}
+      AND dataFim LIKE ${"'%" + valorDataFim + "%'"}
+      AND dataReajuste LIKE ${"'%" + valorDataReajuste + "%'"}
+      AND empresa LIKE ${"'%" + valorEmpresa + "%'"}
+      AND chamado LIKE ${"'%" + valorChamado + "%'"}
+      AND retencaoContrato LIKE ${"'%" + valorRetencaoContrato + "%'"}
+      AND negocio LIKE ${"'%" + valorNegocio + "%'"}
+      AND CAST(valor AS VARCHAR (64)) LIKE ${"'%" + valorValor + "%'"}
+      ORDER BY contrat.id DESC LIMIT 11 OFFSET ${skipPage}`)
       .then((values: any) => {
         return values.map((value: any) => {
           return {
@@ -84,7 +87,7 @@ export class ContratosService {
   async findDesc(): Promise<Contrato> {
 
     try {
-      const result = await this.prisma.$queryRaw<Contrato>`SELECT documento FROM Contrato ORDER BY id DESC LIMI 1`;
+      const result = await this.prisma.$queryRaw<Contrato>`SELECT documento FROM CONTRATO ORDER BY id DESC LIMI 1`;
       return result;
 
     } catch (error) {
@@ -117,8 +120,6 @@ export class ContratosService {
       throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
-
   async remove(id: number): Promise<Contrato> {
     return this.prisma.contrato.delete({
       where: {
