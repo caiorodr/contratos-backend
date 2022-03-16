@@ -33,7 +33,7 @@ export class ContratosService {
       valor: data.valor,
       lgpd: data.lgpd,
       limiteResponsabilidade: data.limiteResponsabilidade,
-      crContrato: {createMany: {data: bodyCr}}
+      crContrato: {createMany:{data:bodyCr}}
     }},)
   }
 
@@ -66,7 +66,7 @@ export class ContratosService {
     try {
       const ret = await this.prisma.$queryRawUnsafe<any>(`
       select * from CONTRATO as contrat
-      left join CR_CONTRATO as cr on cr.numContratoId = contrat.id
+      left join CR_CONTRATO as cr on cr.numContratoId = contrat.documento
       where D_E_L_E_T_  = ''
       ${crInnerJoin}
       AND grupoCliente LIKE ${"'%" + valorGrupoCliente + "%'"} 
