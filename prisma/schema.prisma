@@ -67,7 +67,6 @@ model Aditivo {
   documento              Contrato? @relation(fields: [numDocumento], references: [documento])
   numDocumento           String
 
-
   @@map("ADITIVO")
 }
 
@@ -83,17 +82,17 @@ model ContractFileData {
 }
 
 model CentroCusto {
-  id             Int    @id @default(autoincrement())
-  pecCr          String
-  descricaoPecCr String
-  cr             String @unique
-  descricaoCr    String
-  regionalCr     String
-  diretorCr      String
-  diretorExecCr  String
-  gerenteRegCr   String
-  gerenteCr      String
-  supervisorCr   String
+  id              Int    @id @default(autoincrement())
+  cr              String @unique
+  descricaoCr     String
+  pecCr           String
+  descricaoPecCr  String
+  regionalCr      String
+  supervisorCr    String
+  gerenteCr       String
+  diretorCr       String
+  diretorExecCr   String
+  gerenteRegCr    String
 
   @@map("CENTRO_CUSTO")
 }
@@ -110,9 +109,9 @@ model CrContrato {
   gerenteRegCr   String?
   gerenteCr      String?
   supervisorCr   String?
+  valorCr        Decimal?  @db.Decimal(11, 2)
   numContrato    Contrato? @relation(fields: [numContratoId], references: [id])
   numContratoId  Int
-
-
+  
   @@map("CR_CONTRATO")
 }

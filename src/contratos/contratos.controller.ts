@@ -11,7 +11,9 @@ export class ContratosController {
 
   @Post()
   async create(@Body() createContratoDto: CreateContratoDto) {
-    return this.contratosService.create(createContratoDto);
+    const bodyCr = createContratoDto.crContrato;
+    
+    return this.contratosService.create(createContratoDto, bodyCr);
   }
 
   @Get()
@@ -19,7 +21,7 @@ export class ContratosController {
     @Query('page') page: string,
     @Query('cr') cr: string,
     @Query('grupoCliente') grupoCliente: string,
-    @Query('diretor') diretor: string,
+    @Query('diretorCr') diretorCr: string,
     @Query('gerente') gerente: string,
     @Query('supervisor') supervisor: string,
     @Query('dataInicio') dataInicio: string,
@@ -35,7 +37,7 @@ export class ContratosController {
       page,
       cr,
       grupoCliente,
-      diretor,
+      diretorCr,
       gerente,
       supervisor,
       dataInicio,

@@ -11,14 +11,36 @@ export class ContratosService {
 
   constructor(private prisma: PrismaService) { }
 
-  async create(data: CreateContratoDto): Promise<Contrato> {
-    return this.prisma.contrato.create({ data });
+  async create(data: CreateContratoDto, bodyCr: any): Promise<Contrato> {
+    return this.prisma.contrato.create({data:{
+      dataInicio: data.dataInicio,
+      dataFim: data.dataFim,
+      documento: data.documento,
+      natureza: data.natureza,
+      grupoCliente: data.grupoCliente,
+      empresa: data.empresa,
+      docSolid: data.docSolid,
+      retencaoContrato: data.retencaoContrato,
+      negocio: data.negocio,
+      faturamento: data.faturamento,
+      seguros: data.seguros,
+      reajuste: data.reajuste,
+      dataReajuste: data.dataReajuste,
+      tipoAss: data.tipoAss,
+      chamado: data.chamado,
+      resumo: data.resumo,
+      status: data.status,
+      valor: data.valor,
+      lgpd: data.lgpd,
+      limiteResponsabilidade: data.limiteResponsabilidade,
+      crContrato: {createMany: {data: bodyCr}}
+    }},)
   }
 
-  async findAll(page: string, cr: string, grupoCliente: string, diretor: string, gerente: string, supervisor: string, dataInicio: string, dataFim:string, dataReajuste:string, empresa:string, chamado:string, retencaoContrato:string, negocio:string, valor: Decimal): Promise<any> {
+  async findAll(page: string, cr: string, grupoCliente: string, diretorCr: string, gerente: string, supervisor: string, dataInicio: string, dataFim:string, dataReajuste:string, empresa:string, chamado:string, retencaoContrato:string, negocio:string, valor: Decimal): Promise<any> {
     const valorCr               = cr;
     const valorGrupoCliente     = grupoCliente;
-    const valorDiretor          = diretor;
+    const valorDiretor          = diretorCr;
     const valorGerente          = gerente;
     const valorSupervisor       = supervisor;
     const valorDataInicio       = dataInicio;
@@ -56,6 +78,7 @@ export class ContratosService {
       AND retencaoContrato LIKE ${"'%" + valorRetencaoContrato + "%'"}
       AND negocio LIKE ${"'%" + valorNegocio + "%'"}
       AND CAST(valor AS VARCHAR (64)) LIKE ${"'%" + valorValor + "%'"}
+      GROUP BY cr.numContratoId
       ORDER BY contrat.id DESC LIMIT 11 OFFSET ${skipPage}`)
       .then((values: any) => {
         return values.map((value: any) => {
