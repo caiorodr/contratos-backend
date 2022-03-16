@@ -1,23 +1,41 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
-import { tableCr } from '@prisma/client';
+import { CentroCusto } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class SelectOptionsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
-  async findAll() {
-    const selectOptionRetCr = await this.prisma.tableCr
-      .findMany()
-      .then((values: any) => {
-        return values.map((value: any) => {
-          return {
-            label: value.cr + ' - ' + value.descricaoCr,
-            value: value.cr,
-            ID: value.id,
-          };
-        });
+  async findAll(filter: any, page: any, pageSize: any, cr: any) {
+
+    let validHasNext: boolean = true
+    let resultCr: Array<any> = []
+    let selectOptionRetCr: Array<any> = []
+
+    const numberPage = page == undefined ? 0 : page - 1;
+    const numberPageSize = pageSize == undefined ? 0 : pageSize;
+    const skipPage = numberPage * numberPageSize;
+    const filterTeste = filter == undefined ? '' : filter;
+    const numCr = cr == undefined ? '' : cr.split(',')
+
+    if (numCr.length > 0) {
+      numCr.forEach(element => {
+        resultCr.push(element.trim())
       });
-    return JSON.stringify(selectOptionRetCr);
+
+      selectOptionRetCr = await this.prisma.$queryRaw<any>`SELECT cr as CR, descricaoCr as Descrição FROM CENTRO_CUSTO WHERE cr IN (${Prisma.join(resultCr)})`
+    } else {
+      selectOptionRetCr = await this.prisma.$queryRaw<any>`SELECT cr as CR, descricaoCr as Descrição FROM CENTRO_CUSTO WHERE cr LIKE ${'%' + filterTeste + '%'}
+    OR descricaoCr LIKE ${'%' + filterTeste + '%'} ORDER BY id LIMIT 11 OFFSET ${skipPage}`;
+    }
+
+    if (selectOptionRetCr.length < 11) {
+      validHasNext = false;
+    }
+    return JSON.stringify({ items: selectOptionRetCr, hasNext: validHasNext });
   }
+
+
 }

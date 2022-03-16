@@ -4,10 +4,6 @@ import { DownloadResponse, Storage } from "@google-cloud/storage";
 import StorageConfig from "./storage-config";
 import { extname } from 'path';
 import { PrismaService } from "src/prisma/prisma.service";
-import { contractFileData } from '@prisma/client';
-import { CreateFileDto } from './dto/create-file'
-import { constants } from "buffer";
-import { Contrato } from "@prisma/client";
 
 @Injectable()
 export class StorageService {
@@ -81,8 +77,7 @@ export class StorageService {
         });
       });
       stream.end(media);
-    }
-    catch (error) {
+    } catch (error) {
       throw new error
     }
 
