@@ -110,8 +110,8 @@ model CrContrato {
   gerenteCr      String?
   supervisorCr   String?
   valorCr        Decimal?  @db.Decimal(11, 2)
-  numContrato    Contrato? @relation(fields: [numContratoId], references: [id])
-  numContratoId  Int
+  numContrato    Contrato? @relation(fields: [numContratoId], references: [documento])
+  numContratoId  String
   
   @@map("CR_CONTRATO")
 }
