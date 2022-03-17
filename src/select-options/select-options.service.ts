@@ -25,10 +25,20 @@ export class SelectOptionsService {
         resultCr.push(element.trim())
       });
 
-      selectOptionRetCr = await this.prisma.$queryRaw<any>`SELECT cr as CR, descricaoCr as Descrição FROM CENTRO_CUSTO WHERE cr IN (${Prisma.join(resultCr)})`
+      selectOptionRetCr = await this.prisma.$queryRaw<any>
+      `SELECT cr as CR, descricaoCr as Descrição, descricaoPecCr as PEC, regionalCr as Regional,
+      supervisorCr as Supervisor, gerenteCr as Gerente, gerenteRegCr as 'Gerente Regional',
+      diretorCr as 'Diretor Regional', diretorExecCr as 'Diretor Executivo'
+      FROM CENTRO_CUSTO 
+        WHERE cr IN (${Prisma.join(resultCr)})`
     } else {
-      selectOptionRetCr = await this.prisma.$queryRaw<any>`SELECT cr as CR, descricaoCr as Descrição FROM CENTRO_CUSTO WHERE cr LIKE ${'%' + filterTeste + '%'}
-    OR descricaoCr LIKE ${'%' + filterTeste + '%'} ORDER BY id LIMIT 11 OFFSET ${skipPage}`;
+      selectOptionRetCr = await this.prisma.$queryRaw<any>
+      `SELECT cr as CR, descricaoCr as Descrição, descricaoPecCr as PEC, regionalCr as Regional,
+      supervisorCr as Supervisor, gerenteCr as Gerente, gerenteRegCr as 'Gerente Regional',
+      diretorCr as 'Diretor Regional', diretorExecCr as 'Diretor Executivo'
+      FROM CENTRO_CUSTO 
+        WHERE cr LIKE ${'%' + filterTeste + '%'}
+        OR descricaoCr LIKE ${'%' + filterTeste + '%'} ORDER BY id LIMIT 11 OFFSET ${skipPage}`;
     }
 
     if (selectOptionRetCr.length < 11) {

@@ -28,6 +28,7 @@ export class ContratosService {
       dataReajuste: data.dataReajuste,
       tipoAss: data.tipoAss,
       chamado: data.chamado,
+      pec: data.pec,
       resumo: data.resumo,
       status: data.status,
       valor: data.valor,
@@ -78,7 +79,7 @@ export class ContratosService {
       AND retencaoContrato LIKE ${"'%" + valorRetencaoContrato + "%'"}
       AND negocio LIKE ${"'%" + valorNegocio + "%'"}
       AND CAST(valor AS VARCHAR (64)) LIKE ${"'%" + valorValor + "%'"}
-      GROUP BY cr.numContratoId
+      GROUP BY contrat.Id
       ORDER BY contrat.id DESC LIMIT 11 OFFSET ${skipPage}`)
       .then((values: any) => {
         return values.map((value: any) => {
