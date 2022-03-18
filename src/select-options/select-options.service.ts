@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CentroCusto } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
@@ -8,44 +8,56 @@ import { Prisma } from '@prisma/client';
 export class SelectOptionsService {
   constructor(private prisma: PrismaService) { }
 
-  async findAll(filter: any, page: any, pageSize: any, cr: any) {
-
-    let validHasNext: boolean = true
-    let resultCr: Array<any> = []
-    let selectOptionRetCr: Array<any> = []
-
+  async findAll(filter: any, page: any, pageSize: any, cr: any, pec: string) {
+  
+    let selectOptionRetCr: Array<any> = [];
+    
+    const valorPec = pec;
     const numberPage = page == undefined ? 0 : page - 1;
     const numberPageSize = pageSize == undefined ? 0 : pageSize;
     const skipPage = numberPage * numberPageSize;
-    const filterTeste = filter == undefined ? '' : filter;
-    const numCr = cr == undefined ? '' : cr.split(',')
+    const filterCrLookup = filter == undefined ? '' : filter;
+    const numCr = cr == undefined ? '' : cr;
 
-    if (numCr.length > 0) {
-      numCr.forEach(element => {
-        resultCr.push(element.trim())
-      });
+    try {
+      if (numCr.length > 0 ) {
 
-      selectOptionRetCr = await this.prisma.$queryRaw<any>
-      `SELECT cr as CR, descricaoCr as Descrição, descricaoPecCr as PEC, regionalCr as Regional,
-      supervisorCr as Supervisor, gerenteCr as Gerente, gerenteRegCr as 'Gerente Regional',
-      diretorCr as 'Diretor Regional', diretorExecCr as 'Diretor Executivo'
-      FROM CENTRO_CUSTO 
-        WHERE cr IN (${Prisma.join(resultCr)})`
-    } else {
-      selectOptionRetCr = await this.prisma.$queryRaw<any>
-      `SELECT cr as CR, descricaoCr as Descrição, descricaoPecCr as PEC, regionalCr as Regional,
-      supervisorCr as Supervisor, gerenteCr as Gerente, gerenteRegCr as 'Gerente Regional',
-      diretorCr as 'Diretor Regional', diretorExecCr as 'Diretor Executivo'
-      FROM CENTRO_CUSTO 
-        WHERE cr LIKE ${'%' + filterTeste + '%'}
-        OR descricaoCr LIKE ${'%' + filterTeste + '%'} ORDER BY id LIMIT 11 OFFSET ${skipPage}`;
+        selectOptionRetCr = await this.prisma.$queryRaw<any>
+        `SELECT TRIM(cr) as CR, TRIM(descricaoCr) as 'Descrição CR', TRIM(diretorExecCr) as 'Diretor Executivo'
+        FROM CENTRO_CUSTO 
+          WHERE cr = ${numCr}`
+      } else {
+        selectOptionRetCr = await this.prisma.$queryRawUnsafe<any>(
+        `SELECT TRIM(cr) as CR, TRIM(descricaoCr) as 'Descrição CR', TRIM(diretorExecCr) as 'Diretor Executivo'
+        FROM CENTRO_CUSTO 
+          WHERE cr LIKE '%${filterCrLookup}%' AND pecCr = '${valorPec}'
+          OR descricaoCr LIKE '%${filterCrLookup}%' ORDER BY cr LIMIT 11 OFFSET ${skipPage}`);
+      }
+  
+      return JSON.stringify({ items: selectOptionRetCr, hasNext: false });
+
+    } catch (error) {
+      throw new HttpException(
+        `${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-    if (selectOptionRetCr.length < 11) {
-      validHasNext = false;
-    }
-    return JSON.stringify({ items: selectOptionRetCr, hasNext: validHasNext });
+    
   }
 
-
+  async buscaPec(){
+    try {
+      const buscaPecCr = await this.prisma.$queryRaw<any>
+      `SELECT pecCr AS valor, descricaoPecCr as rotulo 
+      FROM CENTRO_CUSTO
+      WHERE descricaoPecCr <> ('' AND 'NULL' AND NULL) 
+      ORDER BY pecCr
+      `
+      return JSON.stringify({ items: buscaPecCr, hasNext: false });
+    
+    }catch (error) {
+      throw new HttpException(
+        `${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
