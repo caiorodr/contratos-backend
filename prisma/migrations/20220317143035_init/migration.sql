@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE `CONTRATO` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `pec` VARCHAR(191) NOT NULL,
     `dataInicio` VARCHAR(191) NOT NULL,
     `dataFim` VARCHAR(191) NOT NULL,
     `documento` VARCHAR(191) NOT NULL,
