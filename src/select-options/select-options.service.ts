@@ -28,10 +28,10 @@ export class SelectOptionsService {
           WHERE cr = ${numCr}`
       } else {
         selectOptionRetCr = await this.prisma.$queryRawUnsafe<any>(
-        `SELECT TRIM(cr) as CR, TRIM(descricaoCr) as 'Descrição CR', TRIM(diretorExecCr) as 'Diretor Executivo'
-        FROM CENTRO_CUSTO 
-          WHERE cr LIKE '%${filterCrLookup}%' AND pecCr = '${valorPec}'
-          OR descricaoCr LIKE '%${filterCrLookup}%' ORDER BY cr LIMIT 11 OFFSET ${skipPage}`);
+          `SELECT TRIM(cr) as CR, TRIM(descricaoCr) as 'Descrição CR', TRIM(diretorExecCr) as 'Diretor Executivo'
+          FROM CENTRO_CUSTO 
+            WHERE pecCr = '${valorPec}' AND (cr = '%${filterCrLookup}%' 
+            OR descricaoCr LIKE '%${filterCrLookup}%') ORDER BY cr LIMIT 11 OFFSET ${skipPage}`);
       }
   
       return JSON.stringify({ items: selectOptionRetCr, hasNext: false });
