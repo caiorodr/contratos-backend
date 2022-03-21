@@ -11,7 +11,8 @@ export class ContratosController {
 
   @Post()
   async create(@Body() createContratoDto: CreateContratoDto) {
-    return this.contratosService.create(createContratoDto);
+    const bodyCr = createContratoDto.crContrato;
+    return this.contratosService.create(createContratoDto, bodyCr);
   }
 
   @Get()
@@ -32,7 +33,6 @@ export class ContratosController {
     @Query('status') status: string,
     @Query('valor') valor: Decimal,
     @Query('tipoAss') tipoAss: string,
-    @Query('status') status: string,
   ) {
     return this.contratosService.findAll(
       page,
@@ -49,10 +49,7 @@ export class ContratosController {
       retencaoContrato,
       negocio,
       valor,
-<<<<<<< HEAD
       tipoAss,
-=======
->>>>>>> secundary
       status
     );
   }

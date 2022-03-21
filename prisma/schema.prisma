@@ -82,7 +82,6 @@ model ContractFileData {
 
 model CentroCusto {
   id             Int    @id @default(autoincrement())
-<<<<<<< HEAD
   pecCr          String
   descricaoPecCr String
   cr             String @unique
@@ -93,18 +92,6 @@ model CentroCusto {
   gerenteRegCr   String
   gerenteCr      String
   supervisorCr   String
-=======
-  cr             String @unique
-  descricaoCr    String
-  pecCr          String
-  descricaoPecCr String
-  regionalCr     String
-  supervisorCr   String
-  gerenteCr      String
-  diretorCr      String
-  diretorExecCr  String
-  gerenteRegCr   String
->>>>>>> main
 
   @@map("CENTRO_CUSTO")
 }
@@ -121,15 +108,9 @@ model CrContrato {
   gerenteRegCr   String?
   gerenteCr      String?
   supervisorCr   String?
-<<<<<<< HEAD
-  numContrato    Contrato? @relation(fields: [numContratoId], references: [id])
-  numContratoId  Int
-
-=======
   valorCr        Decimal?  @db.Decimal(11, 2)
   numContrato    Contrato? @relation(fields: [numContratoId], references: [documento])
   numContratoId  String
->>>>>>> main
 
   @@map("CR_CONTRATO")
 }
