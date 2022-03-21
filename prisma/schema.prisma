@@ -12,7 +12,6 @@ datasource db {
 
 model Contrato {
   id                     Int                @id @default(autoincrement())
-  pec                    String
   dataInicio             String
   dataFim                String
   documento              String             @unique
