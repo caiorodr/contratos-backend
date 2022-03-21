@@ -28,7 +28,6 @@ export class ContratosService {
       dataReajuste: data.dataReajuste,
       tipoAss: data.tipoAss,
       chamado: data.chamado,
-      pec: data.pec,
       resumo: data.resumo,
       status: data.status,
       valor: data.valor,
@@ -66,9 +65,16 @@ export class ContratosService {
 
     try {
       const ret = await this.prisma.$queryRawUnsafe<any>(`
-      select * from CONTRATO as contrat
-      left join CR_CONTRATO as cr on cr.numContratoId = contrat.documento
-      where D_E_L_E_T_  = ''
+      SELECT DISTINCT contrat.id, contrat.dataInicio, contrat.dataFim,
+      contrat.documento, contrat.natureza, contrat.grupoCliente, contrat.empresa,
+      contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
+      contrat.seguros, contrat.reajuste, contrat.dataReajuste, contrat.tipoAss, contrat.status,
+      contrat.chamado, contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
+      contrat.valor, cr.descricaoPecCr, cr.diretorExecCr 
+      FROM CONTRATO AS contrat
+      LEFT JOIN CR_CONTRATO AS cr 
+      ON cr.numContratoId = contrat.documento
+      WHERE D_E_L_E_T_  = ''
       ${crInnerJoin}
       AND grupoCliente LIKE ${"'%" + valorGrupoCliente + "%'"} 
       AND dataInicio LIKE ${"'%" + valorDataInicio + "%'"}
@@ -78,8 +84,7 @@ export class ContratosService {
       AND chamado LIKE ${"'%" + valorChamado + "%'"}
       AND retencaoContrato LIKE ${"'%" + valorRetencaoContrato + "%'"}
       AND negocio LIKE ${"'%" + valorNegocio + "%'"}
-      AND CAST(valor AS VARCHAR (64)) LIKE ${"'%" + valorValor + "%'"}
-      GROUP BY contrat.Id
+      AND CAST(valor AS CHAR (64)) LIKE ${"'%" + valorValor + "%'"}
       ORDER BY contrat.id DESC LIMIT 11 OFFSET ${skipPage}`)
       .then((values: any) => {
         return values.map((value: any) => {
