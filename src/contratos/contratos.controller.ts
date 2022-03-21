@@ -29,6 +29,7 @@ export class ContratosController {
     @Query('chamado') chamado: string,
     @Query('retencaoContrato') retencaoContrato: string,
     @Query('negocio') negocio: string,
+    @Query('status') status: string,
     @Query('valor') valor: Decimal,
     @Query('tipoAss') tipoAss: string,
     @Query('status') status: string,
@@ -48,7 +49,10 @@ export class ContratosController {
       retencaoContrato,
       negocio,
       valor,
+<<<<<<< HEAD
       tipoAss,
+=======
+>>>>>>> secundary
       status
     );
   }
