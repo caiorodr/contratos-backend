@@ -11,8 +11,35 @@ export class ContratosService {
 
   constructor(private prisma: PrismaService) { }
 
+<<<<<<< HEAD
   async create(data: CreateContratoDto): Promise<Contrato> {
     return this.prisma.contrato.create({ data });
+=======
+  async create(data: CreateContratoDto, bodyCr: any): Promise<Contrato> {
+    return this.prisma.contrato.create({data:{
+      dataInicio: data.dataInicio,
+      dataFim: data.dataFim,
+      documento: data.documento,
+      natureza: data.natureza,
+      grupoCliente: data.grupoCliente,
+      empresa: data.empresa,
+      docSolid: data.docSolid,
+      retencaoContrato: data.retencaoContrato,
+      negocio: data.negocio,
+      faturamento: data.faturamento,
+      seguros: data.seguros,
+      reajuste: data.reajuste,
+      dataReajuste: data.dataReajuste,
+      tipoAss: data.tipoAss,
+      chamado: data.chamado,
+      resumo: data.resumo,
+      status: data.status,
+      valor: data.valor,
+      lgpd: data.lgpd,
+      limiteResponsabilidade: data.limiteResponsabilidade,
+      crContrato: {createMany:{data:bodyCr}}
+    }},)
+>>>>>>> main
   }
 
 <<<<<<< HEAD
@@ -52,9 +79,22 @@ export class ContratosService {
 
     try {
       const ret = await this.prisma.$queryRawUnsafe<any>(`
+<<<<<<< HEAD
       select * from CONTRATO as contrat
       left join CR_CONTRATO as cr on cr.numContratoId = contrat.id
       where D_E_L_E_T_  = ''
+=======
+      SELECT DISTINCT contrat.id, contrat.dataInicio, contrat.dataFim,
+      contrat.documento, contrat.natureza, contrat.grupoCliente, contrat.empresa,
+      contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
+      contrat.seguros, contrat.reajuste, contrat.dataReajuste, contrat.tipoAss, contrat.status,
+      contrat.chamado, contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
+      contrat.valor, cr.descricaoPecCr, cr.diretorExecCr 
+      FROM CONTRATO AS contrat
+      LEFT JOIN CR_CONTRATO AS cr 
+      ON cr.numContratoId = contrat.documento
+      WHERE D_E_L_E_T_  = ''
+>>>>>>> main
       ${crInnerJoin}
       AND grupoCliente LIKE ${"'%" + valorGrupoCliente + "%'"} 
       AND dataInicio LIKE ${"'%" + valorDataInicio + "%'"}
@@ -65,6 +105,7 @@ export class ContratosService {
       AND retencaoContrato LIKE ${"'%" + valorRetencaoContrato + "%'"}
       AND negocio LIKE ${"'%" + valorNegocio + "%'"}
 <<<<<<< HEAD
+<<<<<<< HEAD
       AND tipoAss LIKE ${"'%" + valorAssinatura + "%'"}
       AND status LIKE ${"'%" + valorStatus + "%'"}
       AND CAST(valor AS VARCHAR (64)) LIKE ${"'%" + valorValor + "%'"}
@@ -73,6 +114,9 @@ export class ContratosService {
       AND CAST(valor AS VARCHAR (64)) LIKE ${"'%" + valorValor + "%'"}
       GROUP BY contrat.id
 >>>>>>> secundary
+=======
+      AND CAST(valor AS CHAR (64)) LIKE ${"'%" + valorValor + "%'"}
+>>>>>>> main
       ORDER BY contrat.id DESC LIMIT 11 OFFSET ${skipPage}`)
       .then((values: any) => {
         return values.map((value: any) => {
