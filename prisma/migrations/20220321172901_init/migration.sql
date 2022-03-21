@@ -21,6 +21,7 @@ CREATE TABLE `CONTRATO` (
     `lgpd` BOOLEAN NOT NULL,
     `limiteResponsabilidade` BOOLEAN NOT NULL,
     `valor` DECIMAL(11, 2) NOT NULL,
+    `docContrato` VARCHAR(60000) NULL,
     `D_E_L_E_T_` VARCHAR(191) NULL DEFAULT '',
 
     UNIQUE INDEX `CONTRATO_documento_key`(`documento`),
@@ -50,6 +51,7 @@ CREATE TABLE `ADITIVO` (
     `lgpd` BOOLEAN NOT NULL,
     `limiteResponsabilidade` BOOLEAN NOT NULL,
     `valor` DECIMAL(11, 2) NOT NULL,
+    `docAditivo` VARCHAR(60000) NULL,
     `numDocumento` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
