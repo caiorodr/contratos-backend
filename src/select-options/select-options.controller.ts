@@ -11,7 +11,15 @@ export class SelectOptionsController {
     @Query ('page') page: any,
     @Query ('pageSize') pageSize: any,
     @Query ('CR') cr: any,
+    @Query ('pec') pec: string
   ) {
-    return this.selectOptionsService.findAll(filter, page, pageSize,cr);
+    return this.selectOptionsService.findAll(filter, page, pageSize, cr, pec);
   }
+
+
+  @Get('/selectPec')
+  async buscaPec() {
+    return this.selectOptionsService.buscaPec();
+  }
+
 }

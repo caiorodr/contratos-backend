@@ -28,12 +28,13 @@ export class ContratosService {
       dataReajuste: data.dataReajuste,
       tipoAss: data.tipoAss,
       chamado: data.chamado,
+      pec: data.pec,
       resumo: data.resumo,
       status: data.status,
       valor: data.valor,
       lgpd: data.lgpd,
       limiteResponsabilidade: data.limiteResponsabilidade,
-      crContrato: {createMany: {data: bodyCr}}
+      crContrato: {createMany:{data:bodyCr}}
     }},)
   }
 
@@ -66,7 +67,7 @@ export class ContratosService {
     try {
       const ret = await this.prisma.$queryRawUnsafe<any>(`
       select * from CONTRATO as contrat
-      left join CR_CONTRATO as cr on cr.numContratoId = contrat.id
+      left join CR_CONTRATO as cr on cr.numContratoId = contrat.documento
       where D_E_L_E_T_  = ''
       ${crInnerJoin}
       AND grupoCliente LIKE ${"'%" + valorGrupoCliente + "%'"} 
@@ -78,7 +79,7 @@ export class ContratosService {
       AND retencaoContrato LIKE ${"'%" + valorRetencaoContrato + "%'"}
       AND negocio LIKE ${"'%" + valorNegocio + "%'"}
       AND CAST(valor AS VARCHAR (64)) LIKE ${"'%" + valorValor + "%'"}
-      GROUP BY cr.numContratoId
+      GROUP BY contrat.Id
       ORDER BY contrat.id DESC LIMIT 11 OFFSET ${skipPage}`)
       .then((values: any) => {
         return values.map((value: any) => {
