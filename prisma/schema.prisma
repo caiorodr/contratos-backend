@@ -33,7 +33,6 @@ model Contrato {
   lgpd                   Boolean
   limiteResponsabilidade Boolean
   valor                  Decimal            @db.Decimal(11, 2)
-  docContrato            String?            @db.VarChar(60000) // Sera obrigatorio quando for tratar o pdf como encode64.
   D_E_L_E_T_             String?            @default("")
   aditivos               Aditivo[]
   fileData               ContractFileData[]
@@ -64,7 +63,6 @@ model Aditivo {
   lgpd                   Boolean
   limiteResponsabilidade Boolean
   valor                  Decimal   @db.Decimal(11, 2)
-  docAditivo             String?   @db.VarChar(60000)
   documento              Contrato? @relation(fields: [numDocumento], references: [documento])
   numDocumento           String
 
@@ -83,17 +81,17 @@ model ContractFileData {
 }
 
 model CentroCusto {
-  id              Int    @id @default(autoincrement())
-  cr              String @unique
-  descricaoCr     String
-  pecCr           String
-  descricaoPecCr  String
-  regionalCr      String
-  supervisorCr    String
-  gerenteCr       String
-  diretorCr       String
-  diretorExecCr   String
-  gerenteRegCr    String
+  id             Int    @id @default(autoincrement())
+  cr             String @unique
+  descricaoCr    String
+  pecCr          String
+  descricaoPecCr String
+  regionalCr     String
+  supervisorCr   String
+  gerenteCr      String
+  diretorCr      String
+  diretorExecCr  String
+  gerenteRegCr   String
 
   @@map("CENTRO_CUSTO")
 }
@@ -113,6 +111,6 @@ model CrContrato {
   valorCr        Decimal?  @db.Decimal(11, 2)
   numContrato    Contrato? @relation(fields: [numContratoId], references: [documento])
   numContratoId  String
-  
+
   @@map("CR_CONTRATO")
 }
