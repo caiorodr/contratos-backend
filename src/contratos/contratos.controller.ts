@@ -12,7 +12,7 @@ export class ContratosController {
   @Post()
   async create(@Body() createContratoDto: CreateContratoDto) {
     const bodyCr = createContratoDto.crContrato;
-    
+
     return this.contratosService.create(createContratoDto, bodyCr);
   }
 
@@ -26,12 +26,15 @@ export class ContratosController {
     @Query('supervisor') supervisor: string,
     @Query('dataInicio') dataInicio: string,
     @Query('dataFim') dataFim: string,
-    @Query('dataReajuste') dataReajuste: string,
+    @Query('mesReajuste') mesReajuste: string,
     @Query('empresa') empresa: string,
     @Query('chamado') chamado: string,
     @Query('retencaoContrato') retencaoContrato: string,
+    @Query('status') status: string,
     @Query('negocio') negocio: string,
+    @Query('status') status: string,
     @Query('valor') valor: Decimal,
+    
   ) {
     return this.contratosService.findAll(
       page,
@@ -42,11 +45,12 @@ export class ContratosController {
       supervisor,
       dataInicio,
       dataFim,
-      dataReajuste,
+      mesReajuste,
       empresa,
       chamado,
       retencaoContrato,
       negocio,
+      status,
       valor,
     );
   }

@@ -12,6 +12,7 @@ export class ContratosService {
   constructor(private prisma: PrismaService) { }
 
   async create(data: CreateContratoDto, bodyCr: any): Promise<Contrato> {
+
     return this.prisma.contrato.create({data:{
       pec:data.pec,
       dataInicio: data.dataInicio,
@@ -26,7 +27,7 @@ export class ContratosService {
       faturamento: data.faturamento,
       seguros: data.seguros,
       reajuste: data.reajuste,
-      dataReajuste: data.dataReajuste,
+      mesReajuste: data.mesReajuste,
       tipoAss: data.tipoAss,
       chamado: data.chamado,
       resumo: data.resumo,
@@ -38,7 +39,7 @@ export class ContratosService {
     }},)
   }
 
-  async findAll(page: string, cr: string, grupoCliente: string, diretorCr: string, gerente: string, supervisor: string, dataInicio: string, dataFim:string, dataReajuste:string, empresa:string, chamado:string, retencaoContrato:string, negocio:string, valor: Decimal): Promise<any> {
+  async findAll(page: string, cr: string, grupoCliente: string, diretorCr: string, gerente: string, supervisor: string, dataInicio: string, dataFim:string, mesReajuste:string, empresa:string, chamado:string, retencaoContrato:string, negocio:string, status: string, valor: Decimal): Promise<any> {
     const valorCr               = cr;
     const valorGrupoCliente     = grupoCliente;
     const valorDiretor          = diretorCr;
@@ -46,16 +47,18 @@ export class ContratosService {
     const valorSupervisor       = supervisor;
     const valorDataInicio       = dataInicio;
     const valorDataFim          = dataFim;
-    const valorDataReajuste     = dataReajuste;
+    const valorMesReajuste     = mesReajuste;
     const valorEmpresa          = empresa;
     const valorChamado          = chamado;
     const valorRetencaoContrato = retencaoContrato;
     const valorNegocio          = negocio;
     const valorValor            = valor;
+    const valorStatus           = status; 
     const aRet      : any       = [];
     let crInnerJoin             = `` 
     let skipPage                = 0;
     
+
     if (!(parseInt(page) === 0)) {
       skipPage = (parseInt(page) * 11);
     }
@@ -69,7 +72,7 @@ export class ContratosService {
       SELECT DISTINCT contrat.id, contrat.dataInicio, contrat.dataFim,
       contrat.documento, contrat.natureza, contrat.grupoCliente, contrat.empresa,
       contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
-      contrat.seguros, contrat.reajuste, contrat.dataReajuste, contrat.tipoAss, contrat.status,
+      contrat.seguros, contrat.reajuste, contrat.mesReajuste, contrat.tipoAss, contrat.status,
       contrat.chamado, contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
       contrat.valor, cr.descricaoPecCr, cr.diretorExecCr 
       FROM CONTRATO AS contrat
@@ -80,11 +83,13 @@ export class ContratosService {
       AND grupoCliente LIKE ${"'%" + valorGrupoCliente + "%'"} 
       AND dataInicio LIKE ${"'%" + valorDataInicio + "%'"}
       AND dataFim LIKE ${"'%" + valorDataFim + "%'"}
-      AND dataReajuste LIKE ${"'%" + valorDataReajuste + "%'"}
+      AND mesReajuste LIKE ${"'%" + valorMesReajuste + "%'"}
       AND empresa LIKE ${"'%" + valorEmpresa + "%'"}
       AND chamado LIKE ${"'%" + valorChamado + "%'"}
       AND retencaoContrato LIKE ${"'%" + valorRetencaoContrato + "%'"}
+      AND status LIKE ${"'%" + valorStatus + "%'"}
       AND negocio LIKE ${"'%" + valorNegocio + "%'"}
+      AND status LIKE ${"'%" + valorStatus + "%'"}
       AND CAST(valor AS CHAR (64)) LIKE ${"'%" + valorValor + "%'"}
       ORDER BY contrat.id DESC LIMIT 11 OFFSET ${skipPage}`)
       .then((values: any) => {
@@ -93,11 +98,9 @@ export class ContratosService {
             ...value,
             dataFim : value.dataFim.split('-').reverse().join('/'),
             dataInicio: value.dataInicio.split('-').reverse().join('/'),
-            dataReajuste: value.dataReajuste.split('-').reverse().join('/'),
           }
         })
-      })
-      
+
       function addAction(element, index, array) {
         element.acoes = ['visualizar', 'alterar', 'baixar', 'aditivo',]
         aRet.push(element)
