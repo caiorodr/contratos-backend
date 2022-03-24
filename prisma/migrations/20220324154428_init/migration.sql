@@ -14,6 +14,7 @@ CREATE TABLE `CONTRATO` (
     `seguros` VARCHAR(191) NOT NULL,
     `reajuste` VARCHAR(191) NOT NULL,
     `mesReajuste` VARCHAR(191) NOT NULL,
+    `pec` VARCHAR(191) NOT NULL,
     `tipoAss` VARCHAR(191) NOT NULL,
     `status` VARCHAR(191) NOT NULL,
     `chamado` VARCHAR(191) NOT NULL,

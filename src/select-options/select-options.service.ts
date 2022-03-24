@@ -44,15 +44,37 @@ export class SelectOptionsService {
     
   }
 
-  async buscaPec(){
+  async buscaPec(filter: any){
+    
+    let filterCr = filter ==  undefined ? '' : filter; 
+
     try {
-      const buscaPecCr = await this.prisma.$queryRaw<any>
+      const buscaPecCr = await this.prisma.$queryRawUnsafe<any>(
       `SELECT pecCr AS valor, descricaoPecCr as rotulo 
       FROM CENTRO_CUSTO
-      WHERE descricaoPecCr <> ('' AND 'NULL' AND NULL) 
+      WHERE descricaoPecCr NOT IN ('','NULL') 
+      AND descricaoPecCr LIKE '%${filterCr}%'
       ORDER BY pecCr
-      `
+      `)
       return JSON.stringify({ items: buscaPecCr, hasNext: false });
+    
+    }catch (error) {
+      throw new HttpException(
+        `${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+
+  async findOnePec( pec: string) {
+    try {
+      const retOnePec = await this.prisma.$queryRawUnsafe<any>(
+      `SELECT pecCr AS valor, descricaoPecCr as rotulo 
+      FROM CENTRO_CUSTO
+      WHERE pecCr = '${pec}'
+      ORDER BY pecCr
+      `)
+      return JSON.stringify({valor: retOnePec[0].rotulo});
     
     }catch (error) {
       throw new HttpException(

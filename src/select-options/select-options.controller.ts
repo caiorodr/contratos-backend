@@ -1,4 +1,5 @@
-import { Controller, Get, Query } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { SelectOptionsService } from './select-options.service';
 
 @Controller('select-options')
@@ -18,8 +19,17 @@ export class SelectOptionsController {
 
 
   @Get('/selectPec')
-  async buscaPec() {
-    return this.selectOptionsService.buscaPec();
+  async buscaPec(
+    @Query ('filter') filter: any,
+  ) {
+    return this.selectOptionsService.buscaPec( filter );
   }
+
+
+  @Get('/selectPec/:pec')
+  async findOnePec(@Param ('pec') pec: string) {
+    return this.selectOptionsService.findOnePec(pec);
+  }
+
 
 }
