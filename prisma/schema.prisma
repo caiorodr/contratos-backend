@@ -26,6 +26,7 @@ model Contrato {
   seguros                String
   reajuste               String
   mesReajuste            String
+  pec                    String
   tipoAss                String
   status                 String
   chamado                String
