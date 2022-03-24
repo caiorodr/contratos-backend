@@ -14,6 +14,7 @@ export class ContratosService {
   async create(data: CreateContratoDto, bodyCr: any): Promise<Contrato> {
 
     return this.prisma.contrato.create({data:{
+      pec:data.pec,
       dataInicio: data.dataInicio,
       dataFim: data.dataFim,
       documento: data.documento,
