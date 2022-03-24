@@ -46,6 +46,7 @@ model Aditivo {
   diretor                String
   gerente                String
   supervisor             String
+  pec                    String
   cr                     String
   dataInicio             String
   dataFim                String

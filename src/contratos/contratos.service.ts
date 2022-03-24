@@ -101,6 +101,7 @@ export class ContratosService {
           }
         })
       })
+
       function addAction(element, index, array) {
         element.acoes = ['visualizar', 'alterar', 'baixar', 'aditivo',]
         aRet.push(element)

@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 export class CreateContratoDto implements Prisma.ContratoCreateInput {
   dataInicio: string;
   dataFim: string;
+  pec: string;
   documento: string;
   natureza: string;
   grupoCliente: string;
@@ -14,7 +15,6 @@ export class CreateContratoDto implements Prisma.ContratoCreateInput {
   seguros: string;
   reajuste: string;
   mesReajuste: string;
-  pec: string;
   tipoAss: string;
   status: string;
   chamado: string;
@@ -26,5 +26,6 @@ export class CreateContratoDto implements Prisma.ContratoCreateInput {
   aditivos?: Prisma.AditivoCreateNestedManyWithoutDocumentoInput;
   fileData?: Prisma.ContractFileDataCreateNestedManyWithoutContratoInput;
   crContrato?: Prisma.CrContratoCreateNestedManyWithoutNumContratoInput;
+
   
 }

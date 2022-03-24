@@ -34,6 +34,7 @@ CREATE TABLE `ADITIVO` (
     `diretor` VARCHAR(191) NOT NULL,
     `gerente` VARCHAR(191) NOT NULL,
     `supervisor` VARCHAR(191) NOT NULL,
+    `pec` VARCHAR(191) NOT NULL,
     `cr` VARCHAR(191) NOT NULL,
     `dataInicio` VARCHAR(191) NOT NULL,
     `dataFim` VARCHAR(191) NOT NULL,
