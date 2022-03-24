@@ -24,7 +24,7 @@ model Contrato {
   faturamento            String
   seguros                String
   reajuste               String
-  dataReajuste           String
+  mesReajuste            String
   tipoAss                String
   status                 String
   chamado                String
@@ -56,7 +56,7 @@ model Aditivo {
   retencaoContrato       String
   faturamento            String
   reajuste               String
-  dataReajuste           String
+  mesReajuste            String
   tipoAss                String
   status                 String
   lgpd                   Boolean

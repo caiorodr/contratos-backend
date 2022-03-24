@@ -13,7 +13,7 @@ export class CreateContratoDto implements Prisma.ContratoCreateInput {
   faturamento: string;
   seguros: string;
   reajuste: string;
-  dataReajuste: string;
+  mesReajuste: string;
   tipoAss: string;
   status: string;
   chamado: string;
@@ -25,5 +25,7 @@ export class CreateContratoDto implements Prisma.ContratoCreateInput {
   aditivos?: Prisma.AditivoCreateNestedManyWithoutDocumentoInput;
   fileData?: Prisma.ContractFileDataCreateNestedManyWithoutContratoInput;
   crContrato?: Prisma.CrContratoCreateNestedManyWithoutNumContratoInput;
-  
+
+
+
 }

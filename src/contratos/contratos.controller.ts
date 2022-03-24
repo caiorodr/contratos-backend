@@ -12,6 +12,7 @@ export class ContratosController {
   @Post()
   async create(@Body() createContratoDto: CreateContratoDto) {
     const bodyCr = createContratoDto.crContrato;
+
     return this.contratosService.create(createContratoDto, bodyCr);
   }
 
@@ -20,37 +21,37 @@ export class ContratosController {
     @Query('page') page: string,
     @Query('cr') cr: string,
     @Query('grupoCliente') grupoCliente: string,
-    @Query('diretor') diretor: string,
+    @Query('diretorCr') diretorCr: string,
     @Query('gerente') gerente: string,
     @Query('supervisor') supervisor: string,
     @Query('dataInicio') dataInicio: string,
     @Query('dataFim') dataFim: string,
-    @Query('dataReajuste') dataReajuste: string,
+    @Query('mesReajuste') mesReajuste: string,
     @Query('empresa') empresa: string,
     @Query('chamado') chamado: string,
     @Query('retencaoContrato') retencaoContrato: string,
+    @Query('status') status: string,
     @Query('negocio') negocio: string,
     @Query('status') status: string,
     @Query('valor') valor: Decimal,
-    @Query('tipoAss') tipoAss: string,
+    
   ) {
     return this.contratosService.findAll(
       page,
       cr,
       grupoCliente,
-      diretor,
+      diretorCr,
       gerente,
       supervisor,
       dataInicio,
       dataFim,
-      dataReajuste,
+      mesReajuste,
       empresa,
       chamado,
       retencaoContrato,
       negocio,
+      status,
       valor,
-      tipoAss,
-      status
     );
   }
 
@@ -68,9 +69,9 @@ export class ContratosController {
   @Patch(':documento')
   async update(
     @Param('documento') documento: string,
-    @Body() updateContratoDto: UpdateContratoDto,
+    @Body() updateConrtatoDto: UpdateContratoDto,
   ) {
-    return this.contratosService.update(documento, updateContratoDto);
+    return this.contratosService.update(documento, updateConrtatoDto);
   }
 
   @Delete(':id')
