@@ -30,7 +30,6 @@ export class ContratosController {
     @Query('empresa') empresa: string,
     @Query('chamado') chamado: string,
     @Query('retencaoContrato') retencaoContrato: string,
-    @Query('status') status: string,
     @Query('negocio') negocio: string,
     @Query('valor') valor: Decimal,
     

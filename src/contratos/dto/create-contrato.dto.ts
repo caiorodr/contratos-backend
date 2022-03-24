@@ -5,6 +5,7 @@ export class CreateContratoDto implements Prisma.ContratoCreateInput {
   dataFim: string;
   documento: string;
   natureza: string;
+  pec: string;
   grupoCliente: string;
   empresa: string;
   negocio: string;
