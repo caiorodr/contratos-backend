@@ -12,6 +12,7 @@ export class ContratosService {
   constructor(private prisma: PrismaService) { }
 
   async create(data: CreateContratoDto, bodyCr: any): Promise<Contrato> {
+
     return this.prisma.contrato.create({data:{
       dataInicio: data.dataInicio,
       dataFim: data.dataFim,
@@ -56,6 +57,7 @@ export class ContratosService {
     let crInnerJoin             = `` 
     let skipPage                = 0;
     
+
     if (!(parseInt(page) === 0)) {
       skipPage = (parseInt(page) * 11);
     }
@@ -84,6 +86,7 @@ export class ContratosService {
       AND empresa LIKE ${"'%" + valorEmpresa + "%'"}
       AND chamado LIKE ${"'%" + valorChamado + "%'"}
       AND retencaoContrato LIKE ${"'%" + valorRetencaoContrato + "%'"}
+      AND status LIKE ${"'%" + valorStatus + "%'"}
       AND negocio LIKE ${"'%" + valorNegocio + "%'"}
       AND status LIKE ${"'%" + valorStatus + "%'"}
       AND CAST(valor AS CHAR (64)) LIKE ${"'%" + valorValor + "%'"}
@@ -96,8 +99,7 @@ export class ContratosService {
             dataInicio: value.dataInicio.split('-').reverse().join('/'),
           }
         })
-      })
-      
+
       function addAction(element, index, array) {
         element.acoes = ['visualizar', 'alterar', 'baixar', 'aditivo',]
         aRet.push(element)
