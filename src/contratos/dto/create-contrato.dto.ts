@@ -26,5 +26,5 @@ export class CreateContratoDto implements Prisma.ContratoCreateInput {
   aditivos?: Prisma.AditivoCreateNestedManyWithoutDocumentoInput;
   fileData?: Prisma.ContractFileDataCreateNestedManyWithoutContratoInput;
   crContrato?: Prisma.CrContratoCreateNestedManyWithoutNumContratoInput;
-  
+
 }
