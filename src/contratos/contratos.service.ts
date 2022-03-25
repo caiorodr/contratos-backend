@@ -39,12 +39,9 @@ export class ContratosService {
     }},)
   }
 
-  async findAll(page: string, cr: string, grupoCliente: string, diretorCr: string, gerente: string, supervisor: string, dataInicio: string, dataFim:string, mesReajuste:string, empresa:string, chamado:string, retencaoContrato:string, negocio:string, status: string, valor: Decimal): Promise<any> {
+  async findAll(page: string, cr: string, grupoCliente: string, dataInicio: string, dataFim:string, mesReajuste:string, empresa:string, chamado:string, retencaoContrato:string, negocio:string, status: string, valor: Decimal): Promise<any> {
     const valorCr               = cr;
     const valorGrupoCliente     = grupoCliente;
-    const valorDiretor          = diretorCr;
-    const valorGerente          = gerente;
-    const valorSupervisor       = supervisor;
     const valorDataInicio       = dataInicio;
     const valorDataFim          = dataFim;
     const valorMesReajuste     = mesReajuste;

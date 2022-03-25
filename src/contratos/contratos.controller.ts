@@ -21,9 +21,6 @@ export class ContratosController {
     @Query('page') page: string,
     @Query('cr') cr: string,
     @Query('grupoCliente') grupoCliente: string,
-    @Query('diretorCr') diretorCr: string,
-    @Query('gerente') gerente: string,
-    @Query('supervisor') supervisor: string,
     @Query('dataInicio') dataInicio: string,
     @Query('dataFim') dataFim: string,
     @Query('mesReajuste') mesReajuste: string,
@@ -31,16 +28,13 @@ export class ContratosController {
     @Query('chamado') chamado: string,
     @Query('retencaoContrato') retencaoContrato: string,
     @Query('negocio') negocio: string,
+    @Query('status') status: string,
     @Query('valor') valor: Decimal,
-    
   ) {
     return this.contratosService.findAll(
       page,
       cr,
       grupoCliente,
-      diretorCr,
-      gerente,
-      supervisor,
       dataInicio,
       dataFim,
       mesReajuste,

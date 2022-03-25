@@ -46,7 +46,7 @@ export class SelectOptionsService {
 
   async buscaPec(filter: any){
     
-    let filterCr = filter ==  undefined ? '' : filter; 
+    const filterCr = filter ==  undefined ? '' : filter; 
 
     try {
       const buscaPecCr = await this.prisma.$queryRawUnsafe<any>(
