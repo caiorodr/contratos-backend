@@ -11,7 +11,7 @@ export class ContratosService {
 
   constructor(private prisma: PrismaService) { }
 
-  async create(data: CreateContratoDto, bodyCr: any): Promise<Contrato> {
+  async create(data: CreateContratoDto, bodyCr: any, bodyData: any): Promise<Contrato> {
 
     return this.prisma.contrato.create({data:{
       pec:data.pec,
@@ -35,6 +35,7 @@ export class ContratosService {
       valor: data.valor,
       lgpd: data.lgpd,
       limiteResponsabilidade: data.limiteResponsabilidade,
+      fileData: {createMany:{data:bodyData}},
       crContrato: {createMany:{data:bodyCr}}
     }},)
   }
