@@ -16,6 +16,7 @@ model Contrato {
   dataFim                String
   documento              String             @unique
   natureza               String
+  pec                    String
   grupoCliente           String
   empresa                String             @db.VarChar(1200)
   negocio                String
@@ -25,7 +26,6 @@ model Contrato {
   seguros                String
   reajuste               String
   mesReajuste            String
-  pec                    String
   tipoAss                String
   status                 String
   chamado                String
