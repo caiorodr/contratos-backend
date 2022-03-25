@@ -8,78 +8,60 @@ import { Prisma } from '@prisma/client';
 export class SelectOptionsService {
   constructor(private prisma: PrismaService) { }
 
-  async findAll(filter: any, page: any, pageSize: any, cr: any, pec: string) {
+  async findPec(filter: any, page: any, pageSize: any) {
   
-    let selectOptionRetCr: Array<any> = [];
+    let selectOptionRetPec: Array<any> = [];
     
-    const valorPec = pec;
+    let retHasNext = true;
     const numberPage = page == undefined ? 0 : page - 1;
     const numberPageSize = pageSize == undefined ? 0 : pageSize;
-    const skipPage = numberPage * numberPageSize;
-    const filterCrLookup = filter == undefined ? '' : filter;
-    const numCr = cr == undefined ? '' : cr;
+    const skipPagePec = numberPage * numberPageSize;
+    const filterPecLookup = filter == undefined ? '' : filter;
 
     try {
-      if (numCr.length > 0 ) {
+      if (filterPecLookup.length > 0 ) {
 
-        selectOptionRetCr = await this.prisma.$queryRaw<any>
-        `SELECT TRIM(cr) as CR, TRIM(descricaoCr) as 'Descrição CR', TRIM(diretorExecCr) as 'Diretor Executivo'
-        FROM CENTRO_CUSTO 
-          WHERE cr = ${numCr}`
-      } else {
-        selectOptionRetCr = await this.prisma.$queryRawUnsafe<any>(
-          `SELECT TRIM(cr) as CR, TRIM(descricaoCr) as 'Descrição CR', TRIM(diretorExecCr) as 'Diretor Executivo'
+        selectOptionRetPec = await this.prisma.$queryRawUnsafe<any>(
+        `SELECT DISTINCT (descricaoPecCr) as PEC 
           FROM CENTRO_CUSTO 
-            WHERE pecCr = '${valorPec}' AND (cr = '%${filterCrLookup}%' 
-            OR descricaoCr LIKE '%${filterCrLookup}%') ORDER BY cr LIMIT 11 OFFSET ${skipPage}`);
+          WHERE descricaoPecCr LIKE '%${filterPecLookup}%'`)
+      } else {
+        selectOptionRetPec = await this.prisma.$queryRawUnsafe<any>(
+          `SELECT DISTINCT (descricaoPecCr) as PEC 
+            FROM CENTRO_CUSTO 
+            ORDER BY descricaoPecCr LIMIT 11 OFFSET ${skipPagePec}`);
       }
-  
-      return JSON.stringify({ items: selectOptionRetCr, hasNext: false });
+      
+
+      if (selectOptionRetPec.length < 11 ) {
+        retHasNext = false;
+      }
+
+      return JSON.stringify({ items: selectOptionRetPec, hasNext: retHasNext });
 
     } catch (error) {
       throw new HttpException(
         `${error}`,
         HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    
   }
 
-  async buscaPec(filter: any){
-    
-    const filterCr = filter ==  undefined ? '' : filter; 
-
+  async findCr(pec: any){
+    const valorCr = pec == undefined? '' : pec.substring(1,6);
     try {
-      const buscaPecCr = await this.prisma.$queryRawUnsafe<any>(
-      `SELECT pecCr AS valor, descricaoPecCr as rotulo 
-      FROM CENTRO_CUSTO
-      WHERE descricaoPecCr NOT IN ('','NULL') 
-      AND descricaoPecCr LIKE '%${filterCr}%'
-      ORDER BY pecCr
-      `)
-      return JSON.stringify({ items: buscaPecCr, hasNext: false });
-    
+      const selectOptionRetCr = await this.prisma.$queryRawUnsafe<any>(`
+      SELECT  cr as valor, CONCAT (cr, ' - ',descricaoCr) as rotulo 
+        FROM CENTRO_CUSTO 
+        WHERE pecCr LIKE '%${valorCr}%'
+        ORDER BY cr`)
+        
+        return JSON.stringify({ items: selectOptionRetCr, hasNext: false });
+  
     }catch (error) {
       throw new HttpException(
         `${error}`,
         HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  }
-
-
-  async findOnePec( pec: string) {
-    try {
-      const retOnePec = await this.prisma.$queryRawUnsafe<any>(
-      `SELECT pecCr AS valor, descricaoPecCr as rotulo 
-      FROM CENTRO_CUSTO
-      WHERE pecCr = '${pec}'
-      ORDER BY pecCr
-      `)
-      return JSON.stringify({valor: retOnePec[0].rotulo});
-    
-    }catch (error) {
-      throw new HttpException(
-        `${error}`,
-        HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+      
   }
 }

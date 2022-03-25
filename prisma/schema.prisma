@@ -22,9 +22,9 @@ model Contrato {
   negocio                String
   docSolid               String             @db.VarChar(1200)
   retencaoContrato       String
-  faturamento            String
-  seguros                String
-  reajuste               String
+  faturamento            String             
+  seguros                String             @db.VarChar(1200)
+  reajuste               String 
   mesReajuste            String
   tipoAss                String
   status                 String

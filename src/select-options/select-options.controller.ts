@@ -6,30 +6,20 @@ import { SelectOptionsService } from './select-options.service';
 export class SelectOptionsController {
   constructor(private readonly selectOptionsService: SelectOptionsService) {}
 
-  @Get()
-  async findAll(
+  @Get('/findPec')
+  async findPec(
     @Query ('filter') filter: any,
     @Query ('page') page: any,
-    @Query ('pageSize') pageSize: any,
-    @Query ('CR') cr: any,
-    @Query ('pec') pec: string
+    @Query ('pageSize') pageSize: any
   ) {
-    return this.selectOptionsService.findAll(filter, page, pageSize, cr, pec);
+    return this.selectOptionsService.findPec(filter, page, pageSize);
   }
 
-
-  @Get('/selectPec')
-  async buscaPec(
-    @Query ('filter') filter: any,
+  @Get('/findCr')
+  async findCr(
+    @Query ('pec') pec: any,
   ) {
-    return this.selectOptionsService.buscaPec( filter );
+    return this.selectOptionsService.findCr(pec);
   }
-
-
-  @Get('/selectPec/:pec')
-  async findOnePec(@Param ('pec') pec: string) {
-    return this.selectOptionsService.findOnePec(pec);
-  }
-
 
 }
