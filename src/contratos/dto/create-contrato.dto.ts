@@ -1,11 +1,12 @@
+// eslint-disable-next-line prettier/prettier
 import { Prisma } from '@prisma/client';
 
 export class CreateContratoDto implements Prisma.ContratoCreateInput {
   dataInicio: string;
   dataFim: string;
-  pec: string;
   documento: string;
   natureza: string;
+  pec: string;
   grupoCliente: string;
   empresa: string;
   negocio: string;
@@ -26,6 +27,4 @@ export class CreateContratoDto implements Prisma.ContratoCreateInput {
   aditivos?: Prisma.AditivoCreateNestedManyWithoutDocumentoInput;
   fileData?: Prisma.ContractFileDataCreateNestedManyWithoutContratoInput;
   crContrato?: Prisma.CrContratoCreateNestedManyWithoutNumContratoInput;
-
-  
 }

@@ -75,6 +75,7 @@ model ContractFileData {
   originalName String
   mediaName    String
   contentType  String
+  sizeFile     Int
   contrato     Contrato? @relation(fields: [contratoId], references: [id])
   contratoId   Int
 

@@ -45,11 +45,11 @@ export class StorageService {
     fileName: string,
     contentType: string,
     media: Buffer,
-    numContrato: number
   ) {
     try {
-
+      /*
       const fileEdit = editFileName(fileName);
+      
       const originalName = fileName;
       const mediaName = fileEdit;
       const documento = numContrato;
@@ -66,10 +66,11 @@ export class StorageService {
         },
 
       })
-      const metadata: { [key: string]: string }[] = [{ mediaName: fileEdit }]
+      */
+      const metadata: { [key: string]: string }[] = [{ mediaName: fileName }]
       const object = metadata.reduce(
         (obj, item) => Object.assign(obj, item), {});
-      const file = this.storage.bucket(this.bucket).file(fileEdit);
+      const file = this.storage.bucket(this.bucket).file(fileName);
       const stream = file.createWriteStream();
       stream.on("finish", async () => {
         return await file.setMetadata({

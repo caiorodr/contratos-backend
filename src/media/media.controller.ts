@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, Query, Req, Res, ServiceUnavailableException, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, HttpStatus, NotFoundException, Param, Post, Query, Req, Res, ServiceUnavailableException, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Response, Request } from 'express';
 import { StorageFile } from "src/storage/storage-file";
@@ -14,16 +14,17 @@ export class MediaController {
     })
   )
   async uploadMedia(
-    @UploadedFile() file: Express.Multer.File, @Req() req: Request
+    @UploadedFile() file: Express.Multer.File, @Req() req: Request, @Res() res: Response,
   ) {
 
-    const numContrato = Number(req.body.data)
+    const fileName = req.body.data.substring(1,req.body.data.length -1)
     await this.storageService.save(
-      file.originalname,
+      fileName,
       file.mimetype,
       file.buffer,
-      numContrato
     );
+    
+    res.status(HttpStatus.CREATED).json(fileName);
   }
 
   @Get()
