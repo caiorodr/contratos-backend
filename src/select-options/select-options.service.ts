@@ -82,4 +82,18 @@ export class SelectOptionsService {
         HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+
+  async findAllPec() {
+    try {
+      const retAllPec = await this.prisma.pecContrato.findMany();
+
+      return retAllPec;
+    }catch (error) {
+      throw new HttpException(
+        `${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR);
+    } 
+  }
+  
 }

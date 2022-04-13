@@ -29,7 +29,6 @@ export class ContratosService {
       reajuste: data.reajuste,
       mesReajuste: data.mesReajuste,
       tipoAss: data.tipoAss,
-      chamado: data.chamado,
       resumo: data.resumo,
       status: data.status,
       valor: data.valor,

@@ -14,25 +14,26 @@ model Contrato {
   id                     Int                @id @default(autoincrement())
   dataInicio             String
   dataFim                String
-  documento              String             @unique
-  natureza               String
+  documento              String?            @unique @default(uuid())
+  natureza               String?            @default("")
   pec                    String
   grupoCliente           String
   empresa                String             @db.VarChar(1200)
   negocio                String
-  docSolid               String             @db.VarChar(1200)
-  retencaoContrato       String
-  faturamento            String
-  seguros                String
+  docSolid               String?            @db.VarChar(1200)
+  retencaoContrato       String?
+  faturamento            String?
+  seguros                String?
   reajuste               String
   mesReajuste            String
-  tipoAss                String
-  status                 String
-  chamado                String
+  tipoAss                String?
+  status                 String?
   resumo                 String?
-  lgpd                   Boolean
-  limiteResponsabilidade Boolean
+  lgpd                   Boolean?
+  limiteResponsabilidade Boolean?
   valor                  Decimal            @db.Decimal(11, 2)
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
   D_E_L_E_T_             String?            @default("")
   aditivos               Aditivo[]
   fileData               ContractFileData[]
@@ -63,6 +64,8 @@ model Aditivo {
   lgpd                   Boolean
   limiteResponsabilidade Boolean
   valor                  Decimal   @db.Decimal(11, 2)
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
   documento              Contrato? @relation(fields: [numDocumento], references: [documento])
   numDocumento           String
 
@@ -75,6 +78,8 @@ model ContractFileData {
   mediaName    String
   contentType  String
   sizeFile     Int
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   contrato     Contrato? @relation(fields: [contratoId], references: [id])
   contratoId   Int
 
@@ -82,8 +87,8 @@ model ContractFileData {
 }
 
 model CentroCusto {
-  id             Int    @id @default(autoincrement())
-  cr             String @unique
+  id             Int      @id @default(autoincrement())
+  cr             String   @unique
   descricaoCr    String
   pecCr          String
   descricaoPecCr String
@@ -93,6 +98,8 @@ model CentroCusto {
   diretorCr      String
   diretorExecCr  String
   gerenteRegCr   String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@map("CENTRO_CUSTO")
 }
@@ -110,8 +117,39 @@ model CrContrato {
   gerenteCr      String?
   supervisorCr   String?
   valorCr        Decimal?  @db.Decimal(11, 2)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
   numContrato    Contrato? @relation(fields: [numContratoId], references: [documento])
   numContratoId  String
 
   @@map("CR_CONTRATO")
+}
+
+model PecContrato {
+  id                Int       @id @default(autoincrement())
+  pec               String?
+  descricaoPec      String?
+  grupoClienteId    String?
+  grupoCliente      String?
+  dataInicio        String?
+  dataFim           String?
+  negocioId         String?
+  negocio           String?
+  crReduzido        String?
+  descricaoCr       String?
+  regional          String?
+  diretorRegional   String?
+  diretorExecutivo  String?
+  gereteneExecutivo String?
+  gerenteRegional   String?
+  supervisor        String?
+  empresaId         String?
+  mesReajuste       String?
+  empresa           String?   @db.VarChar(1200)
+  indiceReajuste    String?
+  createdAt         DateTime? @default(now())
+  updatedAt         DateTime? @updatedAt
+  D_E_L_E_T_        String?   @default("")
+
+  @@map("PEC_CONTRATO")
 }

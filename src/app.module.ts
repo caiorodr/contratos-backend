@@ -7,9 +7,20 @@ import { MediaModule } from './media/media.module';
 import { SelectOptionsModule } from './select-options/select-options.module';
 import { CrContratoModule } from './cr-contrato/cr-contrato.module';
 import { CardsHomeModule } from './cards-home/cards-home.module';
+import { JobsModule } from './jobs/jobs.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
-  imports: [ContratosModule, StorageModule, MediaModule, SelectOptionsModule, CrContratoModule, CardsHomeModule],
+  imports: [
+    ScheduleModule.forRoot(),
+    ContratosModule, 
+    StorageModule, 
+    MediaModule, 
+    SelectOptionsModule, 
+    CrContratoModule, 
+    CardsHomeModule, 
+    JobsModule,
+    ],
   controllers: [AppController],
   providers: [AppService],
 })
