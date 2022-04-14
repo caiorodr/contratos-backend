@@ -84,11 +84,11 @@ export class SelectOptionsService {
   }
 
 
-  async findAllPec() {
+  async pecApi() {
     try {
-      const retAllPec = await this.prisma.pecContrato.findMany();
+      const retPecApi = await this.prisma.pecApi.findMany();
 
-      return retAllPec;
+      return retPecApi;
     }catch (error) {
       throw new HttpException(
         `${error}`,
