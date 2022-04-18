@@ -19,18 +19,18 @@ model Contrato {
   pec                    String
   grupoCliente           String
   empresa                String             @db.VarChar(1200)
-  negocio                String
+  negocio                String             @default("")
   docSolid               String?            @db.VarChar(1200)
-  retencaoContrato       String?
-  faturamento            String?
-  seguros                String?
-  reajuste               String
+  retencaoContrato       String?            @default("")
+  faturamento            String?            @default("")
+  seguros                String?            @default("")
+  reajuste               String             @default("")
   mesReajuste            String
-  tipoAss                String?
-  status                 String?
-  resumo                 String?
-  lgpd                   Boolean?
-  limiteResponsabilidade Boolean?
+  tipoAss                String?            @default("")
+  status                 String?            @default("")
+  resumo                 String?            @default("")
+  lgpd                   Boolean?           @default(false)
+  limiteResponsabilidade Boolean?           @default(false)
   valor                  Decimal            @db.Decimal(11, 2)
   createdAt              DateTime           @default(now())
   updatedAt              DateTime           @updatedAt

@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE `CONTRATO` MODIFY `faturamento` VARCHAR(191) NULL DEFAULT '',
+    MODIFY `seguros` VARCHAR(191) NULL DEFAULT '',
+    MODIFY `reajuste` VARCHAR(191) NOT NULL DEFAULT '',
+    MODIFY `tipoAss` VARCHAR(191) NULL DEFAULT '',
+    MODIFY `resumo` VARCHAR(191) NULL DEFAULT '',
+    MODIFY `lgpd` BOOLEAN NULL DEFAULT false,
+    MODIFY `limiteResponsabilidade` BOOLEAN NULL DEFAULT false;

@@ -73,7 +73,7 @@ export class ContratosService {
       contrat.documento, contrat.natureza, contrat.grupoCliente, contrat.empresa,
       contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
       contrat.seguros, contrat.reajuste, contrat.mesReajuste, contrat.tipoAss, contrat.status,
-      contrat.chamado, contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
+      contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
       contrat.valor, cr.descricaoPecCr, cr.diretorExecCr 
       FROM CONTRATO AS contrat
       LEFT JOIN CR_CONTRATO AS cr 
@@ -85,12 +85,10 @@ export class ContratosService {
       AND dataFim LIKE ${"'%" + valorDataFim + "%'"}
       AND mesReajuste LIKE ${"'%" + valorMesReajuste + "%'"}
       AND empresa LIKE ${"'%" + valorEmpresa + "%'"}
-      AND chamado LIKE ${"'%" + valorChamado + "%'"}
       AND retencaoContrato LIKE ${"'%" + valorRetencaoContrato + "%'"}
       AND status LIKE ${"'%" + valorStatus + "%'"}
       AND negocio LIKE ${"'%" + valorNegocio + "%'"}
       AND status LIKE ${"'%" + valorStatus + "%'"}
-      AND CAST(valor AS CHAR (64)) LIKE ${"'%" + valorValor + "%'"}
       ORDER BY contrat.id DESC LIMIT 11 OFFSET ${skipPage}`)
       .then((values: any) => {
         return values.map((value: any) => {
