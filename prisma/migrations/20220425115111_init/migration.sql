@@ -8,54 +8,24 @@ CREATE TABLE `CONTRATO` (
     `pec` VARCHAR(191) NOT NULL,
     `grupoCliente` VARCHAR(191) NOT NULL,
     `empresa` VARCHAR(1200) NOT NULL,
-    `negocio` VARCHAR(191) NOT NULL,
+    `negocio` VARCHAR(191) NOT NULL DEFAULT '',
     `docSolid` VARCHAR(1200) NULL,
-    `retencaoContrato` VARCHAR(191) NULL,
-    `faturamento` VARCHAR(191) NULL,
-    `seguros` VARCHAR(191) NULL,
-    `reajuste` VARCHAR(191) NOT NULL,
+    `retencaoContrato` VARCHAR(191) NULL DEFAULT '',
+    `faturamento` VARCHAR(191) NULL DEFAULT '',
+    `seguros` VARCHAR(191) NULL DEFAULT '',
+    `reajuste` VARCHAR(191) NOT NULL DEFAULT '',
     `mesReajuste` VARCHAR(191) NOT NULL,
-    `tipoAss` VARCHAR(191) NULL,
-    `status` VARCHAR(191) NULL,
-    `resumo` VARCHAR(191) NULL,
-    `lgpd` BOOLEAN NULL,
-    `limiteResponsabilidade` BOOLEAN NULL,
+    `tipoAss` VARCHAR(191) NULL DEFAULT '',
+    `status` VARCHAR(191) NULL DEFAULT '',
+    `resumo` VARCHAR(191) NULL DEFAULT '',
+    `lgpd` BOOLEAN NULL DEFAULT false,
+    `limiteResponsabilidade` BOOLEAN NULL DEFAULT false,
     `valor` DECIMAL(11, 2) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `D_E_L_E_T_` VARCHAR(191) NULL DEFAULT '',
 
     UNIQUE INDEX `CONTRATO_documento_key`(`documento`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `ADITIVO` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `diretor` VARCHAR(191) NOT NULL,
-    `gerente` VARCHAR(191) NOT NULL,
-    `supervisor` VARCHAR(191) NOT NULL,
-    `cr` VARCHAR(191) NOT NULL,
-    `dataInicio` VARCHAR(191) NOT NULL,
-    `dataFim` VARCHAR(191) NOT NULL,
-    `natureza` VARCHAR(191) NOT NULL,
-    `grupoCliente` VARCHAR(191) NOT NULL,
-    `empresa` VARCHAR(191) NOT NULL,
-    `negocio` VARCHAR(191) NOT NULL,
-    `docSolid` VARCHAR(191) NOT NULL,
-    `retencaoContrato` VARCHAR(191) NOT NULL,
-    `faturamento` VARCHAR(191) NOT NULL,
-    `reajuste` VARCHAR(191) NOT NULL,
-    `mesReajuste` VARCHAR(191) NOT NULL,
-    `tipoAss` VARCHAR(191) NOT NULL,
-    `status` VARCHAR(191) NOT NULL,
-    `lgpd` BOOLEAN NOT NULL,
-    `limiteResponsabilidade` BOOLEAN NOT NULL,
-    `valor` DECIMAL(11, 2) NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-    `numDocumento` VARCHAR(191) NOT NULL,
-
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -174,8 +144,15 @@ CREATE TABLE `PEC_API` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- AddForeignKey
-ALTER TABLE `ADITIVO` ADD CONSTRAINT `ADITIVO_numDocumento_fkey` FOREIGN KEY (`numDocumento`) REFERENCES `CONTRATO`(`documento`) ON DELETE RESTRICT ON UPDATE CASCADE;
+-- CreateTable
+CREATE TABLE `LOG_JOB` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `infoLog` LONGTEXT NOT NULL,
+    `dataInicio` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `dataFim` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
 ALTER TABLE `DADOS_ARQUIVO` ADD CONSTRAINT `DADOS_ARQUIVO_contratoId_fkey` FOREIGN KEY (`contratoId`) REFERENCES `CONTRATO`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

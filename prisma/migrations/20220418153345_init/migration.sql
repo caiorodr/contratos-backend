@@ -1,4 +1,0 @@
--- AlterTable
-ALTER TABLE `CONTRATO` MODIFY `negocio` VARCHAR(191) NOT NULL DEFAULT '',
-    MODIFY `retencaoContrato` VARCHAR(191) NULL DEFAULT '',
-    MODIFY `status` VARCHAR(191) NULL DEFAULT '';

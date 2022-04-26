@@ -74,7 +74,7 @@ export class ContratosService {
       contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
       contrat.seguros, contrat.reajuste, contrat.mesReajuste, contrat.tipoAss, contrat.status,
       contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
-      contrat.valor, cr.descricaoPecCr, cr.diretorExecCr 
+      contrat.valor, contrat.pec, cr.diretorExecCr 
       FROM CONTRATO AS contrat
       LEFT JOIN CR_CONTRATO AS cr 
       ON cr.numContratoId = contrat.documento
@@ -94,14 +94,16 @@ export class ContratosService {
         return values.map((value: any) => {
           return {
             ...value,
-            dataFim : value.dataFim.split('-').reverse().join('/'),
-            dataInicio: value.dataInicio.split('-').reverse().join('/'),
+            dataFim : value.dataFim.substring(6,8) + '/' + value.dataFim.substring(4,6) + '/' + value.dataFim.substring(0,4),
+            dataInicio: value.dataInicio.substring(6,8) + '/' + value.dataInicio.substring(4,6) + '/' + value.dataInicio.substring(0,4),
           }
-        })
-      })
+        });
+      });
+
+
       function addAction(element, index, array) {
-        element.acoes = ['visualizar', 'alterar', 'baixar', 'aditivo',]
-        aRet.push(element)
+        element.acoes = ['visualizar', 'alterar', 'baixar', 'aditivo',];
+        aRet.push(element);
       }
 
       ret.forEach(addAction);
@@ -111,7 +113,6 @@ export class ContratosService {
     } catch (error) {
       throw new HttpException('Parâmetro invalido.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
   }
 
   // Pega o ultimo numero do documento Desc Contrato.

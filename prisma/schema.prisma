@@ -25,6 +25,7 @@ model Contrato {
   faturamento            String?            @default("")
   seguros                String?            @default("")
   reajuste               String             @default("")
+  tipoFaturamento        String?            @default("")
   mesReajuste            String
   tipoAss                String?            @default("")
   status                 String?            @default("")
@@ -35,41 +36,10 @@ model Contrato {
   createdAt              DateTime           @default(now())
   updatedAt              DateTime           @updatedAt
   D_E_L_E_T_             String?            @default("")
-  aditivos               Aditivo[]
   fileData               ContractFileData[]
   crContrato             CrContrato[]
 
   @@map("CONTRATO")
-}
-
-model Aditivo {
-  id                     Int       @id @default(autoincrement())
-  diretor                String
-  gerente                String
-  supervisor             String
-  cr                     String
-  dataInicio             String
-  dataFim                String
-  natureza               String
-  grupoCliente           String
-  empresa                String
-  negocio                String
-  docSolid               String
-  retencaoContrato       String
-  faturamento            String
-  reajuste               String
-  mesReajuste            String
-  tipoAss                String
-  status                 String
-  lgpd                   Boolean
-  limiteResponsabilidade Boolean
-  valor                  Decimal   @db.Decimal(11, 2)
-  createdAt              DateTime  @default(now())
-  updatedAt              DateTime  @updatedAt
-  documento              Contrato? @relation(fields: [numDocumento], references: [documento])
-  numDocumento           String
-
-  @@map("ADITIVO")
 }
 
 model ContractFileData {
@@ -181,4 +151,13 @@ model PecApi {
   D_E_L_E_T_        String?   @default("")
 
   @@map("PEC_API")
+}
+
+model logJob {
+  id         Int       @id @default(autoincrement())
+  infoLog    String    @db.LongText
+  dataInicio DateTime? @default(now())
+  dataFim    DateTime? @default(now())
+
+  @@map("LOG_JOB")
 }
