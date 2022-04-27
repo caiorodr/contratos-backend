@@ -21,7 +21,7 @@ export class CrContratoService {
 
     try {
       const buscaCrRet = await this.prisma.crContrato.findMany({
-        distinct: 'pecCr',
+        distinct: 'cr',
         where: {
           pecCr: pec
         }

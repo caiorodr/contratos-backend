@@ -12,7 +12,7 @@ export class JobContratoService {
     private prisma: PrismaService
   ) {}
 
-  @Cron('20 28 12 *  * 0-6')
+  @Cron('20 23 17 *  * 0-6')
   async handleCron() {
     let updateData  : Array<any> = [];
     let createData  : Array<any> = [];
@@ -26,7 +26,7 @@ export class JobContratoService {
       map(
         (res) => res.data
         )
-      );
+      );  
 
     // result api microserviço pec
     const apiContratos = await lastValueFrom(observable);
@@ -115,7 +115,7 @@ export class JobContratoService {
                 empresa: updateData[i][0].empresa,
                 negocio: updateData[i][0].negocio,
                 reajuste: updateData[i][0].reajuste,
-                mesReajuste: updateData[i][0].reajuste,
+                mesReajuste: updateData[i][0].mesReajuste,
                 valor: updateData[i][0].valor,
               },
               where: {
@@ -237,7 +237,7 @@ export class JobContratoService {
               crContrato: {
                 create: {
                   cr: element.cr,
-                  descricaoCr: element.descricaoCr,
+                  descricaoCr: element.cr + ' - ' + element.descricaoCr,
                   pecCr: element.pecCr,
                   descricaoPecCr: element.descricaoPecCr,
                   diretorCr: element.diretorCr,

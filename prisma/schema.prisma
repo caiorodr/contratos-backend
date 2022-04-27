@@ -16,17 +16,17 @@ model Contrato {
   dataFim                String
   documento              String?            @unique @default(uuid())
   natureza               String?            @default("")
-  pec                    String
-  grupoCliente           String
-  empresa                String             @db.VarChar(1200)
+  pec                    String             @default("")
+  grupoCliente           String             @default("")
+  empresa                String             @default("") @db.VarChar(1200)
   negocio                String             @default("")
-  docSolid               String?            @db.VarChar(1200)
+  docSolid               String?            @default("") @db.VarChar(1200)
   retencaoContrato       String?            @default("")
   faturamento            String?            @default("")
   seguros                String?            @default("")
   reajuste               String             @default("")
   tipoFaturamento        String?            @default("")
-  mesReajuste            String
+  mesReajuste            String             @default("")
   tipoAss                String?            @default("")
   status                 String?            @default("")
   resumo                 String?            @default("")
