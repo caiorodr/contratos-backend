@@ -110,7 +110,7 @@ model PecContrato {
   regional          String?
   diretorRegional   String?
   diretorExecutivo  String?
-  gereteneExecutivo String?
+  gerenteExecutivo  String?
   gerenteRegional   String?
   supervisor        String?
   empresaId         String?

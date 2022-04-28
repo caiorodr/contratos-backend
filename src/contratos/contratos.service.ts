@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Contrato, Prisma } from '@prisma/client';
+import { Contrato } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateContratoDto } from './dto/create-contrato.dto';
