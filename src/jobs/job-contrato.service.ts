@@ -12,7 +12,7 @@ export class JobContratoService {
     private prisma: PrismaService
   ) {}
 
-  @Cron('20 23 17 *  * 0-6')
+  @Cron('20 34 11 *  * 0-6')
   async handleCron() {
     let updateData  : Array<any> = [];
     let createData  : Array<any> = [];
@@ -60,7 +60,7 @@ export class JobContratoService {
       diretorCr: element.diretorRegional,
       diretorExecCr: element.diretorExecutivo,
       gerenteRegCr: element.gerenteRegional,
-      gerenteCr: element.gereteneExecutivo,
+      gerenteCr: element.gerenteExecutivo,
       supervisorCr: element.supervisor,
       });
     }); 
