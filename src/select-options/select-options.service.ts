@@ -82,4 +82,18 @@ export class SelectOptionsService {
         HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+
+  async pecApi() {
+    try {
+      const retPecApi = await this.prisma.pecApi.findMany();
+
+      return retPecApi;
+    }catch (error) {
+      throw new HttpException(
+        `${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR);
+    } 
+  }
+  
 }

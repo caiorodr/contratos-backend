@@ -31,5 +31,8 @@ export class SelectOptionsController {
     return this.selectOptionsService.findOnePec(pec);
   }
 
-
+  @Get('/pecApi')
+  async pecApi() {
+    return this.selectOptionsService.pecApi();
+  }
 }

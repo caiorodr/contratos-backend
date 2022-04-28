@@ -17,14 +17,15 @@ export class CrContratoService {
     return ret
   }
 
-  async buscaCr(crDocumento: string): Promise<any> {
-    const crDocumentoValor = crDocumento;
+  async buscaCr(pec: string): Promise<any> {
 
     try {
-      const buscaCrRet = await this.prisma.$queryRawUnsafe<any>(`
-      SELECT * FROM CR_CONTRATO 
-      WHERE numContratoId = '${crDocumentoValor}'
-      ORDER BY cr`);
+      const buscaCrRet = await this.prisma.crContrato.findMany({
+        distinct: 'cr',
+        where: {
+          pecCr: pec
+        }
+      });
   
       return buscaCrRet;
     } catch (error) {
