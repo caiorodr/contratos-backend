@@ -131,7 +131,7 @@ CREATE TABLE `PEC_API` (
     `regional` VARCHAR(191) NULL,
     `diretorRegional` VARCHAR(191) NULL,
     `diretorExecutivo` VARCHAR(191) NULL,
-    `gereteneExecutivo` VARCHAR(191) NULL,
+    `gerenteExecutivo` VARCHAR(191) NULL,
     `gerenteRegional` VARCHAR(191) NULL,
     `supervisor` VARCHAR(191) NULL,
     `empresaId` VARCHAR(191) NULL,
