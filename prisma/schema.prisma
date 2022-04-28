@@ -14,60 +14,32 @@ model Contrato {
   id                     Int                @id @default(autoincrement())
   dataInicio             String
   dataFim                String
-  documento              String             @unique
-  natureza               String
-  pec                    String
-  grupoCliente           String
-  empresa                String             @db.VarChar(1200)
-  negocio                String
-  docSolid               String             @db.VarChar(1200)
-  retencaoContrato       String
-  faturamento            String
-  seguros                String
-  reajuste               String
-  mesReajuste            String
-  tipoAss                String
-  status                 String
-  chamado                String
-  resumo                 String?
-  lgpd                   Boolean
-  limiteResponsabilidade Boolean
+  documento              String?            @unique @default(uuid())
+  natureza               String?            @default("")
+  pec                    String             @default("")
+  grupoCliente           String             @default("")
+  empresa                String             @default("") @db.VarChar(1200)
+  negocio                String             @default("")
+  docSolid               String?            @default("") @db.VarChar(1200)
+  retencaoContrato       String?            @default("")
+  faturamento            String?            @default("")
+  seguros                String?            @default("")
+  reajuste               String             @default("")
+  tipoFaturamento        String?            @default("")
+  mesReajuste            String             @default("")
+  tipoAss                String?            @default("")
+  status                 String?            @default("")
+  resumo                 String?            @default("")
+  lgpd                   Boolean?           @default(false)
+  limiteResponsabilidade Boolean?           @default(false)
   valor                  Decimal            @db.Decimal(11, 2)
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
   D_E_L_E_T_             String?            @default("")
-  aditivos               Aditivo[]
   fileData               ContractFileData[]
   crContrato             CrContrato[]
 
   @@map("CONTRATO")
-}
-
-model Aditivo {
-  id                     Int       @id @default(autoincrement())
-  diretor                String
-  gerente                String
-  supervisor             String
-  pec                    String
-  cr                     String
-  dataInicio             String
-  dataFim                String
-  natureza               String
-  grupoCliente           String
-  empresa                String
-  negocio                String
-  docSolid               String
-  retencaoContrato       String
-  faturamento            String
-  reajuste               String
-  mesReajuste            String
-  tipoAss                String
-  status                 String
-  lgpd                   Boolean
-  limiteResponsabilidade Boolean
-  valor                  Decimal   @db.Decimal(11, 2)
-  documento              Contrato? @relation(fields: [numDocumento], references: [documento])
-  numDocumento           String
-
-  @@map("ADITIVO")
 }
 
 model ContractFileData {
@@ -76,6 +48,8 @@ model ContractFileData {
   mediaName    String
   contentType  String
   sizeFile     Int
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   contrato     Contrato? @relation(fields: [contratoId], references: [id])
   contratoId   Int
 
@@ -83,8 +57,8 @@ model ContractFileData {
 }
 
 model CentroCusto {
-  id             Int    @id @default(autoincrement())
-  cr             String @unique
+  id             Int      @id @default(autoincrement())
+  cr             String   @unique
   descricaoCr    String
   pecCr          String
   descricaoPecCr String
@@ -94,6 +68,8 @@ model CentroCusto {
   diretorCr      String
   diretorExecCr  String
   gerenteRegCr   String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@map("CENTRO_CUSTO")
 }
@@ -111,8 +87,77 @@ model CrContrato {
   gerenteCr      String?
   supervisorCr   String?
   valorCr        Decimal?  @db.Decimal(11, 2)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
   numContrato    Contrato? @relation(fields: [numContratoId], references: [documento])
   numContratoId  String
 
   @@map("CR_CONTRATO")
+}
+
+model PecContrato {
+  id                Int       @id @default(autoincrement())
+  pec               String?
+  descricaoPec      String?
+  grupoClienteId    String?
+  grupoCliente      String?
+  dataInicio        String?
+  dataFim           String?
+  negocioId         String?
+  negocio           String?
+  crReduzido        String?
+  descricaoCr       String?
+  regional          String?
+  diretorRegional   String?
+  diretorExecutivo  String?
+  gereteneExecutivo String?
+  gerenteRegional   String?
+  supervisor        String?
+  empresaId         String?
+  mesReajuste       String?
+  empresa           String?   @db.VarChar(1200)
+  indiceReajuste    String?
+  createdAt         DateTime? @default(now())
+  updatedAt         DateTime? @updatedAt
+  D_E_L_E_T_        String?   @default("")
+
+  @@map("PEC_CONTRATO")
+}
+
+model PecApi {
+  id                Int       @id @default(autoincrement())
+  pec               String?
+  descricaoPec      String?
+  grupoClienteId    String?
+  grupoCliente      String?
+  dataInicio        String?
+  dataFim           String?
+  negocioId         String?
+  negocio           String?
+  crReduzido        String?
+  descricaoCr       String?
+  regional          String?
+  diretorRegional   String?
+  diretorExecutivo  String?
+  gerenteExecutivo String?
+  gerenteRegional   String?
+  supervisor        String?
+  empresaId         String?
+  mesReajuste       String?
+  empresa           String?   @db.VarChar(1200)
+  indiceReajuste    String?
+  createdAt         DateTime? @default(now())
+  updatedAt         DateTime? @updatedAt
+  D_E_L_E_T_        String?   @default("")
+
+  @@map("PEC_API")
+}
+
+model logJob {
+  id         Int       @id @default(autoincrement())
+  infoLog    String    @db.LongText
+  dataInicio DateTime? @default(now())
+  dataFim    DateTime? @default(now())
+
+  @@map("LOG_JOB")
 }

@@ -9,8 +9,9 @@ export class CrContratoController {
   async findAllCr(@Param('cr') cr: string) {
     return this.crContratoService.findAllCr(cr);
   }
-  @Get('/crDocumento/:crDocumento')
-  async buscaCr(@Param('crDocumento') crDocumento: string) {
-    return this.crContratoService.buscaCr(crDocumento);
+  
+  @Get('/pec/:pec')
+  async buscaCr(@Param('pec') pec: string) {
+    return this.crContratoService.buscaCr(pec);
   }
 }
