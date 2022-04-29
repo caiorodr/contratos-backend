@@ -35,6 +35,11 @@ model Contrato {
   valor                  Decimal            @db.Decimal(11, 2)
   createdAt              DateTime           @default(now())
   updatedAt              DateTime           @updatedAt
+  updatedJuridico        DateTime?           
+  valorComparar          Decimal?           @db.Decimal(11, 2)
+  reajusteComparar       String?            @default("")
+  dataInicioComparar     String?            @default("")
+  dataFimComparar        String?            @default("")
   D_E_L_E_T_             String?            @default("")
   fileData               ContractFileData[]
   crContrato             CrContrato[]
