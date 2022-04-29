@@ -12,7 +12,7 @@ export class JobContratoService {
     private prisma: PrismaService
   ) {}
 
-  @Cron('20 34 11 *  * 0-6')
+  @Cron('20 17 17 *  * 0-6')
   async handleCron() {
     let updateData  : Array<any> = [];
     let createData  : Array<any> = [];

@@ -25,8 +25,13 @@ export class CreateContratoDto implements Prisma.ContratoCreateInput {
   valor: string | number | Prisma.Decimal;
   createdAt?: string | Date;
   updatedAt?: string | Date;
+  updatedJuridico?: string | Date;
+  valorComparar: string | number | Prisma.Decimal;
+  reajusteComparar?: string;
+  dataInicioComparar?: string;
+  dataFimComparar?: string;
   D_E_L_E_T_?: string;
   fileData?: Prisma.ContractFileDataCreateNestedManyWithoutContratoInput;
   crContrato?: Prisma.CrContratoCreateNestedManyWithoutNumContratoInput;
- 
+
 }
