@@ -101,59 +101,59 @@ model CrContrato {
 }
 
 model PecContrato {
-  id                Int       @id @default(autoincrement())
-  pec               String?
-  descricaoPec      String?
-  grupoClienteId    String?
-  grupoCliente      String?
-  dataInicio        String?
-  dataFim           String?
-  negocioId         String?
-  negocio           String?
-  crReduzido        String?
-  descricaoCr       String?
-  regional          String?
-  diretorRegional   String?
-  diretorExecutivo  String?
-  gerenteExecutivo  String?
-  gerenteRegional   String?
-  supervisor        String?
-  empresaId         String?
-  mesReajuste       String?
-  empresa           String?   @db.VarChar(1200)
-  indiceReajuste    String?
-  createdAt         DateTime? @default(now())
-  updatedAt         DateTime? @updatedAt
-  D_E_L_E_T_        String?   @default("")
+  id               Int       @id @default(autoincrement())
+  pec              String?
+  descricaoPec     String?
+  grupoClienteId   String?
+  grupoCliente     String?
+  dataInicio       String?
+  dataFim          String?
+  negocioId        String?
+  negocio          String?
+  crReduzido       String?
+  descricaoCr      String?
+  regional         String?
+  diretorRegional  String?
+  diretorExecutivo String?
+  gerenteExecutivo String?
+  gerenteRegional  String?
+  supervisor       String?
+  empresaId        String?
+  mesReajuste      String?
+  empresa          String?   @db.VarChar(1200)
+  indiceReajuste   String?
+  createdAt        DateTime? @default(now())
+  updatedAt        DateTime? @updatedAt
+  D_E_L_E_T_       String?   @default("")
 
   @@map("PEC_CONTRATO")
 }
 
 model PecApi {
-  id                Int       @id @default(autoincrement())
-  pec               String?
-  descricaoPec      String?
-  grupoClienteId    String?
-  grupoCliente      String?
-  dataInicio        String?
-  dataFim           String?
-  negocioId         String?
-  negocio           String?
-  crReduzido        String?
-  descricaoCr       String?
-  regional          String?
-  diretorRegional   String?
-  diretorExecutivo  String?
+  id               Int       @id @default(autoincrement())
+  pec              String?
+  descricaoPec     String?
+  grupoClienteId   String?
+  grupoCliente     String?
+  dataInicio       String?
+  dataFim          String?
+  negocioId        String?
+  negocio          String?
+  crReduzido       String?
+  descricaoCr      String?
+  regional         String?
+  diretorRegional  String?
+  diretorExecutivo String?
   gerenteExecutivo String?
-  gerenteRegional   String?
-  supervisor        String?
-  empresaId         String?
-  mesReajuste       String?
-  empresa           String?   @db.VarChar(1200)
-  indiceReajuste    String?
-  createdAt         DateTime? @default(now())
-  updatedAt         DateTime? @updatedAt
-  D_E_L_E_T_        String?   @default("")
+  gerenteRegional  String?
+  supervisor       String?
+  empresaId        String?
+  mesReajuste      String?
+  empresa          String?   @db.VarChar(1200)
+  indiceReajuste   String?
+  createdAt        DateTime? @default(now())
+  updatedAt        DateTime? @updatedAt
+  D_E_L_E_T_       String?   @default("")
 
   @@map("PEC_API")
 }

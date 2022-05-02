@@ -12,12 +12,19 @@ export class JobContratoService {
     private prisma: PrismaService
   ) {}
 
-  @Cron('20 17 17 *  * 0-6')
+  @Cron('20 40 13 *  * 0-6')
   async handleCron() {
     let updateData  : Array<any> = [];
     let createData  : Array<any> = [];
     let data        : Array<any> = [];
     let dateLogInit : Date = new  Date();
+
+    // DATA DE HOJE
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //Janeiro = 0
+    let yyyy = today.getFullYear();
+    let date = yyyy + '-' + mm + '-' + dd;
 
     this.createLogJob("Iniciou o processamento do JOB.", dateLogInit);
 
@@ -173,9 +180,25 @@ export class JobContratoService {
       // Valida se tem algum contrato novo para ser criado
       if( createData.length > 0 ) {
         let dateInitJob: Date = new Date();
+        let statusAtualizado: string = '';     
+        let dateApi: string = ''; 
+
+        if(dateApi > date) {
+          statusAtualizado = 'vencido';
+        }else {
+          statusAtualizado = 'revisao';
+        }
 
         try {
           createData.forEach(async (element: any,index: number) => {
+            dateApi = element.dataFim.substring(0,4) +'-'+  element.dataFim.substring(4,6)  +'-'+  element.dataFim.substring(6,8); // yyyymmdd 
+
+            if(dateApi > date) {
+              statusAtualizado = 'vencido';
+            }else {
+              statusAtualizado = 'revisao';
+            }
+
             await this.prisma.contrato.create({
               data: {
                 dataFim: element.dataFim,
@@ -186,6 +209,7 @@ export class JobContratoService {
                 pec: element.pec,
                 negocio: element.negocio,
                 valor:element.valor,
+                status: statusAtualizado,
                 crContrato: {
                   create: {
                     cr: element.cr,
@@ -222,6 +246,15 @@ export class JobContratoService {
       // Grava novos contratos quando não ah nenhum contrato na tabela.
       data.forEach( async (element: any, index: number) => {
         let dateInitJob: Date = new Date();
+        let statusAtualizado: string = ''     
+        let dateApi = element.dataFim.substring(0,4) +'-'+  element.dataFim.substring(4,6)  +'-'+  element.dataFim.substring(6,8) // yyyymmdd
+
+        if(dateApi > date) {
+          statusAtualizado = 'vencido';
+        }else {
+          statusAtualizado = 'revisao';
+        }
+
         try{
           await this.prisma.contrato.create({
             data: {
@@ -233,7 +266,8 @@ export class JobContratoService {
               mesReajuste: element.mesReajuste,
               pec: element.pec,
               negocio: element.negocio,
-              valor:element.valor,
+              valor: element.valor,
+              status: statusAtualizado,
               crContrato: {
                 create: {
                   cr: element.cr,
