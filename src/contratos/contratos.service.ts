@@ -92,12 +92,11 @@ export class ContratosService {
             ...value,
             dataFim : value.dataFim.substring(6,8) + '/' + value.dataFim.substring(4,6) + '/' + value.dataFim.substring(0,4),
             dataInicio: value.dataInicio.substring(6,8) + '/' + value.dataInicio.substring(4,6) + '/' + value.dataInicio.substring(0,4),
+            dataInicioComparar: value.dataInicioComparar.split('-').reverse().join('/'),
+            dataFimComparar: value.dataFimComparar.split('-').reverse().join('/'),
           }
         });
       });
-
-
-      
 
       ret.forEach(addAction);
 
