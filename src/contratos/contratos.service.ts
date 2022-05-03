@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Contrato } from '@prisma/client';
+import { Contrato, Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateContratoDto } from './dto/create-contrato.dto';
@@ -62,7 +62,8 @@ export class ContratosService {
       contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
       contrat.seguros, contrat.reajuste, contrat.mesReajuste, contrat.tipoAss, contrat.status,
       contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
-      contrat.valor, contrat.pec, contrat.updatedJuridico ,cr.diretorExecCr 
+      contrat.valor, contrat.pec, contrat.updatedJuridico, contrat.valorComparar, 
+      contrat.reajusteComparar, contrat.dataInicioComparar, contrat.dataFimComparar, cr.diretorExecCr 
       FROM CONTRATO AS contrat
       LEFT JOIN CR_CONTRATO AS cr 
       ON cr.numContratoId = contrat.documento
