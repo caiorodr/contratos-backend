@@ -12,21 +12,19 @@ export class JobContratoService {
     private prisma: PrismaService
   ) {}
 
-  @Cron('20 56 09 *  * 0-6')
+  @Cron('20 40 13 *  * 0-6')
   async handleCron() {
     let updateData  : Array<any> = [];
     let createData  : Array<any> = [];
     let data        : Array<any> = [];
     let dateLogInit : Date = new  Date();
 
-     // DATA DE HOJE
-    let today   : Date    = new Date();
-    let dd      : string  = String(today.getDate()).padStart(2, '0');
-    let mm      : string  = String(today.getMonth() + 1).padStart(2, '0'); //Janeiro = 0
-    let yyyy    : any     = today.getFullYear();
-    let date    : string  = yyyy + '-' + mm + '-' + dd;
-    let dateAtu : string  = '';
-    let status  : string  = '';
+    // DATA DE HOJE
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //Janeiro = 0
+    let yyyy = today.getFullYear();
+    let date = yyyy + '-' + mm + '-' + dd;
 
     this.createLogJob("Iniciou o processamento do JOB.", dateLogInit);
 
@@ -50,7 +48,7 @@ export class JobContratoService {
     }
 
     // monta array para ficar no formato do create e update para tabela contratos.
-    apiContratos.forEach( (element: any) => {      
+    apiContratos.forEach( (element: any) => {
       data.push({
       dataInicio: element.dataInicio,
       dataFim: element.dataFim,
@@ -75,7 +73,7 @@ export class JobContratoService {
     }); 
     
     // result todos os contrato ja inseridos na tabela.
-    const allContrato = await this.prisma.contrato .findMany();
+    const allContrato = await this.prisma.contrato  .findMany();
 
     // monta array com contratos a serem atualizados e criados.
     if( allContrato.length > 0 ) {
@@ -126,7 +124,6 @@ export class JobContratoService {
                 reajuste: updateData[i][0].reajuste,
                 mesReajuste: updateData[i][0].mesReajuste,
                 valor: updateData[i][0].valor,
-                status: updateData[i][0].status,
               },
               where: {
                 id: updateData[i][0].id
@@ -183,9 +180,25 @@ export class JobContratoService {
       // Valida se tem algum contrato novo para ser criado
       if( createData.length > 0 ) {
         let dateInitJob: Date = new Date();
+        let statusAtualizado: string = '';     
+        let dateApi: string = ''; 
+
+        if(dateApi > date) {
+          statusAtualizado = 'vencido';
+        }else {
+          statusAtualizado = 'revisao';
+        }
 
         try {
           createData.forEach(async (element: any,index: number) => {
+            dateApi = element.dataFim.substring(0,4) +'-'+  element.dataFim.substring(4,6)  +'-'+  element.dataFim.substring(6,8); // yyyymmdd 
+
+            if(dateApi > date) {
+              statusAtualizado = 'vencido';
+            }else {
+              statusAtualizado = 'revisao';
+            }
+
             await this.prisma.contrato.create({
               data: {
                 dataFim: element.dataFim,
@@ -195,8 +208,8 @@ export class JobContratoService {
                 mesReajuste: element.reajuste,
                 pec: element.pec,
                 negocio: element.negocio,
-                valor: element.valor,
-                status: element.status,
+                valor:element.valor,
+                status: statusAtualizado,
                 crContrato: {
                   create: {
                     cr: element.cr,
@@ -232,17 +245,16 @@ export class JobContratoService {
     }else {
       // Grava novos contratos quando não ah nenhum contrato na tabela.
       data.forEach( async (element: any, index: number) => {
-        
+        let dateInitJob: Date = new Date();
+        let statusAtualizado: string = ''     
+        let dateApi = element.dataFim.substring(0,4) +'-'+  element.dataFim.substring(4,6)  +'-'+  element.dataFim.substring(6,8) // yyyymmdd
 
-        dateAtu = element.dataFim.substring(0,4) + '-' + element.dataFim.substring(4,6) + '-' + element.dataFim.substring(6,8);
-
-        if(dateAtu < date) {
-          status = 'vencido'
+        if(dateApi > date) {
+          statusAtualizado = 'vencido';
         }else {
-          status = 'revisao'
+          statusAtualizado = 'revisao';
         }
 
-        let dateInitJob: Date = new Date();
         try{
           await this.prisma.contrato.create({
             data: {
@@ -255,7 +267,7 @@ export class JobContratoService {
               pec: element.pec,
               negocio: element.negocio,
               valor: element.valor,
-              status: status,
+              status: statusAtualizado,
               crContrato: {
                 create: {
                   cr: element.cr,
