@@ -85,7 +85,7 @@ export class ContratosService {
       AND negocio LIKE ${"'%" + negocio + "%'"}
       AND status LIKE ${"'%" + status + "%'"}
       AND tipoAss LIKE ${"'%" + tipoAss + "%'"}
-      ORDER BY contrat.id DESC LIMIT 11 OFFSET ${skipPage}`)
+      ORDER BY contrat.id DESC LIMIT 20 OFFSET ${skipPage}`)
       .then((values: any) => {
         return values.map((value: any) => {
           return {
@@ -97,13 +97,15 @@ export class ContratosService {
       });
 
 
-      function addAction(element, index, array) {
-        element.acoes = ['visualizar', 'alterar', 'baixar', 'aditivo',];
-        aRet.push(element);
-      }
+      
 
       ret.forEach(addAction);
 
+      function addAction(element, index, array) {
+        element.acoes = ['visualizar', 'alterar', 'baixar', 'aditivo',];
+        aRet.push(element);
+      } 
+      
       return aRet;
 
     } catch (error) {

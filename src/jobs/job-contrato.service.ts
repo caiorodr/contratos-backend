@@ -13,6 +13,7 @@ export class JobContratoService {
   ) {}
 
   @Cron('20 40 13 *  * 0-6')
+
   async handleCron() {
     let updateData  : Array<any> = [];
     let createData  : Array<any> = [];
@@ -25,7 +26,7 @@ export class JobContratoService {
     let mm = String(today.getMonth() + 1).padStart(2, '0'); //Janeiro = 0
     let yyyy = today.getFullYear();
     let date = yyyy + '-' + mm + '-' + dd;
-
+    
     this.createLogJob("Iniciou o processamento do JOB.", dateLogInit);
 
     const observable = this.httpService.get('http://localhost:3001/select-options/pecApi')
@@ -48,7 +49,7 @@ export class JobContratoService {
     }
 
     // monta array para ficar no formato do create e update para tabela contratos.
-    apiContratos.forEach( (element: any) => {
+    apiContratos.forEach( (element: any) => {      
       data.push({
       dataInicio: element.dataInicio,
       dataFim: element.dataFim,
@@ -73,7 +74,7 @@ export class JobContratoService {
     }); 
     
     // result todos os contrato ja inseridos na tabela.
-    const allContrato = await this.prisma.contrato  .findMany();
+    const allContrato = await this.prisma.contrato .findMany();
 
     // monta array com contratos a serem atualizados e criados.
     if( allContrato.length > 0 ) {
@@ -124,6 +125,7 @@ export class JobContratoService {
                 reajuste: updateData[i][0].reajuste,
                 mesReajuste: updateData[i][0].mesReajuste,
                 valor: updateData[i][0].valor,
+                status: updateData[i][0].status,
               },
               where: {
                 id: updateData[i][0].id
@@ -182,13 +184,7 @@ export class JobContratoService {
         let dateInitJob: Date = new Date();
         let statusAtualizado: string = '';     
         let dateApi: string = ''; 
-
-        if(dateApi > date) {
-          statusAtualizado = 'vencido';
-        }else {
-          statusAtualizado = 'revisao';
-        }
-
+        
         try {
           createData.forEach(async (element: any,index: number) => {
             dateApi = element.dataFim.substring(0,4) +'-'+  element.dataFim.substring(4,6)  +'-'+  element.dataFim.substring(6,8); // yyyymmdd 
@@ -245,11 +241,12 @@ export class JobContratoService {
     }else {
       // Grava novos contratos quando não ah nenhum contrato na tabela.
       data.forEach( async (element: any, index: number) => {
+
         let dateInitJob: Date = new Date();
         let statusAtualizado: string = ''     
         let dateApi = element.dataFim.substring(0,4) +'-'+  element.dataFim.substring(4,6)  +'-'+  element.dataFim.substring(6,8) // yyyymmdd
 
-        if(dateApi > date) {
+        if(dateApi < date) {
           statusAtualizado = 'vencido';
         }else {
           statusAtualizado = 'revisao';
