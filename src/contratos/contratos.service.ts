@@ -13,7 +13,7 @@ export class ContratosService {
 
   async create(data: CreateContratoDto, bodyCr: any, bodyData: any): Promise<Contrato> {
 
-    return this.prisma.contrato.create({data:{
+    return this.prisma.contrato.create({ data:{
       pec:data.pec,
       dataInicio: data.dataInicio,
       dataFim: data.dataFim,
@@ -156,5 +156,10 @@ export class ContratosService {
       },
     });
   }
+
+
+  async getApiPec() {
+    return await this.prisma.pecApi.findMany();
   }
+}
 

@@ -12,7 +12,7 @@ export class JobContratoService {
     private prisma: PrismaService
   ) {}
 
-  @Cron('20 40 13 *  * 0-6')
+  @Cron('00 35 14 *  * 0-6')
 
   async handleCron() {
     let updateData  : Array<any> = [];
@@ -29,7 +29,7 @@ export class JobContratoService {
     
     this.createLogJob("Iniciou o processamento do JOB.", dateLogInit);
 
-    const observable = this.httpService.get('http://localhost:3001/select-options/pecApi')
+    const observable = this.httpService.get('http://localhost:3001/contratos/pec-api')
     .pipe(
       map(
         (res) => res.data

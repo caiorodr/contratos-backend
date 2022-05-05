@@ -8,6 +8,7 @@ import { CrContratoModule } from './cr-contrato/cr-contrato.module';
 import { CardsHomeModule } from './cards-home/cards-home.module';
 import { JobsModule } from './jobs/jobs.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { OptionsModule } from './options/options.module';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     MediaModule, 
     CrContratoModule, 
     CardsHomeModule, 
-    JobsModule,
+    JobsModule, OptionsModule,
     ],
   controllers: [AppController],
   providers: [AppService],

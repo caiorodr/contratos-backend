@@ -85,4 +85,10 @@ export class ContratosController {
   async remove(@Param('id') id: string) {
     return this.contratosService.remove(+id);
   }
+
+
+  @Get('pec-api')
+  async getApi(){
+    return this.contratosService.getApiPec();
+  }
 }

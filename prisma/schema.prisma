@@ -166,3 +166,21 @@ model logJob {
 
   @@map("LOG_JOB")
 }
+
+model Seguros {
+  id         Int      @id @default(autoincrement())
+  nome       String?
+  @@map("SEGUROS")
+}
+
+model DocSolidaria {
+  id         Int      @id @default(autoincrement())
+  nome       String?
+  @@map("DOC_SOLIDARIA")
+}
+
+model RetencContratual {
+  id         Int      @id @default(autoincrement())
+  nome       String?
+  @@map("RETENC_CONTRATUAL")
+}
