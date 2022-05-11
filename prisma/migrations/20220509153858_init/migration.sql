@@ -27,6 +27,7 @@ CREATE TABLE `CONTRATO` (
     `updatedJuridico` DATETIME(3) NULL,
     `valorComparar` DECIMAL(11, 2) NULL,
     `reajusteComparar` VARCHAR(191) NULL DEFAULT '',
+    `mesReajusteComparar` VARCHAR(191) NULL DEFAULT '',
     `dataInicioComparar` VARCHAR(191) NULL DEFAULT '',
     `dataFimComparar` VARCHAR(191) NULL DEFAULT '',
     `D_E_L_E_T_` VARCHAR(191) NULL DEFAULT '',
@@ -163,7 +164,7 @@ CREATE TABLE `LOG_JOB` (
 -- CreateTable
 CREATE TABLE `SEGUROS` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `nome` VARCHAR(191) NULL,
+    `name` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -171,7 +172,7 @@ CREATE TABLE `SEGUROS` (
 -- CreateTable
 CREATE TABLE `DOC_SOLIDARIA` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `nome` VARCHAR(191) NULL,
+    `name` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -179,7 +180,31 @@ CREATE TABLE `DOC_SOLIDARIA` (
 -- CreateTable
 CREATE TABLE `RETENC_CONTRATUAL` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `nome` VARCHAR(191) NULL,
+    `name` VARCHAR(191) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `TIPO_FATURAMENTO` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `TIPO_ASS` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `REAJUSTE` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

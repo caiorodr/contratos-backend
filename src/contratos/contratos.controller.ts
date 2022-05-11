@@ -33,9 +33,9 @@ export class ContratosController {
     @Query('empresa') empresa: string,
     @Query('retencaoContrato') retencaoContrato: string,
     @Query('negocio') negocio: string,
-    @Query('status') status: string,
     @Query('regional') regional: string,
     @Query('valor') valor: Decimal,
+    @Query('status') status: string,
     @Query('tipoAss') tipoAss: string,
     
   ) {
@@ -55,9 +55,9 @@ export class ContratosController {
       empresa,
       retencaoContrato,
       negocio,
-      status,
       regional,
       valor,
+      status,
       tipoAss
     );
   }

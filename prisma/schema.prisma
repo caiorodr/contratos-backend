@@ -38,6 +38,7 @@ model Contrato {
   updatedJuridico        DateTime?           
   valorComparar          Decimal?           @db.Decimal(11, 2)
   reajusteComparar       String?            @default("")
+  mesReajusteComparar    String?            @default("")
   dataInicioComparar     String?            @default("")
   dataFimComparar        String?            @default("")
   D_E_L_E_T_             String?            @default("")
@@ -169,18 +170,36 @@ model logJob {
 
 model Seguros {
   id         Int      @id @default(autoincrement())
-  nome       String?
+  name       String?
   @@map("SEGUROS")
 }
 
 model DocSolidaria {
   id         Int      @id @default(autoincrement())
-  nome       String?
+  name       String?
   @@map("DOC_SOLIDARIA")
 }
 
 model RetencContratual {
   id         Int      @id @default(autoincrement())
-  nome       String?
+  name       String?
   @@map("RETENC_CONTRATUAL")
+}
+
+model TipoFaturamento {
+  id         Int      @id @default(autoincrement())
+  name       String?
+  @@map("TIPO_FATURAMENTO")
+}
+
+model TipoAss {
+  id         Int      @id @default(autoincrement())
+  name       String?
+  @@map("TIPO_ASS")
+}
+
+model Reajuste {
+  id         Int      @id @default(autoincrement())
+  name       String?
+  @@map("REAJUSTE")
 }

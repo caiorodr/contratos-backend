@@ -12,13 +12,14 @@ export class JobContratoService {
     private prisma: PrismaService
   ) {}
 
-  @Cron('00 35 14 *  * 0-6')
+  @Cron('40 02 14 *  * 0-6')
 
   async handleCron() {
     let updateData  : Array<any> = [];
     let createData  : Array<any> = [];
     let data        : Array<any> = [];
     let dateLogInit : Date = new  Date();
+    let MonthValidation: Array<string> = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
 
     // DATA DE HOJE
     let today = new Date();
@@ -50,6 +51,8 @@ export class JobContratoService {
 
     // monta array para ficar no formato do create e update para tabela contratos.
     apiContratos.forEach( (element: any) => {      
+
+
       data.push({
       dataInicio: element.dataInicio,
       dataFim: element.dataFim,
@@ -58,7 +61,7 @@ export class JobContratoService {
       empresa: element.empresa,
       negocio: element.negocio,
       reajuste: element.indiceReajuste,
-      mesReajuste: element.mesReajuste,
+      mesReajuste: MonthValidation[element.mesReajuste - 1],
       valor: 666.666,
       pecCr: element.pec,
       descricaoPecCr: element.descricaoPec,
