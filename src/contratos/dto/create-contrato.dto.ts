@@ -4,7 +4,6 @@ import { Prisma } from '@prisma/client';
 export class CreateContratoDto implements Prisma.ContratoCreateInput {
   dataInicio: string;
   dataFim: string;
-  documento?: string;
   natureza?: string;
   pec?: string;
   grupoCliente?: string;

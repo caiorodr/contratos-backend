@@ -37,7 +37,7 @@ export class ContratosController {
     @Query('valor') valor: Decimal,
     @Query('status') status: string,
     @Query('tipoAss') tipoAss: string,
-    
+
   ) {
     return this.contratosService.findAll(
       page,
@@ -63,22 +63,17 @@ export class ContratosController {
   }
 
 
-  @Get('documento')
-  async findDesc() {
-    return this.contratosService.findDesc();
+  @Get('/idContrato/:idContrato')
+  async findOne(@Param('idContrato') idContrato: number) {
+    return this.contratosService.findUnique(Number(idContrato));
   }
 
-  @Get('/documento/:documento')
-  async findOne(@Param('documento') documento: string) {
-    return this.contratosService.findOne(documento);
-  }
-
-  @Patch(':documento')
+  @Patch(':idContrato')
   async update(
-    @Param('documento') documento: string,
+    @Param('idContrato') idContrato: number,
     @Body() updateConrtatoDto: UpdateContratoDto,
   ) {
-    return this.contratosService.update(documento, updateConrtatoDto);
+    return this.contratosService.update(Number(idContrato), updateConrtatoDto);
   }
 
   @Delete(':id')
@@ -88,7 +83,7 @@ export class ContratosController {
 
 
   @Get('pec-api')
-  async getApi(){
+  async getApi() {
     return this.contratosService.getApiPec();
   }
 }

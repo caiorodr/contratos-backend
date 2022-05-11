@@ -1,4 +1,4 @@
-import { HttpService } from '@nestjs/axios'; 
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { lastValueFrom, map } from 'rxjs';
@@ -6,20 +6,31 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class JobContratoService {
-
   constructor(
     private httpService: HttpService,
-    private prisma: PrismaService
-  ) {}
+    private prisma: PrismaService,
+  ) { }
 
-  @Cron('00 47 11 * * 0-6')
-
+  @Cron('00 53 16 * * 0-6')
   async handleCron() {
-    let updateData  : Array<any> = [];
-    let createData  : Array<any> = [];
-    let data        : Array<any> = [];
-    let dateLogInit : Date = new  Date();
-    let MonthValidation: Array<string> = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
+    let updateData: Array<any> = [];
+    let createData: Array<any> = [];
+    let data: Array<any> = [];
+    let dateLogInit: Date = new Date();
+    let MonthValidation: Array<string> = [
+      'JANEIRO',
+      'FEVEREIRO',
+      'MARÇO',
+      'ABRIL',
+      'MAIO',
+      'JUNHO',
+      'JULHO',
+      'AGOSTO',
+      'SETEMBRO',
+      'OUTUBRO',
+      'NOVEMBRO',
+      'DEZEMBRO',
+    ];
 
     // DATA DE HOJE
     let today = new Date();
@@ -27,15 +38,12 @@ export class JobContratoService {
     let mm = String(today.getMonth() + 1).padStart(2, '0'); //Janeiro = 0
     let yyyy = today.getFullYear();
     let date = yyyy + '-' + mm + '-' + dd;
-    
-    this.createLogJob("Iniciou o processamento do JOB.", dateLogInit);
 
-    const observable = this.httpService.get('http://localhost:3001/contratos/pec-api')
-    .pipe(
-      map(
-        (res) => res.data
-        )
-      );  
+    this.createLogJob('Iniciou o processamento do JOB.', dateLogInit);
+
+    const observable = this.httpService
+      .get('http://localhost:3001/contratos/pec-api')
+      .pipe(map((res) => res.data));
 
     // result api microserviço pec
     const apiContratos = await lastValueFrom(observable);
@@ -43,79 +51,76 @@ export class JobContratoService {
     const deleteAllPec = await this.prisma.pecContrato.deleteMany();
 
     // realiza a criação dos contratos atualizado.
-    if (deleteAllPec.count > 0 || apiContratos.length > 0 ) {
+    if (deleteAllPec.count > 0 || apiContratos.length > 0) {
       await this.prisma.pecContrato.createMany({
-        data: apiContratos
+        data: apiContratos,
       });
     }
 
     // monta array para ficar no formato do create e update para tabela contratos.
-    apiContratos.forEach( (element: any) => {      
-
-
+    apiContratos.forEach((element: any) => {
       data.push({
-      dataInicio: element.dataInicio,
-      dataFim: element.dataFim,
-      pec: element.descricaoPec,
-      grupoCliente: element.grupoCliente,
-      empresa: element.empresa,
-      negocio: element.negocio,
-      reajuste: element.indiceReajuste,
-      mesReajuste: MonthValidation[element.mesReajuste - 1],
-      valor: 666.666,
-      pecCr: element.pec,
-      descricaoPecCr: element.descricaoPec,
-      cr: element.crReduzido,
-      descricaoCr: element.descricaoCr,
-      regionalCr: element.regional,
-      diretorCr: element.diretorRegional,
-      diretorExecCr: element.diretorExecutivo,
-      gerenteRegCr: element.gerenteRegional,
-      gerenteCr: element.gerenteExecutivo,
-      supervisorCr: element.supervisor,
+        dataInicio: element.dataInicio,
+        dataFim: element.dataFim,
+        pec: element.descricaoPec,
+        grupoCliente: element.grupoCliente,
+        empresa: element.empresa,
+        negocio: element.negocio,
+        reajuste: element.indiceReajuste,
+        mesReajuste: MonthValidation[element.mesReajuste - 1],
+        valor: 666.666,
+        pecCr: element.pec,
+        descricaoPecCr: element.descricaoPec,
+        cr: element.crReduzido,
+        descricaoCr: element.descricaoCr,
+        regionalCr: element.regional,
+        diretorCr: element.diretorRegional,
+        diretorExecCr: element.diretorExecutivo,
+        gerenteRegCr: element.gerenteRegional,
+        gerenteCr: element.gerenteExecutivo,
+        supervisorCr: element.supervisor,
       });
-    }); 
-    
+    });
+
     // result todos os contrato ja inseridos na tabela.
-    const allContrato = await this.prisma.contrato .findMany();
+    const allContrato = await this.prisma.contrato.findMany();
 
     // monta array com contratos a serem atualizados e criados.
-    if( allContrato.length > 0 ) {
-      for ( let x = 0; x < allContrato.length; x++ ) {
+    if (allContrato.length > 0) {
+      for (let x = 0; x < allContrato.length; x++) {
         let validContrato: boolean = true;
-  
+
         for (let i = 0; i < data.length; i++) {
           let arrayUpdate: Array<any> = [];
 
-          if( allContrato[i].pec == data[x].pec ) {
+          if (allContrato[i].pec == data[x].pec) {
             arrayUpdate.push(data[x]);
-            arrayUpdate = arrayUpdate.map((value: any) => {            
+            arrayUpdate = arrayUpdate.map((value: any) => {
               return {
                 ...value,
-                id: allContrato[x].id
-              }
+                id: allContrato[x].id,
+              };
             });
 
-            updateData.push( arrayUpdate );
+            updateData.push(arrayUpdate);
             validContrato = false;
             break;
           }
-  
-          if(allContrato.length - 1 == i) {
-            if(validContrato) {
+
+          if (allContrato.length - 1 == i) {
+            if (validContrato) {
               createData.push(data[x]);
             }
           }
         }
       }
-      
-      if( updateData.length > 0 ) {
+
+      if (updateData.length > 0) {
         let updateCrContrato: Array<any> = [];
         let dateInitJob: Date = new Date();
 
         // Atualiza a tabela de contratos
-        for (let i = 0; i < updateData.length; i++) {  
-                  
+        for (let i = 0; i < updateData.length; i++) {
           try {
             const updateContrato = await this.prisma.contrato.update({
               data: {
@@ -131,26 +136,33 @@ export class JobContratoService {
                 status: updateData[i][0].status,
               },
               where: {
-                id: updateData[i][0].id
+                id: updateData[i][0].id,
               },
               include: {
-                crContrato: true
+                crContrato: true,
               },
             });
-            
+
             updateCrContrato.push(updateContrato);
 
-            if(updateData.length - 1 == i) {
-              this.createLogJob(`${updateData.length.toString()} - Contratos atualizados com sucesso.`,dateInitJob,  new Date());
+            if (updateData.length - 1 == i) {
+              this.createLogJob(
+                `${updateData.length.toString()} - Contratos atualizados com sucesso.`,
+                dateInitJob,
+                new Date(),
+              );
             }
-          } catch(error) {
-            this.createLogJob(`Erro ao atualizar a tabela de Contrato: log - ${error}`,dateInitJob,  new Date());
+          } catch (error) {
+            this.createLogJob(
+              `Erro ao atualizar a tabela de Contrato: log - ${error}`,
+              dateInitJob,
+              new Date(),
+            );
           }
         }
 
         // Atualiza a tabela de CR's
         for (let i = 0; i < updateCrContrato.length; i++) {
-
           dateInitJob = new Date();
 
           try {
@@ -159,7 +171,8 @@ export class JobContratoService {
                 cr: updateCrContrato[i].crContrato[0].cr,
                 descricaoCr: updateCrContrato[i].crContrato[0].descricaoCr,
                 pecCr: updateCrContrato[i].crContrato[0].pecCr,
-                descricaoPecCr: updateCrContrato[i].crContrato[0].descricaoPecCr,
+                descricaoPecCr:
+                  updateCrContrato[i].crContrato[0].descricaoPecCr,
                 diretorCr: updateCrContrato[i].crContrato[0].diretorCr,
                 diretorExecCr: updateCrContrato[i].crContrato[0].diretorExecCr,
                 gerenteRegCr: updateCrContrato[i].crContrato[0].gerenteRegCr,
@@ -167,34 +180,47 @@ export class JobContratoService {
                 supervisorCr: updateCrContrato[i].crContrato[0].supervisorCr,
                 regionalCr: updateCrContrato[i].crContrato[0].regionalCr,
               },
-              where:{
-                id: updateCrContrato[i].crContrato[0].id
+              where: {
+                id: updateCrContrato[i].crContrato[0].id,
               },
             });
-          }catch(error) {
-            this.createLogJob(`Erro ao atualizar a tabela de CR's: log - ${error}`,dateInitJob,  new Date());
+          } catch (error) {
+            this.createLogJob(
+              `Erro ao atualizar a tabela de CR's: log - ${error}`,
+              dateInitJob,
+              new Date(),
+            );
           }
-         
+
           //! Valida o ultimo Cr a ser atualizado para criar o log.
-          if(updateCrContrato.length - 1 == i){
-            this.createLogJob('Cr atualizado com sucesso.',dateInitJob,  new Date());
+          if (updateCrContrato.length - 1 == i) {
+            this.createLogJob(
+              'Cr atualizado com sucesso.',
+              dateInitJob,
+              new Date(),
+            );
           }
         }
       }
-      
-      // Valida se tem algum contrato novo para ser criado
-      if( createData.length > 0 ) {
-        let dateInitJob: Date = new Date();
-        let statusAtualizado: string = '';     
-        let dateApi: string = ''; 
-        
-        try {
-          createData.forEach(async (element: any,index: number) => {
-            dateApi = element.dataFim.substring(0,4) +'-'+  element.dataFim.substring(4,6)  +'-'+  element.dataFim.substring(6,8); // yyyymmdd 
 
-            if(dateApi > date) {
+      // Valida se tem algum contrato novo para ser criado
+      if (createData.length > 0) {
+        let dateInitJob: Date = new Date();
+        let statusAtualizado: string = '';
+        let dateApi: string = '';
+
+        try {
+          createData.forEach(async (element: any, index: number) => {
+            dateApi =
+              element.dataFim.substring(0, 4) +
+              '-' +
+              element.dataFim.substring(4, 6) +
+              '-' +
+              element.dataFim.substring(6, 8); // yyyymmdd
+
+            if (dateApi > date) {
               statusAtualizado = 'vencido';
-            }else {
+            } else {
               statusAtualizado = 'revisao';
             }
 
@@ -202,12 +228,12 @@ export class JobContratoService {
               data: {
                 dataFim: element.dataFim,
                 dataInicio: element.dataInicio,
-                empresa: element.empresa ,
+                empresa: element.empresa,
                 grupoCliente: element.grupoCliente,
                 mesReajuste: element.reajuste,
                 pec: element.pec,
                 negocio: element.negocio,
-                valor:element.valor,
+                valor: element.valor,
                 status: statusAtualizado,
                 crContrato: {
                   create: {
@@ -221,46 +247,60 @@ export class JobContratoService {
                     gerenteCr: element.gerenteCr,
                     supervisorCr: element.supervisorCr,
                     regionalCr: element.regionalCr,
-                    valorCr: element.valor
+                    valorCr: element.valor,
                   },
                 },
               },
             });
 
-            if(createData.length - 1 == index) {
-              this.createLogJob(`Criou ${createData.length.toString()} novos contratos.`,dateInitJob,  new Date());
+            if (createData.length - 1 == index) {
+              this.createLogJob(
+                `Criou ${createData.length.toString()} novos contratos.`,
+                dateInitJob,
+                new Date(),
+              );
             }
-
           });
-        }catch(error) {
-          this.createLogJob(`Erro ao criar novos contratos: log - ${error}`,dateInitJob,  new Date());
+        } catch (error) {
+          this.createLogJob(
+            `Erro ao criar novos contratos: log - ${error}`,
+            dateInitJob,
+            new Date(),
+          );
         }
       }
 
       setTimeout(() => {
-        this.createLogJob("Finalizou o processamento do JOB.", dateLogInit ,new Date());
+        this.createLogJob(
+          'Finalizou o processamento do JOB.',
+          dateLogInit,
+          new Date(),
+        );
       }, 500);
-
-    }else {
+    } else {
       // Grava novos contratos quando não ah nenhum contrato na tabela.
-      data.forEach( async (element: any, index: number) => {
-
+      data.forEach(async (element: any, index: number) => {
         let dateInitJob: Date = new Date();
-        let statusAtualizado: string = ''     
-        let dateApi = element.dataFim.substring(0,4) +'-'+  element.dataFim.substring(4,6)  +'-'+  element.dataFim.substring(6,8) // yyyymmdd
+        let statusAtualizado: string = '';
+        let dateApi =
+          element.dataFim.substring(0, 4) +
+          '-' +
+          element.dataFim.substring(4, 6) +
+          '-' +
+          element.dataFim.substring(6, 8); // yyyymmdd
 
-        if(dateApi < date) {
+        if (dateApi < date) {
           statusAtualizado = 'vencido';
-        }else {
+        } else {
           statusAtualizado = 'revisao';
         }
 
-        try{
+        try {
           await this.prisma.contrato.create({
             data: {
               dataFim: element.dataFim,
               dataInicio: element.dataInicio,
-              empresa: element.empresa ,
+              empresa: element.empresa,
               grupoCliente: element.grupoCliente,
               reajuste: element.reajuste,
               mesReajuste: element.mesReajuste,
@@ -280,36 +320,46 @@ export class JobContratoService {
                   gerenteCr: element.gerenteCr,
                   supervisorCr: element.supervisorCr,
                   regionalCr: element.regionalCr,
-                  valorCr: element.valor
+                  valorCr: element.valor,
                 },
               },
             },
           });
 
-          if(data.length - 1 == index) {
-            this.createLogJob(`Criou ${data.length.toString()} contratos.`,dateInitJob,  new Date());
+          if (data.length - 1 == index) {
+            this.createLogJob(
+              `Criou ${data.length.toString()} contratos.`,
+              dateInitJob,
+              new Date(),
+            );
 
             setTimeout(() => {
-              this.createLogJob("Finalizou o processamento do JOB.", dateLogInit ,new Date());
+              this.createLogJob(
+                'Finalizou o processamento do JOB.',
+                dateLogInit,
+                new Date(),
+              );
             }, 500);
           }
-
-        }catch (error) {
-          this.createLogJob(`Ocorreu um erro ao criar o contrato: ${element.pec} : log - ${error}`,dateInitJob, new Date());
+        } catch (error) {
+          this.createLogJob(
+            `Ocorreu um erro ao criar o contrato: ${element.pec} : log - ${error}`,
+            dateInitJob,
+            new Date(),
+          );
         }
-      });        
+      });
     }
   }
 
   //! Grava log do processamento do job.
-  async createLogJob(textInfoLog: string, dateInit?: Date, dateFim?: Date){
-
+  async createLogJob(textInfoLog: string, dateInit?: Date, dateFim?: Date) {
     await this.prisma.logJob.create({
       data: {
-        infoLog:  textInfoLog,
+        infoLog: textInfoLog,
         dataInicio: dateInit,
-        dataFim: dateFim
-      }
+        dataFim: dateFim,
+      },
     });
   }
 }
