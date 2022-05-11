@@ -14,12 +14,12 @@ export class OptionsService {
         try{
             if (validValue == '' && (validFilter.length > 0 || validFilter == '')){
             validRetSeguros = await this.prisma.$queryRawUnsafe<Seguros>
-                (`SELECT name AS value, name AS label FROM seguros
+                (`SELECT name AS value, name AS label FROM SEGUROS
                 WHERE name LIKE '%${validFilter}%'`)
             }else {
             validValue = validValue.split(",").join("','");
             validRetSeguros = await this.prisma.$queryRawUnsafe<Seguros>
-                (`SELECT name AS value, name AS label FROM seguros
+                (`SELECT name AS value, name AS label FROM SEGUROS
                 WHERE name IN ('${validValue}')`)
             }
 
@@ -40,14 +40,14 @@ export class OptionsService {
         try{
             if (validValue == '' && (validFilter.length > 0 || validFilter == '')){
             validRetDocSolidaria = await this.prisma.$queryRawUnsafe<DocSolidaria>
-                (`SELECT name AS value, name AS label FROM doc_solidaria
+                (`SELECT name AS value, name AS label FROM DOC_SOLIDARIA
                 WHERE name LIKE '%${validFilter}%'
                 ORDER BY name`);
 
             }else if (validFilter == '' && validValue.length > 0){
             validValue = validValue.split(",").join("','");
             validRetDocSolidaria = await this.prisma.$queryRawUnsafe<DocSolidaria>
-                (`SELECT name AS value, name AS label FROM doc_solidaria
+                (`SELECT name AS value, name AS label FROM DOC_SOLIDARIA
                 WHERE name IN ('${validValue}')
                 ORDER BY name`);
             }
@@ -62,7 +62,7 @@ export class OptionsService {
 
     async findRetencContratual(){
         const retRetenc = await this.prisma.$queryRaw<RetencContratual>`
-        SELECT name AS value, name AS label FROM retenc_contratual
+        SELECT name AS value, name AS label FROM RETENC_CONTRATUAL
         ORDER BY name`
         
         return  {items: retRetenc} 
@@ -70,7 +70,7 @@ export class OptionsService {
 
     async findTipoAss(){
         const retTipoAss = await this.prisma.$queryRaw<TipoAss>`
-        SELECT name AS value, name AS label FROM tipo_ass
+        SELECT name AS value, name AS label FROM TIPO_ASS
         ORDER BY name`
         
         return  {items: retTipoAss} 
@@ -78,7 +78,7 @@ export class OptionsService {
 
     async findTipoFaturamento(){
         const retTipoFat = await this.prisma.$queryRaw<TipoFaturamento>`
-        SELECT name AS value, name AS label FROM tipo_faturamento
+        SELECT name AS value, name AS label FROM TIPO_FATURAMENTO
         ORDER BY name`
         
         return  {items: retTipoFat} 
@@ -86,8 +86,7 @@ export class OptionsService {
 
     async findReajuste(){
         const retReajuste = await this.prisma.$queryRaw<Reajuste>`
-        SELECT name AS value, name AS label FROM reajuste
-        ORDER BY name`
+        SELECT name AS value, name AS label FROM REAJUSTE`
         
         return  {items: retReajuste} 
     }

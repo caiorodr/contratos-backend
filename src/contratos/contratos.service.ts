@@ -57,10 +57,10 @@ export class ContratosService {
 
     try {
       const ret = await this.prisma.$queryRawUnsafe<any>(`
-      SELECT DISTINCT  contrat.dataInicio, contrat.dataFim,
+      SELECT DISTINCT contrat.id, contrat.dataInicio, contrat.dataFim,
       contrat.documento, contrat.natureza, contrat.grupoCliente, contrat.empresa,
       contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
-      contrat.seguros, contrat.reajuste, contrat.mesReajuste, contrat.tipoAss, contrat.status,
+      contrat.seguros, RTRIM(contrat.reajuste) AS reajuste, contrat.mesReajuste, contrat.tipoAss, contrat.status,
       contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
       contrat.valor, contrat.pec, contrat.updatedJuridico, contrat.valorComparar, 
       contrat.reajusteComparar, contrat.mesReajusteComparar, contrat.dataInicioComparar, 
@@ -95,6 +95,7 @@ export class ContratosService {
             dataInicio: value.dataInicio.substring(6,8) + '/' + value.dataInicio.substring(4,6) + '/' + value.dataInicio.substring(0,4),
             dataInicioComparar: value.dataInicioComparar.split('-').reverse().join('/'),
             dataFimComparar: value.dataFimComparar.split('-').reverse().join('/'),
+            
           }
         });
       });
