@@ -1,8 +1,10 @@
 import { HttpService } from '@nestjs/axios'; 
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { lastValueFrom, map } from 'rxjs';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PecContrato } from '@prisma/client';
+
 
 @Injectable()
 export class JobContratoService {
@@ -12,7 +14,7 @@ export class JobContratoService {
     private prisma: PrismaService
   ) {}
 
-  @Cron('00 47 11 * * 0-6')
+  @Cron('10 41 16 * * 0-6')
 
   async handleCron() {
     let updateData  : Array<any> = [];
@@ -27,10 +29,22 @@ export class JobContratoService {
     let mm = String(today.getMonth() + 1).padStart(2, '0'); //Janeiro = 0
     let yyyy = today.getFullYear();
     let date = yyyy + '-' + mm + '-' + dd;
+
+    const headersOptions = {
+      'Content-Type': 'application/json',
+      'authenticationToken': 'M0IxTFFSWlgtSU8zRS1WT1dLLUY5RkUtRDZTMldMS1hXTDBU'
+    }
+    
+    const header = {                                                                                                                                                                                 
+      headers: headersOptions
+    };
+    const dataBody = {
+      "dataHoraAtualizacao": null
+    };
     
     this.createLogJob("Iniciou o processamento do JOB.", dateLogInit);
 
-    const observable = this.httpService.get('http://localhost:3001/contratos/pec-api')
+    const observable = this.httpService.post('https://ms-pec-api-dswen62thq-ue.a.run.app/api/pec/listarContratos', dataBody, header)
     .pipe(
       map(
         (res) => res.data
@@ -42,42 +56,69 @@ export class JobContratoService {
     // deleta todos os contratos da tabela intermediaria
     const deleteAllPec = await this.prisma.pecContrato.deleteMany();
 
+
     // realiza a criação dos contratos atualizado.
+    
     if (deleteAllPec.count > 0 || apiContratos.length > 0 ) {
-      await this.prisma.pecContrato.createMany({
-        data: apiContratos
-      });
+
+      apiContratos.forEach(async (contrato: any, index: number) => {
+        try{
+          await this.prisma.pecContrato.create({
+            data: {
+              descricaoPec: contrato.desc_contrato == null ? "": contrato.desc_contrato.trim(),
+              grupoCliente: contrato.grupo_cliente == null ? "": contrato.grupo_cliente.trim(),
+              dataInicio: contrato.data_inicio == null ? "": contrato.data_inicio.trim(),
+              dataFim: contrato.data_fim == null ? "": contrato.data_fim.trim(),
+              empresa: contrato.empresa == null ? "": contrato.empresa.trim(),
+              negocio: contrato.negocio == null ? "": contrato.negocio.trim(),
+              indiceReajuste: contrato.indice_reajuste1 == null ? "": contrato.indice_reajuste1.trim(),
+              mesReajuste: MonthValidation[contrato.mes_reajuste1 - 1],
+              pec: contrato.numero_pec == null ? "": contrato.numero_pec.trim(),
+              crReduzido: contrato.cr_reduzido == null ? "": contrato.cr_reduzido.trim(),
+              descricaoCr: contrato.descricao_cr == null ? "": contrato.descricao_cr.trim(),
+              regional: contrato.regional_cr == null ? "": contrato.regional_cr.trim(),
+              diretorRegional: contrato.diretor_regional == null ? "": contrato.diretor_regional.trim(),
+              diretorExecutivo: contrato.diretor_executivo == null ? "": contrato.diretor_executivo.trim(),
+              gerenteRegional: contrato.gerente_regional == null ? "": contrato.gerente_regional.trim(),
+              gerenteExecutivo: contrato.gerente == null ? "": contrato.gerente.trim(),
+              supervisor: contrato.supervisor == null ? "": contrato.supervisor.trim(),
+            }
+          });
+      }catch (error) {
+          throw new HttpException('Parâmetro invalido.' + error, HttpStatus.INTERNAL_SERVER_ERROR);}
+      })
     }
+  
 
     // monta array para ficar no formato do create e update para tabela contratos.
     apiContratos.forEach( (element: any) => {      
 
 
       data.push({
-      dataInicio: element.dataInicio,
-      dataFim: element.dataFim,
-      pec: element.descricaoPec,
-      grupoCliente: element.grupoCliente,
-      empresa: element.empresa,
-      negocio: element.negocio,
-      reajuste: element.indiceReajuste,
-      mesReajuste: MonthValidation[element.mesReajuste - 1],
+      pec: element.desc_contrato == null ? "": element.desc_contrato.trim(),
+      grupoCliente: element.grupo_cliente == null ? "": element.grupo_cliente.trim(),
+      dataInicio: element.data_inicio == null ? "": element.data_inicio.trim(),
+      dataFim: element.data_fim == null ? "": element.data_fim.trim(),
+      empresa: element.empresa == null ? "": element.empresa.trim(),
+      negocio: element.negocio == null ? "": element.negocio.trim(),
+      reajuste: element.indice_reajuste1 == null ? "": element.indice_reajuste1.trim(),
+      mesReajuste: MonthValidation[element.mes_reajuste1 - 1],
       valor: 666.666,
-      pecCr: element.pec,
-      descricaoPecCr: element.descricaoPec,
-      cr: element.crReduzido,
-      descricaoCr: element.descricaoCr,
-      regionalCr: element.regional,
-      diretorCr: element.diretorRegional,
-      diretorExecCr: element.diretorExecutivo,
-      gerenteRegCr: element.gerenteRegional,
-      gerenteCr: element.gerenteExecutivo,
-      supervisorCr: element.supervisor,
+      pecCr: element.numero_pec == null ? "": element.indice_reajuste1.trim(),
+      descricaoPecCr: element.desc_contrato == null ? "": element.indice_reajuste1.trim(),
+      cr: element.cr_reduzido == null ? "": element.indice_reajuste1.trim(),
+      descricaoCr: element.descricao_cr == null ? "": element.indice_reajuste1.trim(),
+      regionalCr: element.regional_cr == null ? "": element.indice_reajuste1.trim(),
+      diretorCr: element.diretor_regional == null ? "": element.indice_reajuste1.trim(),
+      diretorExecCr: element.diretor_executivo == null ? "": element.indice_reajuste1.trim(),
+      gerenteRegCr: element.gerente_regional == null ? "": element.indice_reajuste1.trim(),
+      gerenteCr: element.gerente == null ? "": element.indice_reajuste1.trim(),
+      supervisorCr: element.supervisor == null ? "": element.indice_reajuste1.trim(),
       });
     }); 
     
     // result todos os contrato ja inseridos na tabela.
-    const allContrato = await this.prisma.contrato .findMany();
+    const allContrato = await this.prisma.contrato.findMany();
 
     // monta array com contratos a serem atualizados e criados.
     if( allContrato.length > 0 ) {
