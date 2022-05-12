@@ -1,11 +1,9 @@
-import { Controller, Get, HttpStatus, NotFoundException, Param, Post, Query, Req, Res, ServiceUnavailableException, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, HttpStatus, NotFoundException, Post, Query, Req, Res, ServiceUnavailableException, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { ContractFileData } from "@prisma/client";
 import { Response, Request } from 'express';
 import { StorageFile } from "src/storage/storage-file";
 import { StorageService } from "src/storage/storage.service";
 import { CreateFileDto } from "./dto/create-file.dto";
-import { UpdateFileDto } from "./dto/update-file.dto";
 import { MediaService } from "./media.service";
 
 @Controller('media')
@@ -24,19 +22,19 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File, @Req() req: Request, @Res() res: Response,
   ) {
 
-    const fileName = req.body.data.substring(1, req.body.data.length - 1)
+    const body = JSON.parse(req.body.data)
     await this.storageService.save(
-      fileName,
+      body.mediaName,
       file.buffer,
     );
 
-    res.status(HttpStatus.CREATED).json(fileName);
+    res.status(HttpStatus.CREATED).json(body);
   }
 
 
   @Post('file')
   findUniqueFile(
-    @Query('fileData') fileData: CreateFileDto,
+    @Body() fileData: CreateFileDto
   ) {
     return this.mediaService.findUniqueFile(fileData)
   }

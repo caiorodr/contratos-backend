@@ -8,7 +8,7 @@ export class MediaService {
 
   async findUniqueFile(data: CreateFileDto) {
     try {
-      return await this.prisma.contractFileData.createMany({
+      return await this.prisma.contractFileData.create({
         data
       })
 
