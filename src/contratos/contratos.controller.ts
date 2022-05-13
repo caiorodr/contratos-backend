@@ -1,4 +1,3 @@
-// eslint-disable-next-line prettier/prettier
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { Decimal } from '@prisma/client/runtime';
 import { ContratosService } from './contratos.service';
@@ -7,14 +6,8 @@ import { UpdateContratoDto } from './dto/update-contrato.dto';
 
 @Controller('contratos')
 export class ContratosController {
-  constructor(private readonly contratosService: ContratosService) { }
+  constructor(private readonly contratosService: ContratosService) {}
 
-  @Post()
-  async create(@Body() createContratoDto: CreateContratoDto) {
-    const bodyCr = createContratoDto.crContrato;
-    const bodyData = createContratoDto.fileData;
-    return this.contratosService.create(createContratoDto, bodyCr, bodyData);
-  }
 
   @Get()
   async findAll(
@@ -37,7 +30,6 @@ export class ContratosController {
     @Query('valor') valor: Decimal,
     @Query('status') status: string,
     @Query('tipoAss') tipoAss: string,
-    
   ) {
     return this.contratosService.findAll(
       page,
@@ -58,10 +50,9 @@ export class ContratosController {
       regional,
       valor,
       status,
-      tipoAss
+      tipoAss,
     );
   }
-
 
   @Get('documento')
   async findDesc() {
@@ -84,11 +75,5 @@ export class ContratosController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.contratosService.remove(+id);
-  }
-
-
-  @Get('pec-api')
-  async getApi(){
-    return this.contratosService.getApiPec();
   }
 }

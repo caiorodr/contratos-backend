@@ -1,36 +1,45 @@
 -- CreateTable
 CREATE TABLE `CONTRATO` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `dataInicio` VARCHAR(191) NOT NULL,
-    `dataFim` VARCHAR(191) NOT NULL,
-    `documento` VARCHAR(191) NULL,
-    `natureza` VARCHAR(191) NULL DEFAULT '',
+    `dataInicio` VARCHAR(191) NULL,
+    `dataFim` VARCHAR(191) NULL,
+    `documento` VARCHAR(191) NOT NULL,
+    `natureza` VARCHAR(191) NOT NULL DEFAULT '',
     `pec` VARCHAR(191) NOT NULL DEFAULT '',
     `grupoCliente` VARCHAR(191) NOT NULL DEFAULT '',
     `empresa` VARCHAR(1200) NOT NULL DEFAULT '',
     `negocio` VARCHAR(191) NOT NULL DEFAULT '',
-    `docSolid` VARCHAR(1200) NULL DEFAULT '',
-    `retencaoContrato` VARCHAR(191) NULL DEFAULT '',
-    `faturamento` VARCHAR(191) NULL DEFAULT '',
-    `seguros` VARCHAR(191) NULL DEFAULT '',
-    `reajuste` VARCHAR(191) NOT NULL DEFAULT '',
-    `tipoFaturamento` VARCHAR(191) NULL DEFAULT '',
-    `mesReajuste` VARCHAR(191) NOT NULL DEFAULT '',
-    `tipoAss` VARCHAR(191) NULL DEFAULT '',
-    `status` VARCHAR(191) NULL DEFAULT '',
-    `resumo` VARCHAR(191) NULL DEFAULT '',
-    `lgpd` BOOLEAN NULL DEFAULT false,
-    `limiteResponsabilidade` BOOLEAN NULL DEFAULT false,
-    `valor` DECIMAL(11, 2) NOT NULL,
+    `docSolid` VARCHAR(1200) NOT NULL DEFAULT '',
+    `retencaoContrato` VARCHAR(191) NOT NULL DEFAULT '',
+    `faturamento` VARCHAR(191) NOT NULL DEFAULT '',
+    `seguros` VARCHAR(191) NOT NULL DEFAULT '',
+    `tipoFaturamento` VARCHAR(191) NOT NULL DEFAULT '',
+    `reajuste1` VARCHAR(191) NOT NULL DEFAULT '',
+    `mesReajuste1` VARCHAR(191) NOT NULL DEFAULT '',
+    `reajuste2` VARCHAR(191) NOT NULL DEFAULT '',
+    `mesReajuste2` VARCHAR(191) NOT NULL DEFAULT '',
+    `reajuste3` VARCHAR(191) NOT NULL DEFAULT '',
+    `mesReajuste3` VARCHAR(191) NOT NULL DEFAULT '',
+    `tipoAss` VARCHAR(191) NOT NULL DEFAULT '',
+    `status` VARCHAR(191) NOT NULL DEFAULT '',
+    `statusPec` INTEGER NULL,
+    `resumo` VARCHAR(191) NOT NULL DEFAULT '',
+    `lgpd` BOOLEAN NOT NULL DEFAULT false,
+    `limiteResponsabilidade` BOOLEAN NOT NULL DEFAULT false,
+    `valor` DECIMAL(15, 2) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `updatedJuridico` DATETIME(3) NULL,
-    `valorComparar` DECIMAL(11, 2) NULL,
-    `reajusteComparar` VARCHAR(191) NULL DEFAULT '',
-    `mesReajusteComparar` VARCHAR(191) NULL DEFAULT '',
-    `dataInicioComparar` VARCHAR(191) NULL DEFAULT '',
-    `dataFimComparar` VARCHAR(191) NULL DEFAULT '',
-    `D_E_L_E_T_` VARCHAR(191) NULL DEFAULT '',
+    `valorComparar` DECIMAL(15, 2) NULL,
+    `reajusteComparar1` VARCHAR(191) NOT NULL DEFAULT '',
+    `mesReajusteComparar1` VARCHAR(191) NOT NULL DEFAULT '',
+    `reajusteComparar2` VARCHAR(191) NOT NULL DEFAULT '',
+    `mesReajusteComparar2` VARCHAR(191) NOT NULL DEFAULT '',
+    `reajusteComparar3` VARCHAR(191) NOT NULL DEFAULT '',
+    `mesReajusteComparar3` VARCHAR(191) NOT NULL DEFAULT '',
+    `dataInicioComparar` VARCHAR(191) NOT NULL DEFAULT '',
+    `dataFimComparar` VARCHAR(191) NOT NULL DEFAULT '',
+    `deleted` BOOLEAN NOT NULL DEFAULT false,
 
     UNIQUE INDEX `CONTRATO_documento_key`(`documento`),
     PRIMARY KEY (`id`)
@@ -51,26 +60,6 @@ CREATE TABLE `DADOS_ARQUIVO` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `CENTRO_CUSTO` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `cr` VARCHAR(191) NOT NULL,
-    `descricaoCr` VARCHAR(191) NOT NULL,
-    `pecCr` VARCHAR(191) NOT NULL,
-    `descricaoPecCr` VARCHAR(191) NOT NULL,
-    `regionalCr` VARCHAR(191) NOT NULL,
-    `supervisorCr` VARCHAR(191) NOT NULL,
-    `gerenteCr` VARCHAR(191) NOT NULL,
-    `diretorCr` VARCHAR(191) NOT NULL,
-    `diretorExecCr` VARCHAR(191) NOT NULL,
-    `gerenteRegCr` VARCHAR(191) NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-
-    UNIQUE INDEX `CENTRO_CUSTO_cr_key`(`cr`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `CR_CONTRATO` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `pecCr` VARCHAR(191) NULL,
@@ -83,10 +72,11 @@ CREATE TABLE `CR_CONTRATO` (
     `gerenteRegCr` VARCHAR(191) NULL,
     `gerenteCr` VARCHAR(191) NULL,
     `supervisorCr` VARCHAR(191) NULL,
-    `valorCr` DECIMAL(11, 2) NULL,
+    `valorCr` DECIMAL(15, 2) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `numContratoId` VARCHAR(191) NOT NULL,
+    `deleted` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -111,42 +101,17 @@ CREATE TABLE `PEC_CONTRATO` (
     `gerenteRegional` VARCHAR(191) NULL,
     `supervisor` VARCHAR(191) NULL,
     `empresaId` VARCHAR(191) NULL,
-    `mesReajuste` VARCHAR(191) NULL,
+    `mesReajuste1` VARCHAR(191) NULL,
+    `indiceReajuste1` VARCHAR(191) NULL,
+    `mesReajuste2` VARCHAR(191) NULL,
+    `indiceReajuste2` VARCHAR(191) NULL,
+    `mesReajuste3` VARCHAR(191) NULL,
+    `indiceReajuste3` VARCHAR(191) NULL,
     `empresa` VARCHAR(1200) NULL,
-    `indiceReajuste` VARCHAR(191) NULL,
-    `createdAt` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NULL,
-    `D_E_L_E_T_` VARCHAR(191) NULL DEFAULT '',
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `PEC_API` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `pec` VARCHAR(191) NULL,
-    `descricaoPec` VARCHAR(191) NULL,
-    `grupoClienteId` VARCHAR(191) NULL,
-    `grupoCliente` VARCHAR(191) NULL,
-    `dataInicio` VARCHAR(191) NULL,
-    `dataFim` VARCHAR(191) NULL,
-    `negocioId` VARCHAR(191) NULL,
-    `negocio` VARCHAR(191) NULL,
-    `crReduzido` VARCHAR(191) NULL,
-    `descricaoCr` VARCHAR(191) NULL,
-    `regional` VARCHAR(191) NULL,
-    `diretorRegional` VARCHAR(191) NULL,
-    `diretorExecutivo` VARCHAR(191) NULL,
-    `gerenteExecutivo` VARCHAR(191) NULL,
-    `gerenteRegional` VARCHAR(191) NULL,
-    `supervisor` VARCHAR(191) NULL,
-    `empresaId` VARCHAR(191) NULL,
-    `mesReajuste` VARCHAR(191) NULL,
-    `empresa` VARCHAR(1200) NULL,
-    `indiceReajuste` VARCHAR(191) NULL,
-    `createdAt` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NULL,
-    `D_E_L_E_T_` VARCHAR(191) NULL DEFAULT '',
+    `status` INTEGER NULL,
+    `valorCr` DECIMAL(15, 2) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -155,8 +120,8 @@ CREATE TABLE `PEC_API` (
 CREATE TABLE `LOG_JOB` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `infoLog` LONGTEXT NOT NULL,
-    `dataInicio` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `dataFim` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `dataInicio` DATETIME(3) NULL,
+    `dataFim` DATETIME(3) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

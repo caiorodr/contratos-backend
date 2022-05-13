@@ -10,35 +10,6 @@ import { UpdateContratoDto } from './dto/update-contrato.dto';
 export class ContratosService {
 
   constructor(private prisma: PrismaService) { }
-
-  async create(data: CreateContratoDto, bodyCr: any, bodyData: any): Promise<Contrato> {
-
-    return this.prisma.contrato.create({ data:{
-      pec:data.pec,
-      dataInicio: data.dataInicio,
-      dataFim: data.dataFim,
-      documento: data.documento,
-      natureza: data.natureza,
-      grupoCliente: data.grupoCliente,
-      empresa: data.empresa,
-      docSolid: data.docSolid,
-      retencaoContrato: data.retencaoContrato,
-      negocio: data.negocio,
-      faturamento: data.faturamento,
-      seguros: data.seguros,
-      reajuste: data.reajuste,
-      mesReajuste: data.mesReajuste,
-      tipoAss: data.tipoAss,
-      resumo: data.resumo,
-      status: data.status,
-      valor: data.valor,
-      lgpd: data.lgpd,
-      limiteResponsabilidade: data.limiteResponsabilidade,
-      fileData: {createMany:{data:bodyData}},
-      crContrato: {createMany:{data:bodyCr}}
-    }},)
-  }
-
   async findAll(page: string, cr: string, pec: string, grupoCliente: string, diretorExec: string , diretorCr: string, gerente: string, gerenteReg: string, supervisor: string, dataInicio: string, dataFim:string, mesReajuste:string, empresa:string, retencaoContrato:string, negocio:string, regional: string, valor: Decimal, status: string , tipoAss: string): Promise<any> {
 
     const dataInicioFormato = dataInicio ? dataInicio.substring(6,10) + dataInicio.substring(3,5) + dataInicio.substring(0,2) : ''; //? aaaammdd
@@ -60,15 +31,18 @@ export class ContratosService {
       SELECT DISTINCT contrat.id, contrat.dataInicio, contrat.dataFim,
       contrat.documento, contrat.natureza, contrat.grupoCliente, contrat.empresa,
       contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
-      contrat.seguros, RTRIM(contrat.reajuste) AS reajuste, contrat.mesReajuste, contrat.tipoAss, contrat.status,
+      contrat.seguros, contrat.reajuste1, contrat.mesReajuste1, contrat.reajuste2, contrat.mesReajuste2,
+      contrat.reajuste3, contrat.mesReajuste3, contrat.tipoAss, contrat.status,
       contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
       contrat.valor, contrat.pec, contrat.updatedJuridico, contrat.valorComparar, 
-      contrat.reajusteComparar, contrat.mesReajusteComparar, contrat.dataInicioComparar, 
+      contrat.reajusteComparar1, contrat.mesReajusteComparar1,
+      contrat.reajusteComparar2, contrat.mesReajusteComparar2,
+      contrat.reajusteComparar2, contrat.mesReajusteComparar2, contrat.dataInicioComparar, 
       contrat.dataFimComparar, cr.diretorExecCr 
       FROM CONTRATO AS contrat
       LEFT JOIN CR_CONTRATO AS cr 
       ON cr.numContratoId = contrat.documento
-      WHERE D_E_L_E_T_  = ''
+      WHERE contrat.deleted  = false
       ${crInnerJoin}
       AND cr.diretorExecCr LIKE ${"'%" + diretorExec + "%'"}
       AND cr.descricaoPecCr LIKE ${"'%" + pec + "%'"}
@@ -80,7 +54,9 @@ export class ContratosService {
       AND grupoCliente LIKE ${"'%" + grupoCliente + "%'"}
       AND dataInicio LIKE ${"'%" + dataInicioFormato + "%'"}
       AND dataFim LIKE ${"'%" + dataFimFormato + "%'"}
-      AND mesReajuste LIKE ${"'%" + mesReajuste + "%'"}
+      AND mesReajuste1 LIKE ${"'%" + mesReajuste + "%'"}
+      AND mesReajuste2 LIKE ${"'%" + mesReajuste + "%'"}
+      AND mesReajuste3 LIKE ${"'%" + mesReajuste + "%'"}
       AND empresa LIKE ${"'%" + empresa + "%'"}
       AND retencaoContrato LIKE ${"'%" + retencaoContrato + "%'"}
       AND negocio LIKE ${"'%" + negocio + "%'"}
@@ -157,11 +133,6 @@ export class ContratosService {
         id,
       },
     });
-  }
-
-
-  async getApiPec() {
-    return await this.prisma.pecApi.findMany();
   }
 }
 
