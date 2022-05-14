@@ -9,4 +9,9 @@ export class CrContratoController {
   async buscaCr(@Param('pec') pec: string) {
     return this.crContratoService.buscaCr(pec);
   }
+
+  @Get('/valor/:pec')
+  async buscaValorGlobal(@Param('pec') pecValor: string) {
+    return this.crContratoService.buscaValorGlobal(pecValor);
+  }
 }
