@@ -14,7 +14,6 @@ model Contrato {
   id                     Int                @id @default(autoincrement())
   dataInicio             String
   dataFim                String
-  documento              String?            @unique @default(uuid())
   natureza               String?            @default("")
   pec                    String             @default("")
   grupoCliente           String             @default("")
@@ -35,7 +34,7 @@ model Contrato {
   valor                  Decimal            @db.Decimal(11, 2)
   createdAt              DateTime           @default(now())
   updatedAt              DateTime           @updatedAt
-  updatedJuridico        DateTime?           
+  updatedJuridico        DateTime?
   valorComparar          Decimal?           @db.Decimal(11, 2)
   reajusteComparar       String?            @default("")
   mesReajusteComparar    String?            @default("")
@@ -95,8 +94,8 @@ model CrContrato {
   valorCr        Decimal?  @db.Decimal(11, 2)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-  numContrato    Contrato? @relation(fields: [numContratoId], references: [documento])
-  numContratoId  String
+  numContrato    Contrato? @relation(fields: [numContratoId], references: [id])
+  numContratoId  Int
 
   @@map("CR_CONTRATO")
 }
@@ -169,37 +168,43 @@ model logJob {
 }
 
 model Seguros {
-  id         Int      @id @default(autoincrement())
-  name       String?
+  id   Int     @id @default(autoincrement())
+  name String?
+
   @@map("SEGUROS")
 }
 
 model DocSolidaria {
-  id         Int      @id @default(autoincrement())
-  name       String?
+  id   Int     @id @default(autoincrement())
+  name String?
+
   @@map("DOC_SOLIDARIA")
 }
 
 model RetencContratual {
-  id         Int      @id @default(autoincrement())
-  name       String?
+  id   Int     @id @default(autoincrement())
+  name String?
+
   @@map("RETENC_CONTRATUAL")
 }
 
 model TipoFaturamento {
-  id         Int      @id @default(autoincrement())
-  name       String?
+  id   Int     @id @default(autoincrement())
+  name String?
+
   @@map("TIPO_FATURAMENTO")
 }
 
 model TipoAss {
-  id         Int      @id @default(autoincrement())
-  name       String?
+  id   Int     @id @default(autoincrement())
+  name String?
+
   @@map("TIPO_ASS")
 }
 
 model Reajuste {
-  id         Int      @id @default(autoincrement())
-  name       String?
+  id   Int     @id @default(autoincrement())
+  name String?
+
   @@map("REAJUSTE")
 }

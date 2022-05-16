@@ -3,4 +3,5 @@ export class StorageFile {
   metadata: Map<string, string>;
   contentType: string;
   originalname: string;
+  fileName: string
 }
