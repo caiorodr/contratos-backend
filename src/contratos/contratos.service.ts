@@ -28,18 +28,7 @@ export class ContratosService {
 
     try {
       const ret = await this.prisma.$queryRawUnsafe<any>(`
-      SELECT DISTINCT contrat.id, contrat.dataInicio, contrat.dataFim,
-      contrat.documento, contrat.natureza, contrat.grupoCliente, contrat.empresa,
-      contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
-      contrat.seguros, contrat.reajuste1, contrat.mesReajuste1, contrat.reajuste2, contrat.mesReajuste2,
-      contrat.reajuste3, contrat.mesReajuste3, contrat.tipoAss, contrat.status,
-      contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
-      contrat.valor, contrat.pec, contrat.updatedJuridico, contrat.valorComparar, 
-      contrat.reajusteComparar1, contrat.mesReajusteComparar1,
-      contrat.reajusteComparar2, contrat.mesReajusteComparar2,
-      contrat.reajusteComparar2, contrat.mesReajusteComparar2, contrat.dataInicioComparar, 
-      contrat.dataFimComparar, cr.diretorExecCr 
-      FROM CONTRATO AS contrat
+      SELECT DISTINCT contrat.pec FROM CONTRATO AS contrat
       LEFT JOIN CR_CONTRATO AS cr 
       ON cr.numContratoId = contrat.documento
       WHERE contrat.deleted  = false
@@ -62,23 +51,32 @@ export class ContratosService {
       AND negocio LIKE ${"'%" + negocio + "%'"}
       AND status LIKE ${"'%" + status + "%'"}
       AND tipoAss LIKE ${"'%" + tipoAss + "%'"}
-      ORDER BY contrat.id DESC LIMIT 20 OFFSET ${skipPage}`)
-      .then((values: any) => {
-        return values.map((value: any) => {
-          return {
-            ...value,
-            dataFim : value.dataFim.substring(6,8) + '/' + value.dataFim.substring(4,6) + '/' + value.dataFim.substring(0,4),
-            dataInicio: value.dataInicio.substring(6,8) + '/' + value.dataInicio.substring(4,6) + '/' + value.dataInicio.substring(0,4),
-            dataInicioComparar: value.dataInicioComparar.split('-').reverse().join('/'),
-            dataFimComparar: value.dataFimComparar.split('-').reverse().join('/'),
-            
-          }
-        });
-      });
-
+      ORDER BY contrat.pec DESC LIMIT 20 OFFSET ${skipPage}`)
+      
       ret.forEach(addAction);
 
-      function addAction(element, index, array) {
+      async function addAction(element: any, index, array) {
+        
+        const result = await this.prisma.$queryRawUnsafe(`
+        SELECT contrat.id, contrat.dataInicio, contrat.dataFim,
+        contrat.documento, contrat.natureza, contrat.grupoCliente, contrat.empresa,
+        contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
+        contrat.seguros, contrat.reajuste1, contrat.mesReajuste1, contrat.reajuste2, contrat.mesReajuste2,
+        contrat.reajuste3, contrat.mesReajuste3, contrat.tipoAss, contrat.status,
+        contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
+        contrat.valor, contrat.pec, contrat.updatedJuridico, contrat.valorComparar, 
+        contrat.reajusteComparar1, contrat.mesReajusteComparar1,
+        contrat.reajusteComparar2, contrat.mesReajusteComparar2,
+        contrat.reajusteComparar2, contrat.mesReajusteComparar2, contrat.dataInicioComparar, 
+        contrat.dataFimComparar, cr.diretorExecCr 
+        FROM CONTRATO AS contrat
+        LEFT JOIN CR_CONTRATO AS cr 
+        ON cr.numContratoId = contrat.documento
+        WHERE pec = '${element.pec}'
+        ORDER BY contrat.id DESC LIMIT 20 OFFSET ${skipPage}
+        `)
+        
+        element.push(result)
         element.acoes = ['visualizar', 'alterar', 'baixar', 'aditivo',];
         aRet.push(element);
       } 

@@ -14,7 +14,7 @@ export class JobContratoService {
     private prisma: PrismaService
   ) { }
 
-  @Cron('00 38 17 * * 0-6')
+  @Cron('00 11 17 * * 0-6')
 
   async handleCron() {
     let updateData: Array<any> = [];
@@ -23,7 +23,8 @@ export class JobContratoService {
     let data: Array<any> = [];
     let dateLogInit: Date = new Date();
     let monthValidation: Array<string> = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
-
+    let resultPecContratos: Array<any> = [];
+    
     // DATA DE HOJE
     let today = new Date();
     let dd = String(today.getDate()).padStart(2, '0');
@@ -107,34 +108,69 @@ export class JobContratoService {
     // monta array para ficar no formato do create e update para tabela contratos.
 
 
-    apiContratos.forEach((element: any) => {
+    const resultPecContrato = await this.prisma.pecContrato.findMany({
+      take: 1
+    }) 
+
+
+    if (resultPecContrato. length > 0) {
+
+      resultPecContratos = await this.prisma.pecContrato.findMany({
+        distinct: "pec",
+      })
+
+    }
+
+    resultPecContratos.forEach( async (element: any) => {
+    
+      let dateInitJob: Date = new Date();
+      try {
+      let resultArrayCr: Array<any> = [];
+      
+      const resultValorGlobal = await this.prisma.$queryRaw<PecContrato>`
+      SELECT SUM(valorCr) AS valorGlobal FROM PEC_CONTRATO
+      WHERE pec = ${element.pec}`
+
+      const resultCr = await this.prisma.pecContrato.findMany({
+        select: {
+          pec: true,
+          crReduzido: true,
+          descricaoCr: true,
+          regional: true,
+          diretorRegional: true,
+          diretorExecutivo: true,
+          gerenteRegional: true,
+          gerenteExecutivo: true,
+          supervisor: true,
+          valorCr: true,
+        },
+        where: {
+          pec: element.pec
+        }
+      });
+      
+      resultArrayCr.push(resultCr); 
 
       data.push({
-        descricaoPec: element.desc_contrato == null ? "" : element.desc_contrato.trim(),
-        grupoCliente: element.grupo_cliente == null ? "" : element.grupo_cliente.trim(),
-        dataInicio: element.data_inicio == null ? "" : element.data_inicio.trim(),
-        dataFim: element.data_fim == null ? "" : element.data_fim.trim(),
+        descricaoPec: element.descricaoPec == null ? "" : element.descricaoPec.trim(),
+        grupoCliente: element.grupoCliente == null ? "" : element.grupoCliente.trim(),
+        dataInicio: element.dataInicio == null ? "" : element.dataInicio.trim(),
+        dataFim: element.dataFim == null ? "" : element.dataFim.trim(),
         empresa: element.empresa == null ? "" : element.empresa.trim(),
         negocio: element.negocio == null ? "" : element.negocio.trim(),
-        indiceReajuste1: element.indice_reajuste1 == null ? "" : element.indice_reajuste1.trim(),
-        mesReajuste1: element.mes_reajuste1 == (null || 0) ? "" : monthValidation[element.mes_reajuste1 - 1],
-        indiceReajuste2: element.indice_reajuste2 == null ? "" : element.indice_reajuste2.trim(),
-        mesReajuste2: element.mes_reajuste2 == (null || 0) ? "" : monthValidation[element.mes_reajuste2 - 1],
-        indiceReajuste3: element.indice_reajuste3 == null ? "" : element.indice_reajuste3.trim(),
-        mesReajuste3: element.mes_reajuste3 == (null || 0) ? "" : monthValidation[element.mes_reajuste3 - 1],
-        pec: element.numero_pec == null ? "" : element.numero_pec.trim(),
-        crReduzido: element.cr_reduzido == null ? "" : element.cr_reduzido.trim(),
-        descricaoCr: element.descricao_cr == null ? "" : element.descricao_cr.trim(),
-        regional: element.regional_cr == null ? "" : element.regional_cr.trim(),
-        diretorRegional: element.diretor_regional == null ? "" : element.diretor_regional.trim(),
-        diretorExecutivo: element.diretor_executivo == null ? "" : element.diretor_executivo.trim(),
-        gerenteRegional: element.gerente_regional == null ? "" : element.gerente_regional.trim(),
-        gerenteExecutivo: element.gerente == null ? "" : element.gerente.trim(),
-        supervisor: element.supervisor == null ? "" : element.supervisor.trim(),
-        status: element.status_pec == (null) ? 0 : element.status_pec,
-        valorCr: element.faturamento_por_cr == (null) ? 0 : element.faturamento_por_cr,
+        indiceReajuste1: element.indiceReajuste1 == null ? "" : element.indiceReajuste1.trim(),
+        mesReajuste1: element.mesReajuste1 == (null || 0) ? "" : monthValidation[element.mesReajuste1 - 1],
+        indiceReajuste2: element.indiceReajuste2 == null ? "" : element.indiceReajuste2.trim(),
+        mesReajuste2: element.mesReajuste2 == (null || 0) ? "" : monthValidation[element.mesReajuste2 - 1],
+        indiceReajuste3: element.indiceReajuste3 == null ? "" : element.indiceReajuste3.trim(),
+        mesReajuste3: element.mesReajuste3 == (null || 0) ? "" : monthValidation[element.mesReajuste3 - 1],
+        valorGlobalPec: resultValorGlobal[0].valorGlobal,
+        status: element.status == (null) ? 0 : element.status,
+        data: {createmany: {resultArrayCr}}
       });
-
+    } catch (error) {
+      this.createLogJob(`Ocorreu um erro ao tentar criar o contrato na tabela PEC_CONTRATO: ${JSON.stringify(element.descricaoPec)}`, dateInitJob, new Date());
+    }
     });
 
     // result todos os contrato ja inseridos na tabela.
@@ -202,7 +238,7 @@ export class JobContratoService {
                 mesReajuste2: updateData[i][0].mesReajuste2,
                 reajuste3: updateData[i][0].reajuste3,
                 mesReajuste3: updateData[i][0].mesReajuste3,
-                valor: 5555,
+                valor: updateData[i][0].valorGlobalPec,
                 status: updateData[i][0].status,
                 deleted: updateData[i][0].deleted,
               },
@@ -293,23 +329,12 @@ export class JobContratoService {
                 mesReajuste3: element.mesReajuste3,
                 pec: element.descricaoPec,
                 negocio: element.negocio,
-                valor: 0,
+                valor: element.valorGlobalPec,
                 status: statusAtualizado,
                 statusPec: element.status,
                 crContrato: {
-                  create: {
-                    cr: element.crReduzido,
-                    descricaoCr: element.crReduzido + ' - ' + element.descricaoCr,
-                    pecCr: element.pec,
-                    descricaoPecCr: element.descricaoPec,
-                    diretorCr: element.diretorRegional,
-                    diretorExecCr: element.diretorExecutivo,
-                    gerenteRegCr: element.gerenteRegional,
-                    gerenteCr: element.gerenteExecutivo,
-                    supervisorCr: element.supervisor,
-                    regionalCr: element.regional,
-                    valorCr: element.valorCr
-                  },
+                  createMany:  element.data,
+                  
                 },
               },
             });
@@ -347,23 +372,11 @@ export class JobContratoService {
                 mesReajuste3: element.mesReajuste3,
                 pec: element.descricaoPec,
                 negocio: element.negocio,
-                valor: 0,
+                valor: element.valorGlobalPec,
                 status: 'encerrado',
                 statusPec: 14,
                 crContrato: {
-                  create: {
-                    cr: element.crReduzido,
-                    descricaoCr: element.crReduzido + ' - ' + element.descricaoCr,
-                    pecCr: element.pec,
-                    descricaoPecCr: element.descricaoPec,
-                    diretorCr: element.diretorRegional,
-                    diretorExecCr: element.diretorExecutivo,
-                    gerenteRegCr: element.gerenteRegional,
-                    gerenteCr: element.gerenteExecutivo,
-                    supervisorCr: element.supervisor,
-                    regionalCr: element.regional,
-                    valorCr: element.valorCr
-                  },
+                  createMany: element.data
                 },
               },
             });
@@ -416,23 +429,11 @@ export class JobContratoService {
               mesReajuste3: element.mesReajuste3,
               pec: element.descricaoPec,
               negocio: element.negocio,
-              valor: 0,
+              valor: element.valorGlobalPec,
               status: statusAtualizado,
               statusPec: element.status,
               crContrato: {
-                create: {
-                  cr: element.crReduzido,
-                  descricaoCr: element.crReduzido + ' - ' + element.descricaoCr,
-                  pecCr: element.pec,
-                  descricaoPecCr: element.descricaoPec,
-                  diretorCr: element.diretorRegional,
-                  diretorExecCr: element.diretorExecutivo,
-                  gerenteRegCr: element.gerenteRegional,
-                  gerenteCr: element.gerenteExecutivo,
-                  supervisorCr: element.supervisor,
-                  regionalCr: element.regional,
-                  valorCr: element.valorCr
-                },
+                createMany: element.data
               },
             },
           });
