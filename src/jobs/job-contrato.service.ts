@@ -14,7 +14,7 @@ export class JobContratoService {
     private prisma: PrismaService
   ) { }
 
-  @Cron('00 11 17 * * 0-6')
+  @Cron('59 59 16 * * 0-6')
 
   async handleCron() {
     let updateData: Array<any> = [];
@@ -24,6 +24,8 @@ export class JobContratoService {
     let dateLogInit: Date = new Date();
     let monthValidation: Array<string> = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
     let resultPecContratos: Array<any> = [];
+    let allContrato: any;
+    let dateInitJob: Date = new Date();
     
     // DATA DE HOJE
     let today = new Date();
@@ -62,7 +64,6 @@ export class JobContratoService {
     // realiza a criação dos contratos atualizado.
 
     if (deleteAllPec.count > 0 || apiContratos.length > 0) {
-      let dateInitJob: Date = new Date();
 
       apiContratos.forEach(async (contrato: any, index: number) => {
         try {
@@ -80,15 +81,15 @@ export class JobContratoService {
               mesReajuste2: contrato.mes_reajuste2 == (null || 0) ? "" : monthValidation[contrato.mes_reajuste2 - 1],
               indiceReajuste3: contrato.indice_reajuste3 == null ? "" : contrato.indice_reajuste3.trim(),
               mesReajuste3: contrato.mes_reajuste3 == (null || 0) ? "" : monthValidation[contrato.mes_reajuste3 - 1],
-              pec: contrato.numero_pec == null ? "" : contrato.numero_pec.trim(),
-              crReduzido: contrato.cr_reduzido == null ? "" : contrato.cr_reduzido.trim(),
+              pecCr: contrato.numero_pec == null ? "" : contrato.numero_pec.trim(),
+              cr: contrato.cr_reduzido == null ? "" : contrato.cr_reduzido.trim(),
               descricaoCr: contrato.descricao_cr == null ? "" : contrato.descricao_cr.trim(),
-              regional: contrato.regional_cr == null ? "" : contrato.regional_cr.trim(),
-              diretorRegional: contrato.diretor_regional == null ? "" : contrato.diretor_regional.trim(),
-              diretorExecutivo: contrato.diretor_executivo == null ? "" : contrato.diretor_executivo.trim(),
-              gerenteRegional: contrato.gerente_regional == null ? "" : contrato.gerente_regional.trim(),
-              gerenteExecutivo: contrato.gerente == null ? "" : contrato.gerente.trim(),
-              supervisor: contrato.supervisor == null ? "" : contrato.supervisor.trim(),
+              regionalCr: contrato.regional_cr == null ? "" : contrato.regional_cr.trim(),
+              diretorCr: contrato.diretor_regional == null ? "" : contrato.diretor_regional.trim(),
+              diretorExecCr: contrato.diretor_executivo == null ? "" : contrato.diretor_executivo.trim(),
+              gerenteRegCr: contrato.gerente_regional == null ? "" : contrato.gerente_regional.trim(),
+              gerenteCr: contrato.gerente == null ? "" : contrato.gerente.trim(),
+              supervisorCr: contrato.supervisor == null ? "" : contrato.supervisor.trim(),
               status: contrato.status_pec == (null) ? 0 : contrato.status_pec,
               valorCr: contrato.faturamento_por_cr == (null) ? 0 : contrato.faturamento_por_cr,
             }
@@ -103,79 +104,131 @@ export class JobContratoService {
         }
       });
     }
-
+    
+    allContrato = await this.prisma.contrato.findMany();
 
     // monta array para ficar no formato do create e update para tabela contratos.
-
-
-    const resultPecContrato = await this.prisma.pecContrato.findMany({
-      take: 1
-    }) 
-
-
-    if (resultPecContrato. length > 0) {
-
-      resultPecContratos = await this.prisma.pecContrato.findMany({
-        distinct: "pec",
-      })
-
-    }
-
-    resultPecContratos.forEach( async (element: any) => {
+    resultPecContratos = await this.prisma.pecContrato.findMany({
+      distinct: "pecCr",
+    })
     
-      let dateInitJob: Date = new Date();
+
+    resultPecContratos.forEach( async (element: any, index: number) => {
+      
+      
       try {
       let resultArrayCr: Array<any> = [];
       
       const resultValorGlobal = await this.prisma.$queryRaw<PecContrato>`
       SELECT SUM(valorCr) AS valorGlobal FROM PEC_CONTRATO
-      WHERE pec = ${element.pec}`
+      WHERE pecCr = ${element.pecCr}`
 
       const resultCr = await this.prisma.pecContrato.findMany({
-        select: {
-          pec: true,
-          crReduzido: true,
-          descricaoCr: true,
-          regional: true,
-          diretorRegional: true,
-          diretorExecutivo: true,
-          gerenteRegional: true,
-          gerenteExecutivo: true,
-          supervisor: true,
-          valorCr: true,
-        },
-        where: {
-          pec: element.pec
-        }
-      });
+            select:{
+              pecCr: true,
+              cr: true,
+              descricaoCr: true,
+              regionalCr: true,
+              diretorCr: true,
+              diretorExecCr: true,
+              gerenteRegCr: true,
+              gerenteCr: true,
+              supervisorCr: true,
+              valorCr: true,
+            }, where: {
+              pecCr: element.pecCr
+            }
+          });
       
-      resultArrayCr.push(resultCr); 
 
       data.push({
-        descricaoPec: element.descricaoPec == null ? "" : element.descricaoPec.trim(),
-        grupoCliente: element.grupoCliente == null ? "" : element.grupoCliente.trim(),
-        dataInicio: element.dataInicio == null ? "" : element.dataInicio.trim(),
-        dataFim: element.dataFim == null ? "" : element.dataFim.trim(),
-        empresa: element.empresa == null ? "" : element.empresa.trim(),
-        negocio: element.negocio == null ? "" : element.negocio.trim(),
-        indiceReajuste1: element.indiceReajuste1 == null ? "" : element.indiceReajuste1.trim(),
-        mesReajuste1: element.mesReajuste1 == (null || 0) ? "" : monthValidation[element.mesReajuste1 - 1],
-        indiceReajuste2: element.indiceReajuste2 == null ? "" : element.indiceReajuste2.trim(),
-        mesReajuste2: element.mesReajuste2 == (null || 0) ? "" : monthValidation[element.mesReajuste2 - 1],
-        indiceReajuste3: element.indiceReajuste3 == null ? "" : element.indiceReajuste3.trim(),
-        mesReajuste3: element.mesReajuste3 == (null || 0) ? "" : monthValidation[element.mesReajuste3 - 1],
+        descricaoPec: element.descricaoPec == null ? "" : element.descricaoPec,
+        grupoCliente: element.grupoCliente == null ? "" : element.grupoCliente,
+        dataInicio: element.dataInicio == null ? "" : element.dataInicio,
+        dataFim: element.dataFim == null ? "" : element.dataFim,
+        empresa: element.empresa == null ? "" : element.empresa,
+        negocio: element.negocio == null ? "" : element.negocio,
+        indiceReajuste1: element.indiceReajuste1 == null ? "" : element.indiceReajuste1,
+        mesReajuste1: element.mesReajuste1 == (null || "") ? "" : element.mesReajuste1,
+        indiceReajuste2: element.indiceReajuste2 == null ? "" : element.indiceReajuste2,
+        mesReajuste2: element.mesReajuste2 == (null || "") ? "" : element.mesReajuste2,
+        indiceReajuste3: element.indiceReajuste3 == null ? "" : element.indiceReajuste3,
+        mesReajuste3: element.mesReajuste3 == (null || "") ? "" : element.mesReajuste3,
         valorGlobalPec: resultValorGlobal[0].valorGlobal,
         status: element.status == (null) ? 0 : element.status,
-        data: {createmany: {resultArrayCr}}
+        data: resultCr
       });
+
+      if (resultPecContratos.length - 1 == index) {
+        
+        this.createLogJob(`${data.length.toString()} Contratos adicionados com sucesso no data.`, dateInitJob, new Date());
+
+        if(allContrato.length == 0) {
+          // Grava novos contratos quando não ah nenh        um contrato na tabela.
+      
+          data.forEach(async (element: any, index: number) => {
+            
+            let statusAtualizado: string = ''
+            let dateApi = element.dataFim.substring(0, 4) + '-' + element.dataFim.substring(4, 6) + '-' + element.dataFim.substring(6, 8) // yyyymmdd
+
+            if (element.status == 14) {
+              statusAtualizado = 'encerrado';
+            } else if (dateApi < date) {
+              statusAtualizado = 'vencido';
+            } else {
+              statusAtualizado = 'revisao';
+            }
+
+            try {
+              if (index == 1){
+                this.createLogJob('iniciou o processo de criação dos Contratos.', dateLogInit, new Date());}
+
+              await this.prisma.contrato.create({
+                data: {
+                  dataFim: element.dataFim,
+                  dataInicio: element.dataInicio,
+                  empresa: element.empresa,
+                  grupoCliente: element.grupoCliente,
+                  reajuste1: element.indiceReajuste1,
+                  mesReajuste1: element.mesReajuste1,
+                  reajuste2: element.indiceReajuste2,
+                  mesReajuste2: element.mesReajuste2,
+                  reajuste3: element.indiceReajuste3,
+                  mesReajuste3: element.mesReajuste3,
+                  pec: element.descricaoPec,
+                  negocio: element.negocio,
+                  valor: element.valorGlobalPec,
+                  status: statusAtualizado,
+                  statusPec: element.status,
+                  crContrato: {
+                    createMany: {
+                      data: element.data
+                    }
+                  },
+                },
+              });
+
+              if (data.length - 1 == index) {
+                this.createLogJob(`Criou ${data.length.toString()} contratos.`, dateInitJob, new Date());
+
+                setTimeout(() => {
+                  this.createLogJob("Finalizou o processamento do JOB.", dateLogInit, new Date());
+                }, 500);
+              }
+
+            } catch (error) {
+              this.createLogJob(`Ocorreu um erro ao criar o contrato: ${element.pec} : log - ${error}`, dateInitJob, new Date());
+            }
+          });
+        }
+      }
+      
     } catch (error) {
-      this.createLogJob(`Ocorreu um erro ao tentar criar o contrato na tabela PEC_CONTRATO: ${JSON.stringify(element.descricaoPec)}`, dateInitJob, new Date());
+      this.createLogJob('Ocorreu um erro no processo de push do data.', dateInitJob, new Date());
     }
     });
 
-    // result todos os contrato ja inseridos na tabela.
-    const allContrato = await this.prisma.contrato.findMany();
-
+    
     // monta array com contratos a serem atualizados e criados.
     if (allContrato.length > 0) {
       for (let x = 0; x < allContrato.length; x++) {
@@ -217,8 +270,8 @@ export class JobContratoService {
       }
 
       if (updateData.length > 0) {
+ 
         let updateCrContrato: Array<any> = [];
-        let dateInitJob: Date = new Date();
 
         // Atualiza a tabela de contratos
         for (let i = 0; i < updateData.length; i++) {
@@ -263,7 +316,6 @@ export class JobContratoService {
         // Atualiza a tabela de CR's
         for (let i = 0; i < updateCrContrato.length; i++) {
 
-          dateInitJob = new Date();
 
           try {
             await this.prisma.crContrato.update({
@@ -299,7 +351,7 @@ export class JobContratoService {
 
       // Valida se tem algum contrato novo para ser criado
       if (createData.length > 0) {
-        let dateInitJob: Date = new Date();
+
         let statusAtualizado: string = '';
         let dateApi: string = '';
 
@@ -333,8 +385,9 @@ export class JobContratoService {
                 status: statusAtualizado,
                 statusPec: element.status,
                 crContrato: {
-                  createMany:  element.data,
-                  
+                  createMany: {
+                    data: element.data
+                  }
                 },
               },
             });
@@ -353,7 +406,6 @@ export class JobContratoService {
 
       // Cria novos contratos encerrados
       if (createDataEncerrado.length > 0) {
-        let dateInitJob: Date = new Date();
 
         try {
           createDataEncerrado.forEach(async (element: any, index: number) => {
@@ -376,7 +428,9 @@ export class JobContratoService {
                 status: 'encerrado',
                 statusPec: 14,
                 crContrato: {
-                  createMany: element.data
+                  createMany: {
+                    data: element.data
+                  }
                 },
               },
             });
@@ -398,59 +452,7 @@ export class JobContratoService {
         this.createLogJob("Finalizou o processamento do JOB.", dateLogInit, new Date());
       }, 800);
 
-    } else {
-      // Grava novos contratos quando não ah nenh        um contrato na tabela.
-      data.forEach(async (element: any, index: number) => {
-
-        let dateInitJob: Date = new Date();
-        let statusAtualizado: string = ''
-        let dateApi = element.dataFim.substring(0, 4) + '-' + element.dataFim.substring(4, 6) + '-' + element.dataFim.substring(6, 8) // yyyymmdd
-
-        if (element.status == 14) {
-          statusAtualizado = 'encerrado';
-        } else if (dateApi < date) {
-          statusAtualizado = 'vencido';
-        } else {
-          statusAtualizado = 'revisao';
-        }
-
-        try {
-          await this.prisma.contrato.create({
-            data: {
-              dataFim: element.dataFim,
-              dataInicio: element.dataInicio,
-              empresa: element.empresa,
-              grupoCliente: element.grupoCliente,
-              reajuste1: element.indiceReajuste1,
-              mesReajuste1: element.mesReajuste1,
-              reajuste2: element.indiceReajuste2,
-              mesReajuste2: element.mesReajuste2,
-              reajuste3: element.indiceReajuste3,
-              mesReajuste3: element.mesReajuste3,
-              pec: element.descricaoPec,
-              negocio: element.negocio,
-              valor: element.valorGlobalPec,
-              status: statusAtualizado,
-              statusPec: element.status,
-              crContrato: {
-                createMany: element.data
-              },
-            },
-          });
-
-          if (data.length - 1 == index) {
-            this.createLogJob(`Criou ${data.length.toString()} contratos.`, dateInitJob, new Date());
-
-            setTimeout(() => {
-              this.createLogJob("Finalizou o processamento do JOB.", dateLogInit, new Date());
-            }, 500);
-          }
-
-        } catch (error) {
-          this.createLogJob(`Ocorreu um erro ao criar o contrato: ${element.pec} : log - ${error}`, dateInitJob, new Date());
-        }
-      });
-    }
+    } 
   }
 
   //! Grava log do processamento do job.

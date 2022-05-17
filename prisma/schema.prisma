@@ -95,7 +95,7 @@ model CrContrato {
 
 model PecContrato {
   id               Int       @id @default(autoincrement())
-  pec              String?
+  pecCr            String?
   descricaoPec     String?
   grupoClienteId   String?
   grupoCliente     String?
@@ -103,14 +103,14 @@ model PecContrato {
   dataFim          String?
   negocioId        String?
   negocio          String?
-  crReduzido       String?
+  cr               String?
   descricaoCr      String?
-  regional         String?
-  diretorRegional  String?
-  diretorExecutivo String?
-  gerenteExecutivo String?
-  gerenteRegional  String?
-  supervisor       String?
+  regionalCr       String?
+  diretorCr        String?
+  diretorExecCr    String?
+  gerenteRegCr     String?
+  gerenteCr        String?
+  supervisorCr     String?
   empresaId        String?
   mesReajuste1     String?
   indiceReajuste1  String?
