@@ -6,6 +6,7 @@ CREATE TABLE `CONTRATO` (
     `documento` VARCHAR(191) NOT NULL,
     `natureza` VARCHAR(191) NOT NULL DEFAULT '',
     `pec` VARCHAR(191) NOT NULL DEFAULT '',
+    `descricaoPec` VARCHAR(191) NOT NULL DEFAULT '',
     `grupoCliente` VARCHAR(191) NOT NULL DEFAULT '',
     `empresa` VARCHAR(1200) NOT NULL DEFAULT '',
     `negocio` VARCHAR(191) NOT NULL DEFAULT '',

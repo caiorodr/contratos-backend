@@ -34,7 +34,7 @@ export class ContratosService {
       contrat.seguros, contrat.reajuste1, contrat.mesReajuste1, contrat.reajuste2, contrat.mesReajuste2,
       contrat.reajuste3, contrat.mesReajuste3, contrat.tipoAss, contrat.status,
       contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
-      contrat.valor, contrat.pec, contrat.updatedJuridico, contrat.valorComparar, 
+      contrat.valor, contrat.descricaoPec, contrat.updatedJuridico, contrat.valorComparar, 
       contrat.reajusteComparar1, contrat.mesReajusteComparar1,
       contrat.reajusteComparar2, contrat.mesReajusteComparar2,
       contrat.reajusteComparar3, contrat.mesReajusteComparar3, contrat.dataInicioComparar, 
@@ -42,8 +42,7 @@ export class ContratosService {
       FROM CONTRATO AS contrat
       LEFT JOIN CR_CONTRATO AS cr 
       ON cr.numContratoId = contrat.id
-      WHERE contrat.deleted = 0
-      ${crInnerJoin}
+      WHERE contrat.deleted = 0 ${crInnerJoin}
       AND cr.diretorExecCr LIKE '%${ diretorExec }%'
       AND cr.diretorCr LIKE '%${ diretorCr }%'
       AND cr.gerenteCr LIKE '%${ gerente }%'

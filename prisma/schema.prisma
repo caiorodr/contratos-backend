@@ -17,6 +17,7 @@ model Contrato {
   documento              String             @unique @default(uuid())
   natureza               String             @default("")
   pec                    String             @default("")
+  descricaoPec           String             @default("")
   grupoCliente           String             @default("")
   empresa                String             @default("") @db.VarChar(1200)
   negocio                String             @default("")

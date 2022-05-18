@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { JobContratoService } from './job-contrato.service';
 
 
+
 @Module({
   imports: [HttpModule],
   providers: [JobContratoService, PrismaService]
