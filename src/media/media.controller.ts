@@ -1,12 +1,17 @@
-import { Body, Controller, Get, HttpStatus, NotFoundException, Param, Post, Query, Req, Res, ServiceUnavailableException, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, HttpStatus, NotFoundException, Post, Query, Req, Res, ServiceUnavailableException, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Response, Request } from 'express';
 import { StorageFile } from "src/storage/storage-file";
 import { StorageService } from "src/storage/storage.service";
+import { CreateFileDto } from "./dto/create-file.dto";
+import { MediaService } from "./media.service";
 
 @Controller('media')
 export class MediaController {
-  constructor(private storageService: StorageService) { }
+  constructor(
+    private storageService: StorageService,
+    private mediaService: MediaService
+  ) { }
 
   @Post()
   @UseInterceptors(
@@ -17,14 +22,21 @@ export class MediaController {
     @UploadedFile() file: Express.Multer.File, @Req() req: Request, @Res() res: Response,
   ) {
 
-    const fileName = req.body.data.substring(1,req.body.data.length -1)
+    const body = JSON.parse(req.body.data)
     await this.storageService.save(
-      fileName,
-      file.mimetype,
+      body.mediaName,
       file.buffer,
     );
-    
-    res.status(HttpStatus.CREATED).json(fileName);
+
+    res.status(HttpStatus.CREATED).json(body);
+  }
+
+
+  @Post('file')
+  findUniqueFile(
+    @Body() fileData: CreateFileDto
+  ) {
+    return this.mediaService.findUniqueFile(fileData)
   }
 
   @Get()
@@ -36,9 +48,16 @@ export class MediaController {
   ) {
 
     let storageFile: StorageFile;
-
+    let body: Array<any> = []
     try {
       storageFile = await this.storageService.getFile(fileName, contentType, originalName);
+
+      body = [{
+        contentType: storageFile.contentType,
+        originalname: storageFile.originalname,
+        fileName: storageFile.fileName
+      }]
+
     } catch (e) {
       if (e.message.toString().includes('No such object')) {
         throw new NotFoundException('image not found');
@@ -49,6 +68,7 @@ export class MediaController {
 
     res.setHeader('Content-Type', storageFile.contentType);
     res.setHeader('Cache-Control', 'max-age=60d');
+    res.setHeader('teste', body);
     res.end(storageFile.buffer);
   }
 

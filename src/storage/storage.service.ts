@@ -34,6 +34,7 @@ export class StorageService {
       storageFile.metadata = new Map<string, string>();
       storageFile.contentType = contentType;
       storageFile.originalname = originalname;
+      storageFile.fileName = fileName;
       return storageFile;
 
     } catch (error) {
@@ -43,30 +44,10 @@ export class StorageService {
 
   async save(
     fileName: string,
-    contentType: string,
     media: Buffer,
   ) {
     try {
-      /*
-      const fileEdit = editFileName(fileName);
-      
-      const originalName = fileName;
-      const mediaName = fileEdit;
-      const documento = numContrato;
-      const createMetadata = await this.prismaService.contractFileData.create({
-        data: {
-          originalName,
-          mediaName,
-          contentType,
-          contrato: {
-            connect: {
-              id: documento
-            }
-          },
-        },
 
-      })
-      */
       const metadata: { [key: string]: string }[] = [{ mediaName: fileName }]
       const object = metadata.reduce(
         (obj, item) => Object.assign(obj, item), {});

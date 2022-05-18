@@ -8,9 +8,9 @@ import { PecContrato } from '@prisma/client';
 
 @Injectable()
 export class JobContratoService {
-
   constructor(
     private httpService: HttpService,
+
     private prisma: PrismaService
   ) { }
 
@@ -295,7 +295,6 @@ export class JobContratoService {
               break;
 
             }
-
           }
 
           if (allContrato.length - 1 == i) {
@@ -336,10 +335,10 @@ export class JobContratoService {
                 deleted: updateData[i][0].deleted,
               },
               where: {
-                id: updateData[i][0].id
+                id: updateData[i][0].id,
               },
               include: {
-                crContrato: true
+                crContrato: true,
               },
             });
 
@@ -355,7 +354,6 @@ export class JobContratoService {
 
         // Atualiza a tabela de CR's
         for (let i = 0; i < updateCrContrato.length; i++) {
-
           if (i == 1){
             this.createLogJob('iniciou o processo de atualização da tabela de CR_CONTRATO.', dateInitProcess);
           }
@@ -439,13 +437,11 @@ export class JobContratoService {
             if (createData.length - 1 == index) {
               this.createLogJob(`Criou ${createData.length.toString()} novos contratos.`, dateInitJob, new Date());
             }
-
           });
         } catch (error) {
           this.createLogJob(`Erro ao criar novos contratos: log - ${error}`, dateInitJob, new Date());
         }
       }
-
 
 
       // Cria novos contratos encerrados
@@ -493,7 +489,6 @@ export class JobContratoService {
         } catch (error) {
           this.createLogJob(`Erro ao criar contrato encerrado: log - ${error}`, null, new Date());
         }
-
       }
 
 
@@ -502,18 +497,18 @@ export class JobContratoService {
       }, 800);
 
     } 
+    
   }
 
 
   //! Grava log do processamento do job.
   async createLogJob(textInfoLog: string, dateInit?: Date, dateFim?: Date) {
-
     await this.prisma.logJob.create({
       data: {
         infoLog: textInfoLog,
         dataInicio: dateInit,
-        dataFim: dateFim
-      }
+        dataFim: dateFim,
+      },
     });
   }
 }

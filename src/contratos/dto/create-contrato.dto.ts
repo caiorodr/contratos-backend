@@ -2,9 +2,9 @@
 import { Prisma } from '@prisma/client';
 
 export class CreateContratoDto implements Prisma.ContratoCreateInput {
+
   dataInicio?: string | null
   dataFim?: string | null
-  documento?: string
   natureza?: string
   pec?: string
   grupoCliente?: string
@@ -41,6 +41,7 @@ export class CreateContratoDto implements Prisma.ContratoCreateInput {
   dataInicioComparar?: string
   dataFimComparar?: string
   deleted?: boolean
+
   fileData?: Prisma.ContractFileDataCreateNestedManyWithoutContratoInput;
   crContrato?: Prisma.CrContratoCreateNestedManyWithoutNumContratoInput;
 }
