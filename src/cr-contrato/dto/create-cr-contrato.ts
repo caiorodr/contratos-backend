@@ -1,7 +1,13 @@
 import { Prisma } from '@prisma/client';
 
 
-export class CreateCrContratoDto implements Prisma.CrContratoCreateInput {
+export class CreateCrContratoDto implements Prisma.CrContratoUncheckedCreateInput {
+  id?: number;
+  valorCr?: string | number | Prisma.Decimal;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+  numContratoId: string;
+  deleted?: boolean;
   pecCr?: string | null
   descricaoPecCr?: string | null
   cr?: string | null
