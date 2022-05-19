@@ -13,13 +13,14 @@ import { OptionsModule } from './options/options.module';
 @Module({
   imports: [
     ScheduleModule.forRoot(),
-    ContratosModule, 
-    StorageModule, 
-    MediaModule, 
-    CrContratoModule, 
-    CardsHomeModule, 
-    JobsModule, OptionsModule,
-    ],
+    ContratosModule,
+    StorageModule,
+    MediaModule,
+    CrContratoModule,
+    CardsHomeModule,
+    JobsModule,
+    OptionsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
