@@ -9,9 +9,11 @@ import { CardsHomeModule } from './cards-home/cards-home.module';
 import { JobsModule } from './jobs/jobs.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { OptionsModule } from './options/options.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     ScheduleModule.forRoot(),
     ContratosModule, 
     StorageModule, 
