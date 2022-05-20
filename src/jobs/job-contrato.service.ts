@@ -16,7 +16,7 @@ export class JobContratoService {
 
   
 
-  @Cron('00 07 13 * * 0-6')
+  @Cron('00 25 14 * * 0-6')
 
   async jobPecContrato() {
       let dateInitProcess : Date = new Date();
@@ -108,7 +108,7 @@ export class JobContratoService {
     }
 
 
-  @Cron('00 20 13 * * 0-6')
+  @Cron('00 40 14 * * 0-6')
 
   async jobContrato() {
     let updateData          : Array<any> = [];
@@ -222,7 +222,7 @@ export class JobContratoService {
                     percReajuste1: element.percReajuste1,
                     reajuste2: element.indiceReajuste2,
                     mesReajuste2: element.mesReajuste2,
-                    percReajuste2: element.percReajuste2
+                    percReajuste2: element.percReajuste2,
                     reajuste3: element.indiceReajuste3,
                     mesReajuste3: element.mesReajuste3,
                     percReajuste3: element.percReajuste3,
