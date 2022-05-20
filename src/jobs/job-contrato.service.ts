@@ -16,7 +16,7 @@ export class JobContratoService {
 
   
 
-  @Cron('00 07 13 * * 0-6')
+  @Cron('00 25 14 * * 0-6')
 
   async jobPecContrato() {
       let dateInitProcess : Date = new Date();
@@ -71,10 +71,13 @@ export class JobContratoService {
                 negocio: contrato.negocio                     == ( null || undefined ) ? "" : contrato.negocio.trim(),
                 indiceReajuste1: contrato.indice_reajuste1    == ( null || undefined ) ? "" : contrato.indice_reajuste1.trim(),
                 mesReajuste1: contrato.mes_reajuste1          == ( null || 0 || undefined) ? "" : monthValidation[contrato.mes_reajuste1 - 1],
+                percReajuste1: contrato.perc_reajuste1        == ( null || 0 || undefined) ? " ": contrato.perc_reajuste1,
                 indiceReajuste2: contrato.indice_reajuste2    == ( null || undefined ) ? "" : contrato.indice_reajuste2.trim(),
                 mesReajuste2: contrato.mes_reajuste2          == ( null || 0 || undefined) ? "" : monthValidation[contrato.mes_reajuste2 - 1],
+                percReajuste2: contrato.perc_reajuste2        == ( null || 0 || undefined) ? " ": contrato.perc_reajuste2,
                 indiceReajuste3: contrato.indice_reajuste3    == ( null || undefined ) ? "" : contrato.indice_reajuste3.trim(),
                 mesReajuste3: contrato.mes_reajuste3          == ( null || 0 || undefined) ? "" : monthValidation[contrato.mes_reajuste3 - 1],
+                percReajuste3: contrato.perc_reajuste3        == ( null || 0 || undefined) ? " ": contrato.perc_reajuste3,
                 pecCr: contrato.numero_pec                    == ( null || undefined ) ? "" : contrato.numero_pec.trim(),
                 cr: contrato.cr_reduzido                      == ( null || undefined ) ? "" : contrato.cr_reduzido.trim(),
                 descricaoCr: contrato.descricao_cr            == ( null || undefined ) ? "" : contrato.descricao_cr.trim(),
@@ -105,7 +108,7 @@ export class JobContratoService {
     }
 
 
-  @Cron('00 20 13 * * 0-6')
+  @Cron('00 40 14 * * 0-6')
 
   async jobContrato() {
     let updateData          : Array<any> = [];
@@ -170,10 +173,13 @@ export class JobContratoService {
           negocio: element.negocio                   == ( null || undefined ) ? "" : element.negocio,
           indiceReajuste1: element.indiceReajuste1   == ( null || undefined ) ? "" : element.indiceReajuste1,
           mesReajuste1: element.mesReajuste1         == ( null || undefined ) ? "" : element.mesReajuste1,
+          percReajuste1: element.percReajuste1       == ( null || undefined ) ? "" : element.percReajuste1,
           indiceReajuste2: element.indiceReajuste2   == ( null || undefined ) ? "" : element.indiceReajuste2,
           mesReajuste2: element.mesReajuste2         == ( null || undefined ) ? "" : element.mesReajuste2,
+          percReajuste2: element.percReajuste2       == ( null || undefined ) ? "" : element.percReajuste2,
           indiceReajuste3: element.indiceReajuste3   == ( null || undefined ) ? "" : element.indiceReajuste3,
           mesReajuste3: element.mesReajuste3         == ( null || undefined ) ? "" : element.mesReajuste3,
+          percReajuste3: element.percReajuste3       == ( null || undefined ) ? "" : element.percReajuste3,
           status: element.status                     == ( null || undefined ) ? 0  : element.status,
           valorGlobalPec: resultValorGlobal[0].valorGlobal,
           dataCR: resultCr
@@ -213,10 +219,13 @@ export class JobContratoService {
                     grupoCliente: element.grupoCliente,
                     reajuste1: element.indiceReajuste1,
                     mesReajuste1: element.mesReajuste1,
+                    percReajuste1: element.percReajuste1,
                     reajuste2: element.indiceReajuste2,
                     mesReajuste2: element.mesReajuste2,
+                    percReajuste2: element.percReajuste2,
                     reajuste3: element.indiceReajuste3,
                     mesReajuste3: element.mesReajuste3,
+                    percReajuste3: element.percReajuste3,
                     pec: element.pec,
                     descricaoPec: element.descricaoPec,
                     negocio: element.negocio,
@@ -326,10 +335,13 @@ export class JobContratoService {
                 negocio: updateData[i][0].negocio,
                 reajuste1: updateData[i][0].reajuste1,
                 mesReajuste1: updateData[i][0].mesReajuste1,
+                percReajuste1: updateData[i][0].percReajuste1,
                 reajuste2: updateData[i][0].reajuste2,
                 mesReajuste2: updateData[i][0].mesReajuste2,
+                percReajuste2: updateData[i][0].percReajuste2,
                 reajuste3: updateData[i][0].reajuste3,
                 mesReajuste3: updateData[i][0].mesReajuste3,
+                percReajuste3: updateData[i][0].percReajuste3,
                 valor: updateData[i][0].valorGlobalPec,
                 status: updateData[i][0].status,
                 deleted: updateData[i][0].deleted,
@@ -416,10 +428,13 @@ export class JobContratoService {
                 grupoCliente: element.grupoCliente,
                 reajuste1: element.indiceReajuste1,
                 mesReajuste1: element.mesReajuste1,
+                percReajuste1: element.percReajuste1,
                 reajuste2: element.indiceReajuste2,
                 mesReajuste2: element.mesReajuste2,
+                percReajuste2: element.percReajuste2,
                 reajuste3: element.indiceReajuste3,
                 mesReajuste3: element.mesReajuste3,
+                percReajuste3: element.percReajuste3,
                 pec: element.pec,
                 descricaoPec: element.descricaoPec,
                 negocio: element.negocio,
@@ -462,10 +477,13 @@ export class JobContratoService {
                 grupoCliente: element.grupoCliente,
                 reajuste1: element.indiceReajuste1,
                 mesReajuste1: element.mesReajuste1,
+                percReajuste1: element.percReajuste1,
                 reajuste2: element.indiceReajuste2,
                 mesReajuste2: element.mesReajuste2,
+                percReajuste2: element.percReajuste2,
                 reajuste3: element.indiceReajuste3,
                 mesReajuste3: element.mesReajuste3,
+                percReajuste3: element.percReajuste3,
                 pec: element.pec,
                 descricaoPec: element.descricaoPec,
                 negocio: element.negocio,
