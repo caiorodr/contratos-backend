@@ -82,11 +82,15 @@ export class OptionsService {
                 }
             });
             }else {
-                retReajuste = await this.prisma.$queryRawUnsafe<Reajuste>(`
-                SELECT name AS id, name AS name FROM REAJUSTE 
-                WHERE name LIKE '%${filterReajuste}%'
-                LIMIT 20 OFFSET ${pageReajuste}
-                `)
+                retReajuste = await this.prisma.reajuste.findMany({
+                    select:{
+                        name: true
+                    }, where:{
+                        name: {
+                            contains: filterReajuste
+                        }
+                    }
+                });
             }
         return  {items: retReajuste, "hasNext":true} 
     }

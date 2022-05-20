@@ -5,7 +5,7 @@ import { Decimal } from '@prisma/client/runtime';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateContratoDto } from './dto/update-contrato.dto';
 import { HttpService } from '@nestjs/axios';
-import { lastValueFrom, map } from 'rxjs';
+import { lastValueFrom, map, throwError } from 'rxjs';
 
 
 @Injectable()
@@ -21,9 +21,11 @@ export class ContratosService {
     const aRet: any = [];
     let crInnerJoin = ``
     let skipPage = 0;
+    //const idSiga = '13919'
+    const idSiga = '22612'
+    //const idSiga = '22789'
 
     //* Busca o privilegio do usuario queesta acessando o sistema.
-    const idSiga = '22612'
     const buscaPrivilegio = this.httpService.get(`${process.env.PRIVILEGIO_API + idSiga}/OEP_EC`)
     .pipe(
       map(
@@ -35,8 +37,21 @@ export class ContratosService {
     .pipe(
       map(
       (res) => res.data));
-    let acesso = await lastValueFrom(buscaAcesso) == "TODOS" ? "": await lastValueFrom(buscaAcesso);
-    acesso = acesso.split(',').join("','");
+    let acesso = await lastValueFrom(buscaAcesso);
+    if (acesso == "TODOS") {
+
+      acesso = ""
+    }else if (acesso.length > 0){
+
+      acesso = acesso.split(',').join("','"); 
+      acesso = "AND cr2.cr IN ('${" + acesso + "}')"
+    }else {
+
+      acesso = "AND cr2.cr = ' '"
+
+    }
+    
+    
 
 
     
@@ -65,7 +80,7 @@ export class ContratosService {
         LEFT JOIN CR_CONTRATO AS cr ON cr.numContratoId = contrat.id
         LEFT JOIN CR_CONTRATO AS cr2  ON cr2.numContratoId = contrat.id
         WHERE contrat.deleted = 0 
-        AND cr2.cr IN ('${acesso}')
+        ${acesso}
         AND cr.descricaoCr LIKE '%${cr}%'
         AND cr.diretorExecCr LIKE '%${ diretorExec }%'
         AND cr.diretorCr LIKE '%${ diretorCr }%'
@@ -112,7 +127,7 @@ export class ContratosService {
       return aRet;
 
     } catch (error) {
-      throw new HttpException('Parâmetro invalido.', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException('Parâmetro inválido, Contate o suporte.', HttpStatus.BAD_REQUEST);
     }
   }
 
