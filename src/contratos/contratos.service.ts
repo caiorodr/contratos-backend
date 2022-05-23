@@ -12,7 +12,7 @@ export class ContratosService {
 
   constructor(private prisma: PrismaService) { }
 
-  async findAll(page: string, cr: string, pec: string, grupoCliente: string, diretorExec: string , diretorCr: string, gerente: string, gerenteReg: string, supervisor: string, dataInicio: string, dataFim:string, mesReajuste:string, empresa:string, retencaoContrato:string, negocio:string, regional: string, valor: Decimal, status: string , tipoAss: string): Promise<any> {
+  async findAll(page: string, cr: string, pec: string, grupoCliente: string, diretorExec: string, diretorCr: string, gerente: string, gerenteReg: string, supervisor: string, dataInicio: string, dataFim: string, mesReajuste: string, empresa: string, retencaoContrato: string, negocio: string, regional: string, valor: Decimal, status: string, tipoAss: string): Promise<any> {
     const dataInicioFormato = dataInicio ? dataInicio.substring(6, 10) + dataInicio.substring(3, 5) + dataInicio.substring(0, 2) : ''; //? aaaammdd
     const dataFimFormato = dataFim ? dataFim.substring(6, 10) + dataFim.substring(3, 5) + dataFim.substring(0, 2) : ''; //? aaaammdd
     const aRet: any = [];
@@ -46,24 +46,24 @@ export class ContratosService {
       LEFT JOIN CR_CONTRATO AS cr 
       ON cr.numContratoId = contrat.id
       WHERE contrat.deleted = 0 ${crInnerJoin}
-      AND cr.diretorExecCr LIKE '%${ diretorExec }%'
-      AND cr.diretorCr LIKE '%${ diretorCr }%'
-      AND cr.gerenteCr LIKE '%${ gerente }%'
-      AND cr.gerenteRegCr LIKE '%${ gerenteReg }%'
-      AND cr.supervisorCr LIKE '%${ supervisor }%'
-      AND cr.regionalCr LIKE '%${ regional }%'
-      AND contrat.pec LIKE '%${ pec }%'
-      AND contrat.grupoCliente LIKE '%${ grupoCliente }%'
-      AND contrat.dataInicio LIKE '%${ dataInicioFormato }%'
-      AND contrat.dataFim LIKE '%${ dataFimFormato }%'
-      AND contrat.mesReajuste1 LIKE '%${ mesReajuste }%'
-      AND contrat.mesReajuste2 LIKE '%${ mesReajuste }%'
-      AND contrat.mesReajuste3 LIKE '%${ mesReajuste }%'
-      AND contrat.empresa LIKE '%${ empresa }%'
-      AND contrat.retencaoContrato LIKE '%${ retencaoContrato }%'
-      AND contrat.negocio LIKE '%${ negocio }%'
-      AND contrat.status LIKE '%${ status }%'
-      AND contrat.tipoAss LIKE '%${ tipoAss }%'
+      AND cr.diretorExecCr LIKE '%${diretorExec}%'
+      AND cr.diretorCr LIKE '%${diretorCr}%'
+      AND cr.gerenteCr LIKE '%${gerente}%'
+      AND cr.gerenteRegCr LIKE '%${gerenteReg}%'
+      AND cr.supervisorCr LIKE '%${supervisor}%'
+      AND cr.regionalCr LIKE '%${regional}%'
+      AND contrat.pec LIKE '%${pec}%'
+      AND contrat.grupoCliente LIKE '%${grupoCliente}%'
+      AND contrat.dataInicio LIKE '%${dataInicioFormato}%'
+      AND contrat.dataFim LIKE '%${dataFimFormato}%'
+      AND contrat.mesReajuste1 LIKE '%${mesReajuste}%'
+      AND contrat.mesReajuste2 LIKE '%${mesReajuste}%'
+      AND contrat.mesReajuste3 LIKE '%${mesReajuste}%'
+      AND contrat.empresa LIKE '%${empresa}%'
+      AND contrat.retencaoContrato LIKE '%${retencaoContrato}%'
+      AND contrat.negocio LIKE '%${negocio}%'
+      AND contrat.status LIKE '%${status}%'
+      AND contrat.tipoAss LIKE '%${tipoAss}%'
       ORDER BY contrat.id DESC LIMIT 20 OFFSET ${skipPage}`)
         .then((values: any) => {
           return values.map((value: any) => {
@@ -91,8 +91,9 @@ export class ContratosService {
     }
   }
 
+
   async findUnique(idContrato: number): Promise<Contrato> {
-    return this.prisma.contrato.findUnique({
+    const result = await this.prisma.contrato.findUnique({
       where: {
         id: idContrato
       },
@@ -100,6 +101,8 @@ export class ContratosService {
         fileData: true
       }
     });
+
+    return result;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -18,5 +18,6 @@ export class CreateCrContratoDto implements Prisma.CrContratoUncheckedCreateInpu
   updatedAt?: string | Date;
   deleted?: boolean;
   numContratoId: number;
-  
+
+
 }
