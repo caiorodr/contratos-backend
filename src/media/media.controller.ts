@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, NotFoundException, Post, Query, Req, Res, ServiceUnavailableException, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, Post, Query, Req, Res, ServiceUnavailableException, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Response, Request } from 'express';
 import { StorageFile } from "src/storage/storage-file";
@@ -70,6 +70,21 @@ export class MediaController {
     res.setHeader('Cache-Control', 'max-age=60d');
     res.setHeader('teste', body);
     res.end(storageFile.buffer);
+  }
+
+  @Delete('deleteFileContrato/:mediaName')
+  async deleteFileContrato(
+    @Param('mediaName') mediaName: string) {
+    return await this.mediaService.delete(mediaName)
+  }
+
+
+  @Delete('deleteFileStorage')
+  async deleteFileStorage(
+    @Query('fileName') fileName: string,
+    @Query('contentType') contentType: string,
+    @Query('originalName') originalName: string,) {
+    return await this.storageService.delete(fileName)
   }
 
 }
