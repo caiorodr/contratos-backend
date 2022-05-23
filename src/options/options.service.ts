@@ -60,6 +60,34 @@ export class OptionsService {
          }
     }
 
+    async findReajuste(filter: string, value: string){
+
+        const filterReajuste = filter == (null || undefined) ? "": filter;
+        const valueReajuste = value == (null || undefined) ? "" : value;
+        let retReajuste !: any 
+
+        if (valueReajuste.length > 0 ){
+            retReajuste = await this.prisma.reajuste.findMany({
+                select:{
+                    name: true
+                }, where:{
+                    name: valueReajuste
+                }
+            });
+            }else {
+                retReajuste = await this.prisma.reajuste.findMany({
+                    select:{
+                        name: true
+                    }, where:{
+                        name: {
+                            contains: filterReajuste
+                        }
+                    }
+                });
+            }
+        return  {items: retReajuste, "hasNext":true} 
+    }
+
     async findRetencContratual(){
         const retRetenc = await this.prisma.$queryRaw<RetencContratual>`
         SELECT name AS value, name AS label FROM RETENC_CONTRATUAL
@@ -84,10 +112,4 @@ export class OptionsService {
         return  {items: retTipoFat} 
     }
 
-    async findReajuste(){
-        const retReajuste = await this.prisma.$queryRaw<Reajuste>`
-        SELECT name AS value, name AS label FROM REAJUSTE`
-        
-        return  {items: retReajuste} 
-    }
 }
