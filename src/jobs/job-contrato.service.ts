@@ -15,12 +15,17 @@ export class JobContratoService {
   ) { }
 
   
-  @Cron('00 17 11 * * 0-6')
+
+  @Cron('10 39 10 * * 0-6')
 
   async jobPecContrato() {
       let dateInitProcess : Date = new Date();
       let monthValidation : Array<string> = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
       let dateInitJob     : Date = new Date();
+
+      //! Alterar o fuso horário do Database
+      await this.prisma.$queryRaw<any>`
+      SET time_zone='America/Sao_Paulo'`
 
       const headersOptions = {
       'Content-Type': 'application/json',
@@ -52,8 +57,9 @@ export class JobContratoService {
 
       if(deleteAllPec.count > 0) {
         this.createLogJob(`Tabela PEC_CONTRATO deletado com sucesso!`, new Date());
-      }
-
+      } 
+  
+    
       // realiza a criação dos contratos atualizado.
       if (apiContratos.length > 0) {
         dateInitProcess = new Date();
@@ -107,7 +113,7 @@ export class JobContratoService {
     }
 
 
-  @Cron('00 26 11 * * 0-6')
+  @Cron('59 53 10 * * 0-6')
 
   async jobContrato() {
     let updateData          : Array<any> = [];
