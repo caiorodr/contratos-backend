@@ -1,0 +1,13 @@
+ version: "3.9"
+ services:
+   db:
+     image: mysql:8
+     container_name: nestjs-backend-contrato
+     ports:
+       - 5432:5432
+     environment:
+       POSTGRES_USER: web-innovation-2022
+       POSTGRES_PASSWORD: webinnovation2022
+       MYSQL_DATABASE: /var/lib/mysql/data/mysqldata
+     volumes:
+      - ~/apps/mysql:/var/lib/mysql

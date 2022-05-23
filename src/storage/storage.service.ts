@@ -62,23 +62,13 @@ export class StorageService {
     } catch (error) {
       throw new error
     }
-
-
   };
-};
 
-function editFileName(fileName: string) {
-  try {
-    const name = fileName.split('.')[0];
-    const fileExtName = extname(fileName);
-    const randomName = Array(15)
-      .fill(null)
-      .map(() => Math.round(Math.random() * 16).toString(16))
-      .join('');
-    const fileNameWithRandom = `${name}-${randomName}${fileExtName}`
-    return fileNameWithRandom;
-  } catch (error) {
-    throw error;
+  async delete(path: string) {
+    return await this.storage
+      .bucket(this.bucket)
+      .file(path)
+      .delete({ ignoreNotFound: true });
   };
 };
 

@@ -17,10 +17,13 @@ export class CreateContratoDto implements Prisma.ContratoCreateInput {
   tipoFaturamento?: string;
   reajuste1?: string;
   mesReajuste1?: string;
+  percReajuste1?: string | number | Prisma.Decimal;
   reajuste2?: string;
   mesReajuste2?: string;
+  percReajuste2?: string | number | Prisma.Decimal;
   reajuste3?: string;
   mesReajuste3?: string;
+  percReajuste3?: string | number | Prisma.Decimal;
   tipoAss?: string;
   status?: string;
   statusPec?: number;
@@ -34,14 +37,18 @@ export class CreateContratoDto implements Prisma.ContratoCreateInput {
   valorComparar?: string | number | Prisma.Decimal;
   reajusteComparar1?: string;
   mesReajusteComparar1?: string;
+  percReajusteComparar1?: string | number | Prisma.Decimal;
   reajusteComparar2?: string;
   mesReajusteComparar2?: string;
+  percReajusteComparar2?: string | number | Prisma.Decimal;
   reajusteComparar3?: string;
   mesReajusteComparar3?: string;
+  percReajusteComparar3?: string | number | Prisma.Decimal;
   dataInicioComparar?: string;
   dataFimComparar?: string;
   deleted?: boolean;
   fileData?: Prisma.ContractFileDataCreateNestedManyWithoutContratoInput;
   crContrato?: Prisma.CrContratoCreateNestedManyWithoutNumContratoInput;
+
 
 }
