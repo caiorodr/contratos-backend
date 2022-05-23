@@ -60,18 +60,11 @@ export class OptionsService {
          }
     }
 
-    async findReajuste(page: string, filter: string, value: string){
+    async findReajuste(filter: string, value: string){
 
         const filterReajuste = filter == (null || undefined) ? "": filter;
         const valueReajuste = value == (null || undefined) ? "" : value;
         let retReajuste !: any 
-        let pageReajuste = 0;
-        let validPage = page == (undefined || null) ? "0": page;
-
-        if (!(parseInt(validPage) == 0)) {
-            pageReajuste = (parseInt(validPage) * 11);
-          }
-
 
         if (valueReajuste.length > 0 ){
             retReajuste = await this.prisma.reajuste.findMany({

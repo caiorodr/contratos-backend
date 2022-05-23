@@ -26,11 +26,10 @@ export class OptionsController {
 
     @Get('reajuste')
     async findReajuste(
-        @Query('page') page: string,
         @Query('filter') filter: string,
-        @Query('value') value: string
+        @Query('value') value: string,
         ){
-        return this.optionsService.findReajuste(page, filter, value);
+        return this.optionsService.findReajuste(filter, value);
     }
 
     @Get('retencao')
