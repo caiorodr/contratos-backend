@@ -15,7 +15,7 @@ export class ContratosService {
   constructor(private prisma: PrismaService, private httpService: HttpService,
     ) { }
 
-  async findAll(page: string, cr: string, pec: string, grupoCliente: string, diretorExec: string , diretorCr: string, gerente: string, gerenteReg: string, supervisor: string, dataInicio: string, dataFim:string, mesReajuste:string, empresa:string, retencaoContrato:string, negocio:string, regional: string, valor: Decimal, status: string , tipoAss: string): Promise<any> {
+  async findAll(page: string, cr: string, pec: string, grupoCliente: string, diretorExec: string, diretorCr: string, gerente: string, gerenteReg: string, supervisor: string, dataInicio: string, dataFim: string, mesReajuste: string, empresa: string, retencaoContrato: string, negocio: string, regional: string, valor: Decimal, status: string, tipoAss: string): Promise<any> {
     const dataInicioFormato = dataInicio ? dataInicio.substring(6, 10) + dataInicio.substring(3, 5) + dataInicio.substring(0, 2) : ''; //? aaaammdd
     const dataFimFormato = dataFim ? dataFim.substring(6, 10) + dataFim.substring(3, 5) + dataFim.substring(0, 2) : ''; //? aaaammdd
     const aRet: any = [];
@@ -66,16 +66,18 @@ export class ContratosService {
     try {
       const ret = await this.prisma.$queryRawUnsafe<any>(`
       SELECT DISTINCT contrat.id, contrat.dataInicio, contrat.dataFim,
-        contrat.natureza, contrat.grupoCliente, contrat.empresa,
-        contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
-        contrat.seguros, contrat.reajuste1, contrat.mesReajuste1, contrat.reajuste2, contrat.mesReajuste2,
-        contrat.reajuste3, contrat.mesReajuste3, contrat.tipoAss, contrat.status,
-        contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
-        contrat.valor, contrat.descricaoPec, contrat.updatedJuridico, contrat.valorComparar, 
-        contrat.reajusteComparar1, contrat.mesReajusteComparar1,
-        contrat.reajusteComparar2, contrat.mesReajusteComparar2,
-        contrat.reajusteComparar3, contrat.mesReajusteComparar3, contrat.dataInicioComparar, 
-        contrat.dataFimComparar, cr2.diretorExecCr 
+      contrat.natureza, contrat.grupoCliente, contrat.empresa,
+      contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
+      contrat.seguros, contrat.reajuste1, contrat.mesReajuste1, contrat.percReajuste1,
+      contrat.reajuste2, contrat.mesReajuste2, contrat.percReajuste2,
+      contrat.reajuste3, contrat.mesReajuste3, contrat.percReajuste3,
+      contrat.tipoAss, contrat.status,
+      contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
+      contrat.valor, contrat.descricaoPec, contrat.updatedJuridico, contrat.valorComparar, 
+      contrat.reajusteComparar1, contrat.mesReajusteComparar1,
+      contrat.reajusteComparar2, contrat.mesReajusteComparar2,
+      contrat.reajusteComparar3, contrat.mesReajusteComparar3, contrat.dataInicioComparar, 
+      contrat.dataFimComparar, cr.diretorExecCr 
       FROM CONTRATO AS contrat
         LEFT JOIN CR_CONTRATO AS cr ON cr.numContratoId = contrat.id
         LEFT JOIN CR_CONTRATO AS cr2  ON cr2.numContratoId = contrat.id
@@ -131,8 +133,9 @@ export class ContratosService {
     }
   }
 
+
   async findUnique(idContrato: number): Promise<Contrato> {
-    return this.prisma.contrato.findUnique({
+    const result = await this.prisma.contrato.findUnique({
       where: {
         id: idContrato
       },
@@ -140,6 +143,8 @@ export class ContratosService {
         fileData: true
       }
     });
+
+    return result;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -17,4 +17,17 @@ export class MediaService {
     }
   }
 
+
+  async delete(mediaName: string) {
+    try {
+      return await this.prisma.contractFileData.deleteMany({
+        where: {
+          mediaName: mediaName
+        }
+      })
+    } catch (error) {
+      throw new HttpException('Falha ao deletar os dados do arquivo.', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 }
