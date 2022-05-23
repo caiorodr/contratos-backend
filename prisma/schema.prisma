@@ -27,27 +27,33 @@ model Contrato {
   tipoFaturamento        String             @default("")
   reajuste1              String             @default("")
   mesReajuste1           String             @default("")
+  percReajuste1          Decimal?           @db.Decimal(15, 2)
   reajuste2              String             @default("")
   mesReajuste2           String             @default("")
+  percReajuste2          Decimal?           @db.Decimal(15, 2)
   reajuste3              String             @default("")
   mesReajuste3           String             @default("")
+  percReajuste3          Decimal?           @db.Decimal(15, 2)
   tipoAss                String             @default("")
   status                 String             @default("")
-  statusPec              Int?           
+  statusPec              Int?
   resumo                 String             @default("")
   lgpd                   Boolean            @default(false)
   limiteResponsabilidade Boolean            @default(false)
   valor                  Decimal?           @db.Decimal(15, 2)
   createdAt              DateTime           @default(now())
   updatedAt              DateTime           @updatedAt
-  updatedJuridico        DateTime?           
+  updatedJuridico        DateTime?
   valorComparar          Decimal?           @db.Decimal(15, 2)
   reajusteComparar1      String             @default("")
   mesReajusteComparar1   String             @default("")
+  percReajusteComparar1  Decimal?           @db.Decimal(15, 2)
   reajusteComparar2      String             @default("")
   mesReajusteComparar2   String             @default("")
+  percReajusteComparar2  Decimal?           @db.Decimal(15, 2)
   reajusteComparar3      String             @default("")
   mesReajusteComparar3   String             @default("")
+  percReajusteComparar3  Decimal?           @db.Decimal(15, 2)
   dataInicioComparar     String             @default("")
   dataFimComparar        String             @default("")
   deleted                Boolean            @default(false)
@@ -71,7 +77,6 @@ model ContractFileData {
   @@map("DADOS_ARQUIVO")
 }
 
-
 model CrContrato {
   id             Int       @id @default(autoincrement())
   pecCr          String?
@@ -90,40 +95,43 @@ model CrContrato {
   deleted        Boolean   @default(false)
   numContrato    Contrato? @relation(fields: [numContratoId], references: [id])
   numContratoId  Int
-  
+
   @@map("CR_CONTRATO")
 }
 
 model PecContrato {
-  id               Int       @id @default(autoincrement())
-  pecCr            String?
-  descricaoPec     String?
-  grupoClienteId   String?
-  grupoCliente     String?
-  dataInicio       String?
-  dataFim          String?
-  negocioId        String?
-  negocio          String?
-  cr               String?
-  descricaoCr      String?
-  regionalCr       String?
-  diretorCr        String?
-  diretorExecCr    String?
-  gerenteRegCr     String?
-  gerenteCr        String?
-  supervisorCr     String?
-  empresaId        String?
-  mesReajuste1     String?
-  indiceReajuste1  String?
-  mesReajuste2     String?
-  indiceReajuste2  String?
-  mesReajuste3     String?
-  indiceReajuste3  String?
-  empresa          String?   @db.VarChar(1200)
-  status           Int? 
-  valorCr          Decimal?  @db.Decimal(15, 2)  
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id              Int      @id @default(autoincrement())
+  pecCr           String?
+  descricaoPec    String?
+  grupoClienteId  String?
+  grupoCliente    String?
+  dataInicio      String?
+  dataFim         String?
+  negocioId       String?
+  negocio         String?
+  cr              String?
+  descricaoCr     String?
+  regionalCr      String?
+  diretorCr       String?
+  diretorExecCr   String?
+  gerenteRegCr    String?
+  gerenteCr       String?
+  supervisorCr    String?
+  empresaId       String?
+  mesReajuste1    String?
+  indiceReajuste1 String?
+  percReajuste1   Decimal? @db.Decimal(15, 2)
+  mesReajuste2    String?
+  indiceReajuste2 String?
+  percReajuste2   Decimal? @db.Decimal(15, 2)
+  mesReajuste3    String?
+  indiceReajuste3 String?
+  percReajuste3   Decimal? @db.Decimal(15, 2)
+  empresa         String?  @db.VarChar(1200)
+  status          Int?
+  valorCr         Decimal? @db.Decimal(15, 2)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@map("PEC_CONTRATO")
 }
@@ -131,7 +139,7 @@ model PecContrato {
 model logJob {
   id         Int       @id @default(autoincrement())
   infoLog    String    @db.LongText
-  dataInicio DateTime?  
+  dataInicio DateTime?
   dataFim    DateTime?
 
   @@map("LOG_JOB")
