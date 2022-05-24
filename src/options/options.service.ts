@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { TipoAss, TipoFaturamento, Reajuste, DocSolidaria, RetencContratual, Seguros, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -9,7 +10,7 @@ export class OptionsService {
     async findSeguros(filter: string, value: string){
         let validRetSeguros: any;
         let validValue = value == undefined ? '' : value;
-        let validFilter = filter == undefined ? '' : filter;
+        const validFilter = filter == undefined ? '' : filter;
 
         try{
             if (validValue == '' && (validFilter.length > 0 || validFilter == '')){
@@ -35,7 +36,7 @@ export class OptionsService {
 
         let validRetDocSolidaria: any;
         let validValue = value == undefined ? '' : value;
-        let validFilter = filter == undefined ? '' : filter;
+        const validFilter = filter == undefined ? '' : filter;
 
         try{
             if (validValue == '' && (validFilter.length > 0 || validFilter == '')){
@@ -60,32 +61,37 @@ export class OptionsService {
          }
     }
 
-    async findReajuste(filter: string, value: string){
+    async findReajuste(value?: string, page?: string,pageSize?: number, filter?: string){
 
-        const filterReajuste = filter == (null || undefined) ? "": filter;
-        const valueReajuste = value == (null || undefined) ? "" : value;
-        let retReajuste !: any 
+        let skipPage = 0
+        let validFilter = filter == (null || undefined) ? '': filter;
+        let validValue = value == (null || undefined) ? '': value;
+        let validHasnext = true;
 
-        if (valueReajuste.length > 0 ){
-            retReajuste = await this.prisma.reajuste.findMany({
-                select:{
-                    name: true
-                }, where:{
-                    name: valueReajuste
-                }
-            });
-            }else {
-                retReajuste = await this.prisma.reajuste.findMany({
-                    select:{
-                        name: true
-                    }, where:{
-                        name: {
-                            contains: filterReajuste
-                        }
-                    }
-                });
+        if (!(parseInt(page) == 1)){
+            skipPage = (parseInt(page) * 11);
+        }else {
+            skipPage = 0
+        }
+    
+        if(validValue.length > 0) {
+            const retReajusteValue = await this.prisma.$queryRawUnsafe<Reajuste>(`
+                SELECT name AS label, name AS value FROM REAJUSTE
+                WHERE name LIKE '%${validValue}%'`)
+            
+            return  retReajusteValue[0]
+        }else {
+            const retReajuste = await this.prisma.$queryRawUnsafe<any>(`
+                SELECT id, name AS label, name AS value FROM REAJUSTE
+                WHERE name LIKE '%${validFilter}%'
+                ORDER BY id LIMIT ${pageSize} OFFSET ${skipPage}`)
+
+            if(retReajuste.length < 9){
+                validHasnext = false
             }
-        return  {items: retReajuste, "hasNext":true} 
+            return  {items:retReajuste, hasNext: validHasnext}
+        }
+        
     }
 
     async findRetencContratual(){

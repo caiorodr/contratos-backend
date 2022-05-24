@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Contrato, Prisma } from '@prisma/client';
+import { Contrato } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateContratoDto } from './dto/update-contrato.dto';
 import { HttpService } from '@nestjs/axios';
-import { lastValueFrom, map, throwError } from 'rxjs';
+import { lastValueFrom, map } from 'rxjs';
 
 
 @Injectable()
@@ -19,7 +19,6 @@ export class ContratosService {
     const dataInicioFormato = dataInicio ? dataInicio.substring(6, 10) + dataInicio.substring(3, 5) + dataInicio.substring(0, 2) : ''; //? aaaammdd
     const dataFimFormato = dataFim ? dataFim.substring(6, 10) + dataFim.substring(3, 5) + dataFim.substring(0, 2) : ''; //? aaaammdd
     const aRet: any = [];
-    let crInnerJoin = ``
     let skipPage = 0;
     //const idSiga = '13919'
     const idSiga = '22612'
@@ -51,16 +50,8 @@ export class ContratosService {
 
     }
     
-    
-
-
-    
     if (!(parseInt(page) == 0)) {
       skipPage = (parseInt(page) * 11);
-    }
-
-    if (cr.length > 0) {
-      crInnerJoin = `AND cr.descricaoCr LIKE '%${cr}%'`
     }
 
     try {
@@ -107,8 +98,10 @@ export class ContratosService {
           return values.map((value: any) => {
             return {
               ...value,
-              dataFim: value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4),
-              dataInicio: value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4),
+              dataFim: value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4) == '//' ? '': 
+              value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4),
+              dataInicio: value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4) == '//' ? '': 
+              value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4),
               dataInicioComparar: value.dataInicioComparar.split('-').reverse().join('/'),
               dataFimComparar: value.dataFimComparar.split('-').reverse().join('/'),
             }
