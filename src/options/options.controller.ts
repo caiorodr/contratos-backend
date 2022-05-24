@@ -24,13 +24,23 @@ export class OptionsController {
         return this.optionsService.findDocSolidaria(filter, value);
     }
 
+    @Get('reajuste/:value')
+    async findReajusteVelue(
+        @Param('value') value: string,
+        ){
+        return this.optionsService.findReajuste(value);
+    }
+
+
     @Get('reajuste')
     async findReajuste(
+        @Query('page') page: string,
+        @Query('pageSize') pageSize: number,
         @Query('filter') filter: string,
-        @Query('value') value: string,
         ){
-        return this.optionsService.findReajuste(filter, value);
+        return this.optionsService.findReajuste(undefined,page, pageSize, filter);
     }
+
 
     @Get('retencao')
     async findRetencContratual(){
