@@ -523,13 +523,14 @@ export class JobContratoService {
     
   };
 
-  @Cron('00 12 17 * * 0-6')
+  @Cron('00 18 17 * * 0-6')
   async jobCreateReajuste() {
     let tablePec: Array<any> = [];
     let dateInitProcess = new Date();
     let indexReajuste = 0;
 
     await this.prisma.reajuste.deleteMany();
+    
     tablePec = await this.prisma.pecContrato.findMany({
       distinct: 'indiceReajuste1',
       select: {
@@ -544,7 +545,7 @@ export class JobContratoService {
         try{
           await this.prisma.reajuste.create({
             data:{
-              name: items
+              name: items.indiceReajuste1
             }
           })
 
@@ -558,7 +559,7 @@ export class JobContratoService {
       });
 
       setTimeout(() => {
-        this.createLogJob(`JOB CreateReajuste finalizada com sucesso, foram criados ${indexReajuste} `, null, new Date());
+        this.createLogJob(`JOB CreateReajuste finalizada com sucesso! `, null, new Date());
       }, 800);
     };
   };
