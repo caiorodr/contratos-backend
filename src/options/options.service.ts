@@ -14,13 +14,11 @@ export class OptionsService {
 
         try{
             if (validValue == '' && (validFilter.length > 0 || validFilter == '')){
-            validRetSeguros = await this.prisma.$queryRawUnsafe<Seguros>
-                (`SELECT name AS value, name AS label FROM SEGUROS
+            validRetSeguros = await this.prisma.$queryRawUnsafe<Seguros>(`SELECT name AS value, name AS label FROM SEGUROS
                 WHERE name LIKE '%${validFilter}%'`)
             }else {
             validValue = validValue.split(",").join("','");
-            validRetSeguros = await this.prisma.$queryRawUnsafe<Seguros>
-                (`SELECT name AS value, name AS label FROM SEGUROS
+            validRetSeguros = await this.prisma.$queryRawUnsafe<Seguros>(`SELECT name AS value, name AS label FROM SEGUROS
                 WHERE name IN ('${validValue}')`)
             }
 
@@ -40,15 +38,13 @@ export class OptionsService {
 
         try{
             if (validValue == '' && (validFilter.length > 0 || validFilter == '')){
-            validRetDocSolidaria = await this.prisma.$queryRawUnsafe<DocSolidaria>
-                (`SELECT name AS value, name AS label FROM DOC_SOLIDARIA
+            validRetDocSolidaria = await this.prisma.$queryRawUnsafe<DocSolidaria>(`SELECT name AS value, name AS label FROM DOC_SOLIDARIA
                 WHERE name LIKE '%${validFilter}%'
                 ORDER BY name`);
 
             }else if (validFilter == '' && validValue.length > 0){
             validValue = validValue.split(",").join("','");
-            validRetDocSolidaria = await this.prisma.$queryRawUnsafe<DocSolidaria>
-                (`SELECT name AS value, name AS label FROM DOC_SOLIDARIA
+            validRetDocSolidaria = await this.prisma.$queryRawUnsafe<DocSolidaria>(`SELECT name AS value, name AS label FROM DOC_SOLIDARIA
                 WHERE name IN ('${validValue}')
                 ORDER BY name`);
             }
@@ -106,7 +102,7 @@ export class OptionsService {
         const retTipoAss = await this.prisma.$queryRaw<TipoAss>`
         SELECT name AS value, name AS label FROM TIPO_ASS
         ORDER BY name`
-        
+
         return  {items: retTipoAss} 
     }
 
@@ -114,7 +110,7 @@ export class OptionsService {
         const retTipoFat = await this.prisma.$queryRaw<TipoFaturamento>`
         SELECT name AS value, name AS label FROM TIPO_FATURAMENTO
         ORDER BY name`
-        
+
         return  {items: retTipoFat} 
     }
 
