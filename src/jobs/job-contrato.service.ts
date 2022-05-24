@@ -15,7 +15,6 @@ export class JobContratoService {
   ) { }
 
   
-
   @Cron('10 00 00 * * 0-6')
 
   async jobPecContrato() {
@@ -111,6 +110,7 @@ export class JobContratoService {
         }, 500);
       }
     }
+
 
 
   @Cron('59 20 00 * * 0-6')
@@ -519,9 +519,49 @@ export class JobContratoService {
         this.createLogJob("JOB CONTRATO finalizado com sucesso!", null, new Date());
       }, 800);
 
-    } 
+    }; 
     
-  }
+  };
+
+  @Cron('00 12 17 * * 0-6')
+  async jobCreateReajuste() {
+    let tablePec: Array<any> = [];
+    let dateInitProcess = new Date();
+    let indexReajuste = 0;
+
+    await this.prisma.reajuste.deleteMany();
+    tablePec = await this.prisma.pecContrato.findMany({
+      distinct: 'indiceReajuste1',
+      select: {
+        indiceReajuste1: true
+      }
+    });
+
+    if(tablePec.length > 0){
+      dateInitProcess = new Date();
+
+      tablePec.forEach(async (items: any, index:number) => {
+        try{
+          await this.prisma.reajuste.create({
+            data:{
+              name: items
+            }
+          })
+
+          if(tablePec.length - 1 == index){
+            indexReajuste = index;
+          }
+
+        }catch (error) {
+            this.createLogJob(`Erro ao criar os Reajustes, ocorrido na criação numero ${index} ${error}`, dateInitProcess, new Date());
+          }
+      });
+
+      setTimeout(() => {
+        this.createLogJob(`JOB CreateReajuste finalizada com sucesso, foram criados ${indexReajuste} `, null, new Date());
+      }, 800);
+    };
+  };
 
 
   //! Grava log do processamento do job.
