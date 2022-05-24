@@ -74,10 +74,10 @@ export class ContratosService {
       contrat.tipoAss, contrat.status,
       contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
       contrat.valor, contrat.descricaoPec, contrat.updatedJuridico, contrat.valorComparar, 
-      contrat.reajusteComparar1, contrat.mesReajusteComparar1,
-      contrat.reajusteComparar2, contrat.mesReajusteComparar2,
-      contrat.reajusteComparar3, contrat.mesReajusteComparar3, contrat.dataInicioComparar, 
-      contrat.dataFimComparar, cr.diretorExecCr 
+      contrat.reajusteComparar1, contrat.mesReajusteComparar1, contrat.percReajusteComparar1,
+      contrat.reajusteComparar2, contrat.mesReajusteComparar2,  contrat.percReajusteComparar2,
+      contrat.reajusteComparar3, contrat.mesReajusteComparar3, contrat.percReajusteComparar3, 
+      contrat.dataInicioComparar, contrat.dataFimComparar, cr.diretorExecCr 
       FROM CONTRATO AS contrat
         LEFT JOIN CR_CONTRATO AS cr ON cr.numContratoId = contrat.id
         LEFT JOIN CR_CONTRATO AS cr2  ON cr2.numContratoId = contrat.id

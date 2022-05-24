@@ -100,7 +100,7 @@ export class OptionsService {
         const retTipoAss = await this.prisma.$queryRaw<TipoAss>`
         SELECT name AS value, name AS label FROM TIPO_ASS
         ORDER BY name`
-        
+
         return  {items: retTipoAss} 
     }
 
@@ -108,7 +108,7 @@ export class OptionsService {
         const retTipoFat = await this.prisma.$queryRaw<TipoFaturamento>`
         SELECT name AS value, name AS label FROM TIPO_FATURAMENTO
         ORDER BY name`
-        
+
         return  {items: retTipoFat} 
     }
 

@@ -16,7 +16,7 @@ export class JobContratoService {
 
   
 
-  @Cron('10 39 10 * * 0-6')
+  @Cron('10 00 00 * * 0-6')
 
   async jobPecContrato() {
       let dateInitProcess : Date = new Date();
@@ -113,7 +113,7 @@ export class JobContratoService {
     }
 
 
-  @Cron('59 53 10 * * 0-6')
+  @Cron('59 20 00 * * 0-6')
 
   async jobContrato() {
     let updateData          : Array<any> = [];
