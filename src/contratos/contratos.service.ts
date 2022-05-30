@@ -10,10 +10,10 @@ import { lastValueFrom, map } from 'rxjs';
 
 @Injectable()
 export class ContratosService {
- 
+
 
   constructor(private prisma: PrismaService, private httpService: HttpService,
-    ) { }
+  ) { }
 
   async findAll(page: string, cr: string, pec: string, grupoCliente: string, diretorExec: string, diretorCr: string, gerente: string, gerenteReg: string, supervisor: string, dataInicio: string, dataFim: string, mesReajuste: string, empresa: string, retencaoContrato: string, negocio: string, regional: string, valor: Decimal, status: string, tipoAss: string): Promise<any> {
     const dataInicioFormato = dataInicio ? dataInicio.substring(6, 10) + dataInicio.substring(3, 5) + dataInicio.substring(0, 2) : ''; //? aaaammdd
@@ -26,30 +26,30 @@ export class ContratosService {
 
     //* Busca o privilegio do usuario queesta acessando o sistema.
     const buscaPrivilegio = this.httpService.get(`${process.env.PRIVILEGIO_API + idSiga}/OEP_EC`)
-    .pipe(
-      map(
-      (res) => res.data));
+      .pipe(
+        map(
+          (res) => res.data));
     const privilegio = await lastValueFrom(buscaPrivilegio);
 
     //* Busca o acesso de visualização de contratos do usuario que esta acessando o sistema. 
     const buscaAcesso = this.httpService.get(`${process.env.ACESSO_API + idSiga}`)
-    .pipe(
-      map(
-      (res) => res.data));
+      .pipe(
+        map(
+          (res) => res.data));
     let acesso = await lastValueFrom(buscaAcesso);
     if (acesso == "TODOS") {
 
       acesso = ""
-    }else if (acesso.length > 0){
+    } else if (acesso.length > 0) {
 
-      acesso = acesso.split(',').join("','"); 
+      acesso = acesso.split(',').join("','");
       acesso = "AND cr2.cr IN ('${" + acesso + "}')"
-    }else {
+    } else {
 
       acesso = "AND cr2.cr = ' '"
 
     }
-    
+
     if (!(parseInt(page) == 0)) {
       skipPage = (parseInt(page) * 11);
     }
@@ -75,33 +75,33 @@ export class ContratosService {
         WHERE contrat.deleted = 0 
         ${acesso}
         AND cr.descricaoCr LIKE '%${cr}%'
-        AND cr.diretorExecCr LIKE '%${ diretorExec }%'
-        AND cr.diretorCr LIKE '%${ diretorCr }%'
-        AND cr.gerenteCr LIKE '%${ gerente }%'
-        AND cr.gerenteRegCr LIKE '%${ gerenteReg }%'
-        AND cr.supervisorCr LIKE '%${ supervisor }%'
-        AND cr.regionalCr LIKE '%${ regional }%'
-        AND contrat.pec LIKE '%${ pec }%'
-        AND contrat.grupoCliente LIKE '%${ grupoCliente }%'
-        AND contrat.dataInicio LIKE '%${ dataInicioFormato }%'
-        AND contrat.dataFim LIKE '%${ dataFimFormato }%'
-        AND contrat.mesReajuste1 LIKE '%${ mesReajuste }%'
-        AND contrat.mesReajuste2 LIKE '%${ mesReajuste }%'
-        AND contrat.mesReajuste3 LIKE '%${ mesReajuste }%'
-        AND contrat.empresa LIKE '%${ empresa }%'
-        AND contrat.retencaoContrato LIKE '%${ retencaoContrato }%'
-        AND contrat.negocio LIKE '%${ negocio }%'
-        AND contrat.status LIKE '%${ status }%'
-        AND contrat.tipoAss LIKE '%${ tipoAss }%'
+        AND cr.diretorExecCr LIKE '%${diretorExec}%'
+        AND cr.diretorCr LIKE '%${diretorCr}%'
+        AND cr.gerenteCr LIKE '%${gerente}%'
+        AND cr.gerenteRegCr LIKE '%${gerenteReg}%'
+        AND cr.supervisorCr LIKE '%${supervisor}%'
+        AND cr.regionalCr LIKE '%${regional}%'
+        AND contrat.pec LIKE '%${pec}%'
+        AND contrat.grupoCliente LIKE '%${grupoCliente}%'
+        AND contrat.dataInicio LIKE '%${dataInicioFormato}%'
+        AND contrat.dataFim LIKE '%${dataFimFormato}%'
+        AND contrat.mesReajuste1 LIKE '%${mesReajuste}%'
+        AND contrat.mesReajuste2 LIKE '%${mesReajuste}%'
+        AND contrat.mesReajuste3 LIKE '%${mesReajuste}%'
+        AND contrat.empresa LIKE '%${empresa}%'
+        AND contrat.retencaoContrato LIKE '%${retencaoContrato}%'
+        AND contrat.negocio LIKE '%${negocio}%'
+        AND contrat.status LIKE '%${status}%'
+        AND contrat.tipoAss LIKE '%${tipoAss}%'
         ORDER BY contrat.id DESC LIMIT 20 OFFSET ${skipPage}`)
         .then((values: any) => {
           return values.map((value: any) => {
             return {
               ...value,
-              dataFim: value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4) == '//' ? '': 
-              value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4),
-              dataInicio: value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4) == '//' ? '': 
-              value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4),
+              dataFim: value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4) == '//' ? '' :
+                value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4),
+              dataInicio: value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4) == '//' ? '' :
+                value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4),
               dataInicioComparar: value.dataInicioComparar.split('-').reverse().join('/'),
               dataFimComparar: value.dataFimComparar.split('-').reverse().join('/'),
             }
@@ -111,13 +111,14 @@ export class ContratosService {
       ret.forEach(addAction);
 
       function addAction(element) {
-        if (privilegio == "CORD"){
-        element.acoes = ['visualizar', 'alterar', 'baixar'];
-        aRet.push(element);
-      }else {
-        element.acoes = ['visualizar', 'baixar'];
-        aRet.push(element);
-      }}
+        if (privilegio == "CORD") {
+          element.acoes = ['visualizar', 'alterar', 'baixar'];
+          aRet.push(element);
+        } else {
+          element.acoes = ['visualizar', 'baixar'];
+          aRet.push(element);
+        }
+      }
 
       return aRet;
 
@@ -141,20 +142,117 @@ export class ContratosService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async update(contratoId: number, data: UpdateContratoDto): Promise<Contrato> {
+  async update(contratoId: number, data: UpdateContratoDto | any): Promise<Contrato> {
 
-    try {
-      const ret = await this.prisma.contrato.update({
-        where: {
-          id: contratoId
-        },
-        data,
-      })
+    let resultReajuste1: any;
+    let resultReajuste2: any;
+    let resultReajuste3: any;
 
-      return ret
-    } catch (error) {
-      throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
+    if (data.length == 1) {
+
+
+      try {
+        const ret = await this.prisma.contrato.update({
+          where: {
+            id: contratoId
+          },
+          data: data[0]
+        });
+
+        return ret;
+      } catch (error) {
+        throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+    } else {
+      if (typeof data.reajusteComparar1 == 'number') {
+        try {
+          resultReajuste1 = await this.prisma.reajuste.findUnique({
+            select: {
+              name: true
+            },
+            where: {
+              id: Number(data.reajusteComparar1)
+            }
+          });
+        } catch (error) {
+          throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+      }
+
+
+      if (typeof data.reajusteComparar2 == 'number') {
+        try {
+          resultReajuste2 = await this.prisma.reajuste.findUnique({
+            select: {
+              name: true
+            },
+            where: {
+              id: Number(data.reajusteComparar2)
+            }
+          });
+
+        } catch (error) {
+          throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+      }
+
+
+      if (typeof data.reajusteComparar2 == 'number') {
+        try {
+          resultReajuste3 = await this.prisma.reajuste.findUnique({
+            select: {
+              name: true
+            },
+            where: {
+              id: Number(data.reajusteComparar3)
+            }
+          });
+        } catch (error) {
+          throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+      }
+
+
+      try {
+        const ret = await this.prisma.contrato.update({
+          where: {
+            id: contratoId
+          },
+          data: {
+            dataFimComparar: data.dataFimComparar,
+            dataInicioComparar: data.dataInicioComparar,
+            docSolid: data.docSolid,
+            faturamento: data.faturamento,
+            lgpd: data.lgpd,
+            limiteResponsabilidade: data.limiteResponsabilidade,
+            mesReajusteComparar1: data.mesReajusteComparar1,
+            mesReajusteComparar2: data.mesReajusteComparar2,
+            mesReajusteComparar3: data.mesReajusteComparar3,
+            natureza: data.natureza,
+            percReajusteComparar1: data.percReajusteComparar1,
+            percReajusteComparar2: data.percReajusteComparar2,
+            percReajusteComparar3: data.percReajusteComparar3,
+            reajusteComparar1: resultReajuste1 == null ? '' : resultReajuste1.name,
+            reajusteComparar2: resultReajuste2 == null ? '' : resultReajuste2.name,
+            reajusteComparar3: resultReajuste3 == null ? '' : resultReajuste3.name,
+            resumo: data.resumo,
+            retencaoContrato: data.retencaoContrato,
+            seguros: data.seguros,
+            status: data.status,
+            tipoAss: data.tipoAss,
+            updatedJuridico: data.updatedJuridico,
+            valorComparar: data.valorComparar,
+          },
+        });
+
+        return ret;
+      } catch (error) {
+        throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
+      }
     }
+
+
 
   }
 
