@@ -56,19 +56,19 @@ export class ContratosService {
 
     try {
       const ret = await this.prisma.$queryRawUnsafe<any>(`
-      SELECT DISTINCT contrat.id, contrat.dataInicio, contrat.dataFim,
-      contrat.natureza, contrat.grupoCliente, contrat.empresa,
-      contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
-      contrat.seguros, contrat.reajuste1, contrat.mesReajuste1, contrat.percReajuste1,
-      contrat.reajuste2, contrat.mesReajuste2, contrat.percReajuste2,
-      contrat.reajuste3, contrat.mesReajuste3, contrat.percReajuste3,
-      contrat.tipoAss, contrat.status,
-      contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
-      contrat.valor, contrat.descricaoPec, contrat.updatedJuridico, contrat.valorComparar, 
-      contrat.reajusteComparar1, contrat.mesReajusteComparar1, contrat.percReajusteComparar1,
-      contrat.reajusteComparar2, contrat.mesReajusteComparar2,  contrat.percReajusteComparar2,
-      contrat.reajusteComparar3, contrat.mesReajusteComparar3, contrat.percReajusteComparar3, 
-      contrat.dataInicioComparar, contrat.dataFimComparar, cr.diretorExecCr 
+      SELECT 
+        DISTINCT contrat.id, contrat.dataInicio, contrat.dataFim,
+        contrat.natureza, contrat.grupoCliente, contrat.empresa,
+        contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
+        contrat.seguros, contrat.reajuste1, contrat.mesReajuste1, contrat.percReajuste1,
+        contrat.reajuste2, contrat.mesReajuste2, contrat.percReajuste2,
+        contrat.reajuste3, contrat.mesReajuste3, contrat.percReajuste3, contrat.tipoAss, contrat.status,
+        contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
+        contrat.valor, contrat.descricaoPec, contrat.updatedJuridico, contrat.valorComparar, 
+        contrat.idReajusteComparar1, contrat.reajusteComparar1, contrat.mesReajusteComparar1, contrat.percReajusteComparar1,
+        contrat.idReajusteComparar2, contrat.reajusteComparar2, contrat.mesReajusteComparar2,  contrat.percReajusteComparar2,
+        contrat.idReajusteComparar3, contrat.reajusteComparar2, contrat.mesReajusteComparar3, contrat.percReajusteComparar3, 
+        contrat.dataInicioComparar, contrat.dataFimComparar, cr.diretorExecCr 
       FROM CONTRATO AS contrat
         LEFT JOIN CR_CONTRATO AS cr ON cr.numContratoId = contrat.id
         LEFT JOIN CR_CONTRATO AS cr2  ON cr2.numContratoId = contrat.id
@@ -165,53 +165,45 @@ export class ContratosService {
       }
 
     } else {
-      if (typeof data.reajusteComparar1 == 'number') {
-        try {
-          resultReajuste1 = await this.prisma.reajuste.findUnique({
-            select: {
-              name: true
-            },
-            where: {
-              id: Number(data.reajusteComparar1)
-            }
-          });
-        } catch (error) {
-          throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
+      try {
+        if (typeof data.idReajusteComparar1 == 'number') {
+            resultReajuste1 = await this.prisma.reajuste.findUnique({
+              select: {
+                id:true,
+                name: true
+              },
+              where: {
+                id: Number(data.idReajusteComparar1)
+              }
+            });
         }
-      }
 
-
-      if (typeof data.reajusteComparar2 == 'number') {
-        try {
-          resultReajuste2 = await this.prisma.reajuste.findUnique({
-            select: {
-              name: true
-            },
-            where: {
-              id: Number(data.reajusteComparar2)
-            }
-          });
-
-        } catch (error) {
-          throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
+        if (typeof data.idReajusteComparar2 == 'number') {
+            resultReajuste2 = await this.prisma.reajuste.findUnique({
+              select: {
+                id: true,
+                name: true
+              },
+              where: {
+                id: Number(data.idReajusteComparar2)
+              }
+            });
         }
-      }
 
-
-      if (typeof data.reajusteComparar2 == 'number') {
-        try {
-          resultReajuste3 = await this.prisma.reajuste.findUnique({
-            select: {
-              name: true
-            },
-            where: {
-              id: Number(data.reajusteComparar3)
-            }
-          });
-        } catch (error) {
-          throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
+        if (typeof data.idReajusteComparar3 == 'number') {
+            resultReajuste3 = await this.prisma.reajuste.findUnique({
+              select: {
+                id: true,
+                name: true
+              },
+              where: {
+                id: Number(data.idReajusteComparar3)
+              }
+            });
         }
-      }
+      }catch (error) {
+        throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 
       try {
@@ -226,16 +218,19 @@ export class ContratosService {
             faturamento: data.faturamento,
             lgpd: data.lgpd,
             limiteResponsabilidade: data.limiteResponsabilidade,
-            mesReajusteComparar1: data.mesReajusteComparar1,
-            mesReajusteComparar2: data.mesReajusteComparar2,
-            mesReajusteComparar3: data.mesReajusteComparar3,
             natureza: data.natureza,
-            percReajusteComparar1: data.percReajusteComparar1,
-            percReajusteComparar2: data.percReajusteComparar2,
-            percReajusteComparar3: data.percReajusteComparar3,
+            idReajusteComparar1: resultReajuste1 == null ? 0 : resultReajuste1.id,
+            idReajusteComparar2: resultReajuste2 == null ? 0 : resultReajuste2.id,
+            idReajusteComparar3: resultReajuste3 == null ? 0 : resultReajuste3.id,
             reajusteComparar1: resultReajuste1 == null ? '' : resultReajuste1.name,
             reajusteComparar2: resultReajuste2 == null ? '' : resultReajuste2.name,
             reajusteComparar3: resultReajuste3 == null ? '' : resultReajuste3.name,
+            mesReajusteComparar1: data.mesReajusteComparar1,
+            mesReajusteComparar2: data.mesReajusteComparar2,
+            mesReajusteComparar3: data.mesReajusteComparar3,
+            percReajusteComparar1: data.percReajusteComparar1,
+            percReajusteComparar2: data.percReajusteComparar2,
+            percReajusteComparar3: data.percReajusteComparar3,
             resumo: data.resumo,
             retencaoContrato: data.retencaoContrato,
             seguros: data.seguros,
@@ -251,9 +246,6 @@ export class ContratosService {
         throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
-
-
-
   }
 
 
