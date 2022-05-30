@@ -74,7 +74,7 @@ export class OptionsService {
             if (validValue.length > 0) {
                 const retReajusteValue = await this.prisma.$queryRawUnsafe<Reajuste>(`
                     SELECT id AS value, name AS label FROM REAJUSTE
-                    WHERE name LIKE '%${validValue}%'`)
+                    WHERE id LIKE '%${validValue}%'`)
 
                 return retReajusteValue[0]
             } else {
