@@ -10,13 +10,11 @@ import { PecContrato } from '@prisma/client';
 export class JobContratoService {
   constructor(
     private httpService: HttpService,
-
     private prisma: PrismaService
   ) { }
 
   
-
-  @Cron('10 00 00 * * 0-6')
+  @Cron('10 55 11 * * 0-6')
 
   async jobPecContrato() {
       let dateInitProcess : Date = new Date();
@@ -66,41 +64,42 @@ export class JobContratoService {
 
         apiContratos.forEach(async (contrato: any, index: number) => {
             try {
-            await this.prisma.pecContrato.create({
-                data: {
-                descricaoPec: contrato.desc_contrato          == ( null || undefined ) ? "" : contrato.desc_contrato.trim(),
-                grupoCliente: contrato.grupo_cliente          == ( null || undefined ) ? "" : contrato.grupo_cliente.trim(),
-                dataInicio: contrato.data_inicio              == ( null || undefined ) ? "" : contrato.data_inicio.trim(),
-                dataFim: contrato.data_fim                    == ( null || undefined ) ? "" : contrato.data_fim.trim(),
-                empresa: contrato.empresa                     == ( null || undefined ) ? "" : contrato.empresa.trim(),
-                negocio: contrato.negocio                     == ( null || undefined ) ? "" : contrato.negocio.trim(),
-                indiceReajuste1: contrato.indice_reajuste1    == ( null || undefined ) ? "" : contrato.indice_reajuste1.trim(),
-                mesReajuste1: contrato.mes_reajuste1          == ( null || 0 || undefined) ? "" : monthValidation[contrato.mes_reajuste1 - 1],
-                percReajuste1: contrato.perc_reajuste1        == ( null || 0 || undefined) ? " ": contrato.perc_reajuste1,
-                indiceReajuste2: contrato.indice_reajuste2    == ( null || undefined ) ? "" : contrato.indice_reajuste2.trim(),
-                mesReajuste2: contrato.mes_reajuste2          == ( null || 0 || undefined) ? "" : monthValidation[contrato.mes_reajuste2 - 1],
-                percReajuste2: contrato.perc_reajuste2        == ( null || 0 || undefined) ? " ": contrato.perc_reajuste2,
-                indiceReajuste3: contrato.indice_reajuste3    == ( null || undefined ) ? "" : contrato.indice_reajuste3.trim(),
-                mesReajuste3: contrato.mes_reajuste3          == ( null || 0 || undefined) ? "" : monthValidation[contrato.mes_reajuste3 - 1],
-                percReajuste3: contrato.perc_reajuste3        == ( null || 0 || undefined) ? " ": contrato.perc_reajuste3,
-                pecCr: contrato.numero_pec                    == ( null || undefined ) ? "" : contrato.numero_pec.trim(),
-                cr: contrato.cr_reduzido                      == ( null || undefined ) ? "" : contrato.cr_reduzido.trim(),
-                descricaoCr: contrato.descricao_cr            == ( null || undefined ) ? "" : contrato.descricao_cr.trim(),
-                regionalCr: contrato.regional_cr              == ( null || undefined ) ? "" : contrato.regional_cr.trim(),
-                diretorCr: contrato.diretor_regional          == ( null || undefined ) ? "" : contrato.diretor_regional.trim(),
-                diretorExecCr: contrato.diretor_executivo     == ( null || undefined ) ? "" : contrato.diretor_executivo.trim(),
-                gerenteRegCr: contrato.gerente_regional       == ( null || undefined ) ? "" : contrato.gerente_regional.trim(),
-                gerenteCr: contrato.gerente                   == ( null || undefined ) ? "" : contrato.gerente.trim(),
-                supervisorCr: contrato.supervisor             == ( null || undefined ) ? "" : contrato.supervisor.trim(),
-                status: contrato.status_pec                   == ( null || undefined ) ? 0 : contrato.status_pec,
-                valorCr: contrato.faturamento_por_cr          == ( null || undefined ) ? 0 : contrato.faturamento_por_cr,
+              if((contrato.status_pec == 14 && Number(contrato.data_fim.substring(0,4))) > 2022 || contrato.status_pec == 9){
+                await this.prisma.pecContrato.create({
+                    data: {
+                    descricaoPec: contrato.desc_contrato          == ( null || undefined ) ? "" : contrato.desc_contrato.trim(),
+                    grupoCliente: contrato.grupo_cliente          == ( null || undefined ) ? "" : contrato.grupo_cliente.trim(),
+                    dataInicio: contrato.data_inicio              == ( null || undefined ) ? "" : contrato.data_inicio.trim(),
+                    dataFim: contrato.data_fim                    == ( null || undefined ) ? "" : contrato.data_fim.trim(),
+                    empresa: contrato.empresa                     == ( null || undefined ) ? "" : contrato.empresa.trim(),
+                    negocio: contrato.negocio                     == ( null || undefined ) ? "" : contrato.negocio.trim(),
+                    indiceReajuste1: contrato.indice_reajuste1    == ( null || undefined ) ? "" : contrato.indice_reajuste1.trim(),
+                    mesReajuste1: contrato.mes_reajuste1          == ( null || 0 || undefined) ? "" : monthValidation[contrato.mes_reajuste1 - 1],
+                    percReajuste1: contrato.perc_reajuste1        == ( null || undefined) ? 0: contrato.perc_reajuste1,
+                    indiceReajuste2: contrato.indice_reajuste2    == ( null || undefined ) ? "" : contrato.indice_reajuste2.trim(),
+                    mesReajuste2: contrato.mes_reajuste2          == ( null || 0 || undefined) ? "" : monthValidation[contrato.mes_reajuste2 - 1],
+                    percReajuste2: contrato.perc_reajuste2        == ( null || undefined) ? 0 : contrato.perc_reajuste2,
+                    indiceReajuste3: contrato.indice_reajuste3    == ( null || undefined ) ? "" : contrato.indice_reajuste3.trim(),
+                    mesReajuste3: contrato.mes_reajuste3          == ( null || 0 || undefined) ? "" : monthValidation[contrato.mes_reajuste3 - 1],
+                    percReajuste3: contrato.perc_reajuste3        == ( null || undefined) ? 0: contrato.perc_reajuste3,
+                    pecCr: contrato.numero_pec                    == ( null || undefined ) ? "" : contrato.numero_pec.trim(),
+                    cr: contrato.cr_reduzido                      == ( null || undefined ) ? "" : contrato.cr_reduzido.trim(),
+                    descricaoCr: contrato.descricao_cr            == ( null || undefined ) ? "" : contrato.cr_reduzido.trim() + " - " + contrato.descricao_cr.trim(),
+                    regionalCr: contrato.regional_cr              == ( null || undefined ) ? "" : contrato.regional_cr.trim(),
+                    diretorCr: contrato.diretor_regional          == ( null || undefined ) ? "" : contrato.diretor_regional.trim(),
+                    diretorExecCr: contrato.diretor_executivo     == ( null || undefined ) ? "" : contrato.diretor_executivo.trim(),
+                    gerenteRegCr: contrato.gerente_regional       == ( null || undefined ) ? "" : contrato.gerente_regional.trim(),
+                    gerenteCr: contrato.gerente                   == ( null || undefined ) ? "" : contrato.gerente.trim(),
+                    supervisorCr: contrato.supervisor             == ( null || undefined ) ? "" : contrato.supervisor.trim(),
+                    status: contrato.status_pec                   == ( null || undefined ) ? 0 : contrato.status_pec,
+                    valorCr: contrato.faturamento_por_cr          == ( null || undefined ) ? 0 : contrato.faturamento_por_cr,
+                    }
+                });
+
+                if (apiContratos.length - 1 == index) {
+                    this.createLogJob(`${apiContratos.length.toString()} - Contratos criados com sucesso na tabela PEC_CONTRATO.`, dateInitProcess, new Date());
                 }
-            });
-
-            if (apiContratos.length - 1 == index) {
-                this.createLogJob(`${apiContratos.length.toString()} - Contratos criados com sucesso na tabela PEC_CONTRATO.`, dateInitProcess, new Date());
-            }
-
+              }
             } catch (error) {
             this.createLogJob(`Ocorreu um erro ao tentar criar o contrato na tabela PEC_CONTRATO: ${JSON.stringify(contrato)}`, dateInitProcess, new Date());
             }
@@ -113,7 +112,8 @@ export class JobContratoService {
     }
 
 
-  @Cron('59 20 00 * * 0-6')
+
+  @Cron('59 06 12 * * 0-6')
 
   async jobContrato() {
     let updateData          : Array<any> = [];
@@ -519,9 +519,50 @@ export class JobContratoService {
         this.createLogJob("JOB CONTRATO finalizado com sucesso!", null, new Date());
       }, 800);
 
-    } 
+    }; 
     
-  }
+  };
+
+  @Cron('00 15 12 * * 0-6')
+  async jobCreateReajuste() {
+    let tablePec: Array<any> = [];
+    let dateInitProcess = new Date();
+    let indexReajuste = 0;
+
+    await this.prisma.reajuste.deleteMany();
+    
+    tablePec = await this.prisma.pecContrato.findMany({
+      distinct: 'indiceReajuste1',
+      select: {
+        indiceReajuste1: true
+      }
+    });
+
+    if(tablePec.length > 0){
+      dateInitProcess = new Date();
+
+      tablePec.forEach(async (items: any, index:number) => {
+        try{
+          await this.prisma.reajuste.create({
+            data:{
+              name: items.indiceReajuste1
+            }
+          })
+
+          if(tablePec.length - 1 == index){
+            indexReajuste = index;
+          }
+
+        }catch (error) {
+            this.createLogJob(`Erro ao criar os Reajustes, ocorrido na criação numero ${index} ${error}`, dateInitProcess, new Date());
+          }
+      });
+
+      setTimeout(() => {
+        this.createLogJob(`JOB CreateReajuste finalizada com sucesso! `, null, new Date());
+      }, 800);
+    };
+  };
 
 
   //! Grava log do processamento do job.

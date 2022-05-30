@@ -110,7 +110,7 @@ export class ContratosService {
 
       ret.forEach(addAction);
 
-      function addAction(element, index, array) {
+      function addAction(element) {
         if (privilegio == "CORD"){
         element.acoes = ['visualizar', 'alterar', 'baixar'];
         aRet.push(element);
