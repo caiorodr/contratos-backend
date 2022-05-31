@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CardsHomeController } from './cards-home.controller';
-import { CardsHomeService } from './cards-home.service';
+import { CardsHomeController } from './cards.controller';
+import { CardsHomeService } from './cards.service';
 
 
 @Module({
@@ -10,5 +10,4 @@ import { CardsHomeService } from './cards-home.service';
   imports: [PrismaService]
 })
 export class CardsHomeModule {
-  
 }

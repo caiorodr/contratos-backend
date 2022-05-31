@@ -14,7 +14,7 @@ export class JobContratoService {
   ) { }
 
   
-  @Cron('10 55 11 * * 0-6')
+  @Cron('00 06 20 * * 0-6')
 
   async jobPecContrato() {
       let dateInitProcess : Date = new Date();
@@ -113,7 +113,7 @@ export class JobContratoService {
 
 
 
-  @Cron('59 06 12 * * 0-6')
+  @Cron('00 18 20 * * 0-6')
 
   async jobContrato() {
     let updateData          : Array<any> = [];
@@ -523,11 +523,13 @@ export class JobContratoService {
     
   };
 
-  @Cron('00 15 12 * * 0-6')
+  @Cron('00 00 00 * * 0-6')
   async jobCreateReajuste() {
     let tablePec: Array<any> = [];
     let dateInitProcess = new Date();
     let indexReajuste = 0;
+
+    this.createLogJob(`Iniciou o processamento do JOB CREATE REAJUSTE.`, dateInitProcess, null);
 
     await this.prisma.reajuste.deleteMany();
     

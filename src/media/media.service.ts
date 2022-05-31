@@ -6,7 +6,7 @@ import { CreateFileDto } from './dto/create-file.dto';
 export class MediaService {
   constructor(private prisma: PrismaService) { }
 
-  async findUniqueFile(data: CreateFileDto) {
+  async createFile(data: CreateFileDto) {
     try {
       return await this.prisma.contractFileData.create({
         data
