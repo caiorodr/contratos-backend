@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { CardsHomeService } from './cards-home.service';
+import { CardsHomeService } from './cards.service';
 
-@Controller('cards-home')
+@Controller('api/v1/cards/')
 export class CardsHomeController {
 
   //* API's da Home
@@ -10,7 +10,7 @@ export class CardsHomeController {
   constructor(private readonly cardsHomeService: CardsHomeService) {
   } 
 
-  @Get() // ('preencher aqui') para declarar uma rota alternativa
+  @Get('findData/') // ('preencher aqui') para declarar uma rota alternativa
   async getStatus(
     @Query('status')    qtdStatus: number,
   ){

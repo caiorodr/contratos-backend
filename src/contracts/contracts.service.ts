@@ -247,14 +247,5 @@ export class ContratosService {
       }
     }
   }
-
-
-  async remove(id: number): Promise<Contrato> {
-    return this.prisma.contrato.delete({
-      where: {
-        id,
-      },
-    });
-  }
 }
 

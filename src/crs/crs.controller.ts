@@ -1,11 +1,11 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { CrContratoService } from './cr-contrato.service';
+import { CrContratoService } from './crs.service';
 
-@Controller('cr-contrato')
+@Controller('api/v1/crs/')
 export class CrContratoController {
   constructor(private crContratoService: CrContratoService) {}
   
-  @Get('/pec/:pec')
+  @Get('pec/:pec')
   async buscaCr(@Param('pec') pec: string) {
     return this.crContratoService.buscaCr(pec);
   }

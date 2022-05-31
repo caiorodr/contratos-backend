@@ -1,10 +1,8 @@
 import { Param, Query } from '@nestjs/common';
 import { Get, Controller } from '@nestjs/common';
-import { query } from 'express';
-import { filter } from 'rxjs';
 import { OptionsService } from './options.service';
 
-@Controller('options')
+@Controller('api/v1/options/')
 export class OptionsController {
     constructor (private optionsService: OptionsService){}
 
