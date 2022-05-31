@@ -14,6 +14,7 @@ export class OptionsController {
         return this.optionsService.findSeguros(filter, value);
 
     }
+    
     @Get('docSolidaria')
     async findDocSolidaria(
         @Query('filter') filter: string,
