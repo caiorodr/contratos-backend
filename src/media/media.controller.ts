@@ -6,14 +6,14 @@ import { StorageService } from "src/storage/storage.service";
 import { CreateFileDto } from "./dto/create-file.dto";
 import { MediaService } from "./media.service";
 
-@Controller('media')
+@Controller('api/v1/media/')
 export class MediaController {
   constructor(
     private storageService: StorageService,
     private mediaService: MediaService
   ) { }
 
-  @Post()
+  @Post('upload/')
   @UseInterceptors(
     FileInterceptor('files', {
     })
@@ -32,14 +32,14 @@ export class MediaController {
   }
 
 
-  @Post('file')
-  findUniqueFile(
+  @Post('file/')
+  createFile(
     @Body() fileData: CreateFileDto
   ) {
-    return this.mediaService.findUniqueFile(fileData)
+    return this.mediaService.createFile(fileData)
   }
 
-  @Get()
+  @Get('download/')
   async downloadMedia(
     @Query('fileName') fileName: string,
     @Query('contentType') contentType: string,

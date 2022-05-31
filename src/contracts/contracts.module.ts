@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ContratosService } from './contratos.service';
-import { ContratosController } from './contratos.controller';
+import { ContratosService } from './contracts.service';
+import { ContratosController } from './contracts.controller';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { HttpModule } from '@nestjs/axios';
 

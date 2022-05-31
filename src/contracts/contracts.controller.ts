@@ -1,15 +1,15 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { Decimal } from '@prisma/client/runtime';
-import { ContratosService } from './contratos.service';
+import { ContratosService } from './contracts.service';
 import { CreateContratoDto } from './dto/create-contrato.dto';
 import { UpdateContratoDto } from './dto/update-contrato.dto';
 
-@Controller('contratos')
+@Controller('api/v1/contracts/')
 export class ContratosController {
   constructor(private readonly contratosService: ContratosService) {}
 
 
-  @Get()
+  @Get('findAll/')
   async findAll(
     @Query('page') page: string,
     @Query('cr') cr: string,
@@ -54,21 +54,16 @@ export class ContratosController {
     );
   }
 
-  @Get('/idContrato/:idContrato')
+  @Get('idContrato/:idContrato')
   async findOne(@Param('idContrato') idContrato: number) {
     return this.contratosService.findUnique(Number(idContrato));
   }
 
-  @Patch(':idContrato')
+  @Patch('changeUnique/:idContrato')
   async update(
     @Param('idContrato') idContrato: number,
     @Body() updateConrtatoDto: UpdateContratoDto,
   ) {
     return this.contratosService.update(Number(idContrato), updateConrtatoDto);
-  }
-
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.contratosService.remove(+id);
   }
 }

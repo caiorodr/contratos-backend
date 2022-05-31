@@ -12,18 +12,18 @@ datasource db {
 
 model Contrato {
   id                     Int                @id @default(autoincrement())
-  dataInicio             String
-  dataFim                String
+  dataInicio             String             @default("20002202")
+  dataFim                String             @default("20002202")
   natureza               String?            @default("")
   pec                    String             @default("")
   descricaoPec           String             @default("")
   grupoCliente           String             @default("")
-  empresa                String             @default("") @db.VarChar(1200)
+  empresa                String             @default("")
   negocio                String             @default("")
+  seguros                String             @default("") @db.VarChar(1200)
   docSolid               String             @default("") @db.VarChar(1200)
   retencaoContrato       String             @default("")
   faturamento            String             @default("")
-  seguros                String             @default("")
   tipoFaturamento        String             @default("")
   reajuste1              String             @default("")
   mesReajuste1           String             @default("")
@@ -36,7 +36,7 @@ model Contrato {
   percReajuste3          Decimal?           @db.Decimal(15, 2)
   tipoAss                String             @default("")
   status                 String             @default("")
-  statusPec              Int?
+  statusPec              Int?               @default(0)
   resumo                 String             @default("")
   lgpd                   Boolean            @default(false)
   limiteResponsabilidade Boolean            @default(false)
@@ -45,12 +45,15 @@ model Contrato {
   updatedAt              DateTime           @updatedAt
   updatedJuridico        DateTime?
   valorComparar          Decimal?           @db.Decimal(15, 2)
+  idReajusteComparar1    Int                @default(0)
   reajusteComparar1      String             @default("")
   mesReajusteComparar1   String             @default("")
   percReajusteComparar1  Decimal?           @db.Decimal(15, 2)
+  idReajusteComparar2    Int                @default(0)
   reajusteComparar2      String             @default("")
   mesReajusteComparar2   String             @default("")
   percReajusteComparar2  Decimal?           @db.Decimal(15, 2)
+  idReajusteComparar3    Int                @default(0)
   reajusteComparar3      String             @default("")
   mesReajusteComparar3   String             @default("")
   percReajusteComparar3  Decimal?           @db.Decimal(15, 2)
