@@ -12,8 +12,11 @@ import { lastValueFrom, map } from 'rxjs';
 export class ContratosService {
 
 
-  constructor(private prisma: PrismaService, private httpService: HttpService,
-  ) { }
+  constructor(
+    private prisma: PrismaService,
+    private httpService: HttpService) 
+    { }
+
 
   //! API FAKE PARA RETORNO DO IDSIGA DO USUARIO
   async idSiga(){
@@ -86,7 +89,7 @@ export class ContratosService {
         contrat.idReajusteComparar1, contrat.reajusteComparar1, contrat.mesReajusteComparar1, contrat.percReajusteComparar1,
         contrat.idReajusteComparar2, contrat.reajusteComparar2, contrat.mesReajusteComparar2,  contrat.percReajusteComparar2,
         contrat.idReajusteComparar3, contrat.reajusteComparar3, contrat.mesReajusteComparar3, contrat.percReajusteComparar3, 
-        contrat.dataInicioComparar, contrat.dataFimComparar, cr.diretorExecCr 
+        contrat.dataInicioComparar, contrat.dataFimComparar, contrat.idSiga, cr.diretorExecCr
       FROM CONTRATO AS contrat
         LEFT JOIN CR_CONTRATO AS cr ON cr.numContratoId = contrat.id
         LEFT JOIN CR_CONTRATO AS cr2  ON cr2.numContratoId = contrat.id
@@ -141,7 +144,7 @@ export class ContratosService {
       return aRet;
 
     } catch (error) {
-      throw new HttpException('Parâmetro inválido, Contate o suporte.', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Parâmetro inválido, contate a equipe de desenvolvimento.', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -256,6 +259,7 @@ export class ContratosService {
             tipoAss: data.tipoAss,
             updatedJuridico: data.updatedJuridico,
             valorComparar: data.valorComparar,
+            idSiga: data.idSiga,
           },
         });
 
