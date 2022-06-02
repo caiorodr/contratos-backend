@@ -15,24 +15,42 @@ export class ContratosService {
   constructor(private prisma: PrismaService, private httpService: HttpService,
   ) { }
 
+  //! API FAKE PARA RETORNO DO IDSIGA DO USUARIO
+  async idSiga(){
+  /*Gestão de Contratos:
+    3646  : Adriana da Silva Siqueira
+    18224 : Patrick Rodrigues Costa
+    4147  : Geyza Porto Pierini
+    13919 : Caio Rodrigues do Nascimento Maroni
+    22789 : Rafael Lopes do Nascimento
+    22612 : Igor Souza Maroni
+  */
+    const idSiga = '22612'
+
+    return {idSiga}
+  }
+
   async findAll(page: string, cr: string, pec: string, grupoCliente: string, diretorExec: string, diretorCr: string, gerente: string, gerenteReg: string, supervisor: string, dataInicio: string, dataFim: string, mesReajuste: string, empresa: string, retencaoContrato: string, negocio: string, regional: string, valor: Decimal, status: string, tipoAss: string): Promise<any> {
     const dataInicioFormato = dataInicio ? dataInicio.substring(6, 10) + dataInicio.substring(3, 5) + dataInicio.substring(0, 2) : ''; //? aaaammdd
     const dataFimFormato = dataFim ? dataFim.substring(6, 10) + dataFim.substring(3, 5) + dataFim.substring(0, 2) : ''; //? aaaammdd
     const aRet: any = [];
     let skipPage = 0;
-    //const idSiga = '13919'
-    const idSiga = '22612'
-    //const idSiga = '22789'
 
-    //* Busca o privilegio do usuario queesta acessando o sistema.
-    const buscaPrivilegio = this.httpService.get(`${process.env.PRIVILEGIO_API + idSiga}/OEP_EC`)
+    //*busca o idsiga do usuario logado.
+    const buscaIdSiga: any = this.httpService.get(`${process.env.IDSIGA_API}`).pipe(
+      map(
+        (res) => res.data));
+    const idSiga: any = await lastValueFrom(buscaIdSiga);
+
+    //* Busca o privilegio do usuario logado.
+    const buscaPrivilegio = this.httpService.get(`${process.env.PRIVILEGIO_API + idSiga.idSiga}/OEP_EC`)
       .pipe(
         map(
           (res) => res.data));
     const privilegio = await lastValueFrom(buscaPrivilegio);
 
-    //* Busca o acesso de visualização de contratos do usuario que esta acessando o sistema. 
-    const buscaAcesso = this.httpService.get(`${process.env.ACESSO_API + idSiga}`)
+    //* Busca o acesso de visualização de contratos do usuario logado. 
+    const buscaAcesso = this.httpService.get(`${process.env.ACESSO_API + idSiga.idSiga}`)
       .pipe(
         map(
           (res) => res.data));
@@ -101,7 +119,7 @@ export class ContratosService {
               dataFim: value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4) == '//' ? '' :
                 value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4),
               dataInicio: value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4) == '//' ? '' :
-                value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4),
+                value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4),
               dataInicioComparar: value.dataInicioComparar.split('-').reverse().join('/'),
               dataFimComparar: value.dataFimComparar.split('-').reverse().join('/'),
             }
