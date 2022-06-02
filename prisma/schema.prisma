@@ -60,6 +60,7 @@ model Contrato {
   dataInicioComparar     String             @default("")
   dataFimComparar        String             @default("")
   deleted                Boolean            @default(false)
+  idSiga                 String             @default("")
   fileData               ContractFileData[]
   crContrato             CrContrato[]
 
