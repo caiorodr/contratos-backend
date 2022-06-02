@@ -165,12 +165,18 @@ export class ContratosService {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async update(contratoId: number, data: UpdateContratoDto | any): Promise<Contrato> {
 
-    let resultReajuste1: any;
-    let resultReajuste2: any;
-    let resultReajuste3: any;
+    let validResultReajuste1 : any;
+    let validResultReajuste2 : any;
+    let validResultReajuste3 : any;
+    let resultReajuste1 : any = '';
+    let resultReajuste2 : any = '';
+    let resultReajuste3 : any = '';
+    let dataContract    : any;
+    let statusAtualizado: any;
+
+
 
     if (data.length == 1) {
-
 
       try {
         const ret = await this.prisma.contrato.update({
@@ -187,44 +193,82 @@ export class ContratosService {
 
     } else {
       try {
-        if (typeof data.idReajusteComparar1 == 'number') {
-            resultReajuste1 = await this.prisma.reajuste.findUnique({
+        if (typeof data.idReajusteComparar1 == 'number' ) {
+          validResultReajuste1 = await this.prisma.reajuste.findUnique({
               select: {
                 id:true,
                 name: true
               },
               where: {
-                id: Number(data.idReajusteComparar1)
+                id: data.idReajusteComparar1
               }
             });
+          resultReajuste1 = validResultReajuste1.name == (null || undefined) ? '': validResultReajuste1.name
+          
         }
 
-        if (typeof data.idReajusteComparar2 == 'number') {
-            resultReajuste2 = await this.prisma.reajuste.findUnique({
+        if (typeof data.idReajusteComparar2 == 'number' && data.idReajusteComparar2 > 0) {
+          validResultReajuste2 = await this.prisma.reajuste.findUnique({
               select: {
                 id: true,
                 name: true
               },
               where: {
-                id: Number(data.idReajusteComparar2)
+                id: data.idReajusteComparar2
               }
             });
+          resultReajuste2 = validResultReajuste2.name == (null || undefined) ? '': validResultReajuste2.name
         }
 
-        if (typeof data.idReajusteComparar3 == 'number') {
-            resultReajuste3 = await this.prisma.reajuste.findUnique({
+        if (typeof data.idReajusteComparar3 == 'number' && data.idReajusteComparar3 > 0) {
+          validResultReajuste3 = await this.prisma.reajuste.findUnique({
               select: {
                 id: true,
                 name: true
               },
               where: {
-                id: Number(data.idReajusteComparar3)
+                id: data.idReajusteComparar3
               }
             });
+          resultReajuste3 = validResultReajuste3.name == (null || undefined) ? '': validResultReajuste3.name
+        }
+      }catch (error) {
+        throw new HttpException('Falha ao buscar o ID e Name na tabela REAJUSTE.', HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+      //* Realizar a busca das informaçõess da tabela contratos e atualizar o status.
+      dataContract = await this.prisma.contrato.findUnique({
+        select:{
+        valor:true,
+        dataInicio: true,
+        dataFim: true,
+        reajuste1: true,
+        reajuste2: true,
+        reajuste3: true,
+        mesReajuste1: true,
+        mesReajuste2: true,
+        mesReajuste3: true,
+        percReajuste1: true,
+        percReajuste2: true,
+        percReajuste3: true,
+        }, where: {
+          id: contratoId
+        }
+      })
+
+      try{
+        if((dataContract.valor != data.valorComparar) || (dataContract.dataInicio != data.dataInicioComparar.split("-").join("")) || (dataContract.dataFim != data.dataFimComparar.split("-").join("")) || 
+          (dataContract.reajuste1 != resultReajuste1) || (dataContract.reajuste2 != resultReajuste2) || (dataContract.reajuste3 != resultReajuste3) || 
+          (dataContract.mesReajuste1 != data.mesReajusteComparar1) || (dataContract.mesReajuste2 != data.mesReajusteComparar2) || 
+          (dataContract.mesReajuste3 != data.mesReajusteComparar3) || (Number(dataContract.percReajuste1) != Number(data.percReajusteComparar1)) || 
+          (Number(dataContract.percReajuste2) != Number(data.percReajusteComparar2)) || (Number(dataContract.percReajuste3) != Number(data.percReajusteComparar3))){
+
+          statusAtualizado = 'analise'
+        }else{
+          statusAtualizado = 'ativo'
         }
       }catch (error) {
         throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+      }
 
 
       try {
@@ -233,37 +277,39 @@ export class ContratosService {
             id: contratoId
           },
           data: {
-            dataFimComparar: data.dataFimComparar,
-            dataInicioComparar: data.dataInicioComparar,
-            docSolid: data.docSolid,
-            faturamento: data.faturamento,
-            lgpd: data.lgpd,
-            limiteResponsabilidade: data.limiteResponsabilidade,
-            natureza: data.natureza,
+            dataFimComparar: data.dataFimComparar == (undefined || null) ? '19990101' : data.dataFimComparar,
+            dataInicioComparar: data.dataInicioComparar == (undefined || null) ? '19990101' : data.dataInicioComparar,
+            docSolid: data.docSolid == (undefined || null) ? '' : data.docSolid,
+            faturamento: data.faturamento == (undefined || null) ? '' : data.faturamento,
+            natureza: data.natureza == (undefined || null) ? '' : data.natureza,
             idReajusteComparar1: resultReajuste1 == null ? 0 : resultReajuste1.id,
             idReajusteComparar2: resultReajuste2 == null ? 0 : resultReajuste2.id,
             idReajusteComparar3: resultReajuste3 == null ? 0 : resultReajuste3.id,
             reajusteComparar1: resultReajuste1 == null ? '' : resultReajuste1.name,
             reajusteComparar2: resultReajuste2 == null ? '' : resultReajuste2.name,
             reajusteComparar3: resultReajuste3 == null ? '' : resultReajuste3.name,
-            mesReajusteComparar1: data.mesReajusteComparar1,
-            mesReajusteComparar2: data.mesReajusteComparar2,
-            mesReajusteComparar3: data.mesReajusteComparar3,
-            percReajusteComparar1: data.percReajusteComparar1,
-            percReajusteComparar2: data.percReajusteComparar2,
-            percReajusteComparar3: data.percReajusteComparar3,
+            mesReajusteComparar1: data.mesReajusteComparar1 == (undefined || null) ? '' : data.mesReajusteComparar1,
+            mesReajusteComparar2: data.mesReajusteComparar2 == (undefined || null) ? '' : data.mesReajusteComparar2,
+            mesReajusteComparar3: data.mesReajusteComparar3 == (undefined || null) ? '' : data.mesReajusteComparar3,
+            percReajusteComparar1: data.percReajusteComparar1 == (null || undefined) ? 0 : data.percReajusteComparar1,
+            percReajusteComparar2: data.percReajusteComparar2 == (null || undefined) ? 0 : data.percReajusteComparar2,
+            percReajusteComparar3: data.percReajusteComparar3 == (null || undefined) ? 0 : data.percReajusteComparar3,
+            retencaoContrato: data.retencaoContrato == (null || undefined) ? '' : data.retencaoContrato,
+            seguros: data.seguros == (null || undefined) ? '' : data.seguros,
+            tipoAss: data.tipoAss == (null || undefined) ? '' : data.tipoAss,
+            valorComparar: data.valorComparar == (null || undefined) ? 0 : data.valorComparar,
             resumo: data.resumo,
-            retencaoContrato: data.retencaoContrato,
-            seguros: data.seguros,
-            status: data.status,
-            tipoAss: data.tipoAss,
+            status: statusAtualizado,
             updatedJuridico: data.updatedJuridico,
+            lgpd: data.lgpd,
+            limiteResponsabilidade: data.limiteResponsabilidade,
             valorComparar: data.valorComparar,
             idSiga: data.idSiga,
           },
         });
 
         return ret;
+        
       } catch (error) {
         throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
       }
