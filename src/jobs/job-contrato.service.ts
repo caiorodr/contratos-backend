@@ -205,8 +205,6 @@ export class JobContratoService {
 
               if (element.status == 14) {
                 statusAtualizado = 'encerrado';
-              } else if (dateApi < date) {
-                statusAtualizado = 'vencido';
               } else {
                 statusAtualizado = 'revisao';
               }
@@ -419,8 +417,6 @@ export class JobContratoService {
 
             if (element.status == 14) {
               statusAtualizado = 'encerrado';
-            } else if (dateApi < date) {
-              statusAtualizado = 'vencido';
             } else {
               statusAtualizado = 'revisao';
             }
