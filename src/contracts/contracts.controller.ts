@@ -8,6 +8,10 @@ import { UpdateContratoDto } from './dto/update-contrato.dto';
 export class ContratosController {
   constructor(private readonly contratosService: ContratosService) {}
 
+  @Get('idSiga')
+  async idSiga() {
+    return this.contratosService.idSiga();
+  }
 
   @Get('findAll/')
   async findAll(
