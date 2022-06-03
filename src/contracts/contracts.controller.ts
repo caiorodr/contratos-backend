@@ -9,6 +9,7 @@ export class ContratosController {
   constructor(private readonly contratosService: ContratosService) {}
 
   @Get('idSiga')
+  
   async idSiga() {
     return this.contratosService.idSiga();
   }

@@ -19,6 +19,7 @@ export class ContratosService {
 
   //! API FAKE PARA RETORNO DO IDSIGA DO USUARIO
   async idSiga() {
+
     /*Gestão de Contratos:
       3646  : Adriana da Silva Siqueira
       18224 : Patrick Rodrigues Costa
@@ -27,7 +28,8 @@ export class ContratosService {
       22789 : Rafael Lopes do Nascimento
       22612 : Igor Souza Maroni
     */
-    const idSiga = '22612'
+
+    const idSiga = '13919'
 
     return { idSiga }
   }
@@ -131,7 +133,7 @@ export class ContratosService {
       ret.forEach(addAction);
 
       function addAction(element) {
-        if (privilegio == "CORD") {
+        if (privilegio == "LICO") {
           element.acoes = ['visualizar', 'alterar', 'baixar'];
           aRet.push(element);
         } else {
