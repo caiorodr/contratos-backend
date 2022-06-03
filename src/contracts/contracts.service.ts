@@ -32,11 +32,13 @@ export class ContratosService {
     return { idSiga }
   }
 
-  async findAll(page: string, cr: string, pec: string, grupoCliente: string, diretorExec: string, diretorCr: string, gerente: string, gerenteReg: string, supervisor: string, dataInicio: string, dataFim: string, mesReajuste: string, empresa: string, retencaoContrato: string, negocio: string, regional: string, valor: Decimal, status: string, tipoAss: string): Promise<any> {
+  async findAll(page: string, cr: string, pec: string, grupoCliente: string, diretorExec: string, diretorCr: string, gerente: string, gerenteReg: string, supervisor: string, dataInicio: string, dataFim: string, mesReajuste1: string, mesReajuste2: string, mesReajuste3: string, empresa: string, retencaoContrato: string, negocio: string, regional: string, valor: Decimal, status: string, tipoAss: string): Promise<any> {
     const dataInicioFormato = dataInicio ? dataInicio.substring(6, 10) + dataInicio.substring(3, 5) + dataInicio.substring(0, 2) : ''; //? aaaammdd
     const dataFimFormato = dataFim ? dataFim.substring(6, 10) + dataFim.substring(3, 5) + dataFim.substring(0, 2) : ''; //? aaaammdd
     const aRet: any = [];
+    const validValor = String(valor).split(",").join("") == ('0' || null || undefined) ? '': String(valor).split(",").join("");
     let skipPage = 0;
+    
 
     //*busca o idsiga do usuario logado.
     const buscaIdSiga: any = this.httpService.get(`${process.env.IDSIGA_API}`).pipe(
@@ -105,14 +107,15 @@ export class ContratosService {
         AND contrat.grupoCliente LIKE '%${grupoCliente}%'
         AND contrat.dataInicio LIKE '%${dataInicioFormato}%'
         AND contrat.dataFim LIKE '%${dataFimFormato}%'
-        AND contrat.mesReajuste1 LIKE '%${mesReajuste}%'
-        AND contrat.mesReajuste2 LIKE '%${mesReajuste}%'
-        AND contrat.mesReajuste3 LIKE '%${mesReajuste}%'
+        AND contrat.mesReajuste1 LIKE '%${mesReajuste1}%'
+        AND contrat.mesReajuste2 LIKE '%${mesReajuste2}%'
+        AND contrat.mesReajuste3 LIKE '%${mesReajuste3}%'
         AND contrat.empresa LIKE '%${empresa}%'
         AND contrat.retencaoContrato LIKE '%${retencaoContrato}%'
         AND contrat.negocio LIKE '%${negocio}%'
         AND contrat.status LIKE '%${status}%'
         AND contrat.tipoAss LIKE '%${tipoAss}%'
+        AND contrat.valor LIKE '%${validValor}%'
         ORDER BY contrat.id DESC LIMIT 20 OFFSET ${skipPage}`)
         .then((values: any) => {
           return values.map((value: any) => {
