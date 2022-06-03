@@ -234,6 +234,7 @@ export class ContratosService {
       } catch (error) {
         throw new HttpException('Falha ao buscar o ID e Name na tabela REAJUSTE.', HttpStatus.INTERNAL_SERVER_ERROR);
       }
+      
       //* Realizar a busca das informaçõess da tabela contratos e atualizar o status.
       dataContract = await this.prisma.contrato.findUnique({
         select: {
