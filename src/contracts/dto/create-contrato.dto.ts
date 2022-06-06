@@ -52,6 +52,5 @@ export class CreateContratoDto implements Prisma.ContratoCreateInput {
   deleted?: boolean;
   idSiga?: string;
   fileData?: Prisma.ContractFileDataCreateNestedManyWithoutContratoInput;
-  crContrato?: Prisma.CrContratoCreateNestedManyWithoutNumContratoInput;
-  
+  crContrato?: Prisma.CrContratoCreateNestedManyWithoutNumContratoInput; 
 }
