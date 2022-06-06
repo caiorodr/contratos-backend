@@ -71,82 +71,85 @@ export class ContratosService {
       acesso = "AND cr2.cr = ' '"
 
     }
-
+    
     if (!(parseInt(page) == 0)) {
       skipPage = (parseInt(page) * 11);
     }
+    if ((privilegio == "CORD" || privilegio == "LICO" )){
+        try {
+          const ret = await this.prisma.$queryRawUnsafe<any>(`
+            SELECT 
+              DISTINCT contrat.id, contrat.dataInicio, contrat.dataFim,
+              contrat.natureza, contrat.grupoCliente, contrat.empresa,
+              contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
+              contrat.seguros, contrat.reajuste1, contrat.mesReajuste1, contrat.percReajuste1,
+              contrat.reajuste2, contrat.mesReajuste2, contrat.percReajuste2,
+              contrat.reajuste3, contrat.mesReajuste3, contrat.percReajuste3, contrat.tipoAss, contrat.status,
+              contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
+              contrat.valor, contrat.descricaoPec, contrat.updatedJuridico, contrat.valorComparar, 
+              contrat.idReajusteComparar1, contrat.reajusteComparar1, contrat.mesReajusteComparar1, contrat.percReajusteComparar1,
+              contrat.idReajusteComparar2, contrat.reajusteComparar2, contrat.mesReajusteComparar2,  contrat.percReajusteComparar2,
+              contrat.idReajusteComparar3, contrat.reajusteComparar3, contrat.mesReajusteComparar3, contrat.percReajusteComparar3, 
+              contrat.dataInicioComparar, contrat.dataFimComparar, contrat.idSiga, cr.diretorExecCr
+            FROM CONTRATO AS contrat
+              LEFT JOIN CR_CONTRATO AS cr ON cr.numContratoId = contrat.id
+              LEFT JOIN CR_CONTRATO AS cr2  ON cr2.numContratoId = contrat.id
+              WHERE contrat.deleted = 0 
+              ${acesso}
+              AND cr.descricaoCr LIKE '%${cr}%'
+              AND cr.diretorExecCr LIKE '%${diretorExec}%'
+              AND cr.diretorCr LIKE '%${diretorCr}%'
+              AND cr.gerenteCr LIKE '%${gerente}%'
+              AND cr.gerenteRegCr LIKE '%${gerenteReg}%'
+              AND cr.supervisorCr LIKE '%${supervisor}%'
+              AND cr.regionalCr LIKE '%${regional}%'
+              AND contrat.pec LIKE '%${pec}%'
+              AND contrat.grupoCliente LIKE '%${grupoCliente}%'
+              AND contrat.dataInicio LIKE '%${dataInicioFormato}%'
+              AND contrat.dataFim LIKE '%${dataFimFormato}%'
+              AND contrat.mesReajuste1 LIKE '%${mesReajuste1}%'
+              AND contrat.mesReajuste2 LIKE '%${mesReajuste2}%'
+              AND contrat.mesReajuste3 LIKE '%${mesReajuste3}%'
+              AND contrat.empresa LIKE '%${empresa}%'
+              AND contrat.retencaoContrato LIKE '%${retencaoContrato}%'
+              AND contrat.negocio LIKE '%${negocio}%'
+              AND contrat.status LIKE '%${status}%'
+              AND contrat.tipoAss LIKE '%${tipoAss}%'
+              AND contrat.valor LIKE '%${validValor}%'
+              ORDER BY contrat.id DESC LIMIT 20 OFFSET ${skipPage}`)
+              .then((values: any) => {
+                return values.map((value: any) => {
+                  return {
+                    ...value,
+                    dataFim: value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4) == '//' ? '' :
+                      value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4),
+                    dataInicio: value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4) == '//' ? '' :
+                      value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4),
+                    dataInicioComparar: value.dataInicioComparar.split('-').reverse().join('/'),
+                    dataFimComparar: value.dataFimComparar.split('-').reverse().join('/'),
+                  }
+                });
+              });
 
-    try {
-      const ret = await this.prisma.$queryRawUnsafe<any>(`
-      SELECT 
-        DISTINCT contrat.id, contrat.dataInicio, contrat.dataFim,
-        contrat.natureza, contrat.grupoCliente, contrat.empresa,
-        contrat.negocio, contrat.docSolid, contrat.retencaoContrato, contrat.faturamento,
-        contrat.seguros, contrat.reajuste1, contrat.mesReajuste1, contrat.percReajuste1,
-        contrat.reajuste2, contrat.mesReajuste2, contrat.percReajuste2,
-        contrat.reajuste3, contrat.mesReajuste3, contrat.percReajuste3, contrat.tipoAss, contrat.status,
-        contrat.resumo, contrat.lgpd, contrat.limiteResponsabilidade, 
-        contrat.valor, contrat.descricaoPec, contrat.updatedJuridico, contrat.valorComparar, 
-        contrat.idReajusteComparar1, contrat.reajusteComparar1, contrat.mesReajusteComparar1, contrat.percReajusteComparar1,
-        contrat.idReajusteComparar2, contrat.reajusteComparar2, contrat.mesReajusteComparar2,  contrat.percReajusteComparar2,
-        contrat.idReajusteComparar3, contrat.reajusteComparar3, contrat.mesReajusteComparar3, contrat.percReajusteComparar3, 
-        contrat.dataInicioComparar, contrat.dataFimComparar, contrat.idSiga, cr.diretorExecCr
-      FROM CONTRATO AS contrat
-        LEFT JOIN CR_CONTRATO AS cr ON cr.numContratoId = contrat.id
-        LEFT JOIN CR_CONTRATO AS cr2  ON cr2.numContratoId = contrat.id
-        WHERE contrat.deleted = 0 
-        ${acesso}
-        AND cr.descricaoCr LIKE '%${cr}%'
-        AND cr.diretorExecCr LIKE '%${diretorExec}%'
-        AND cr.diretorCr LIKE '%${diretorCr}%'
-        AND cr.gerenteCr LIKE '%${gerente}%'
-        AND cr.gerenteRegCr LIKE '%${gerenteReg}%'
-        AND cr.supervisorCr LIKE '%${supervisor}%'
-        AND cr.regionalCr LIKE '%${regional}%'
-        AND contrat.pec LIKE '%${pec}%'
-        AND contrat.grupoCliente LIKE '%${grupoCliente}%'
-        AND contrat.dataInicio LIKE '%${dataInicioFormato}%'
-        AND contrat.dataFim LIKE '%${dataFimFormato}%'
-        AND contrat.mesReajuste1 LIKE '%${mesReajuste1}%'
-        AND contrat.mesReajuste2 LIKE '%${mesReajuste2}%'
-        AND contrat.mesReajuste3 LIKE '%${mesReajuste3}%'
-        AND contrat.empresa LIKE '%${empresa}%'
-        AND contrat.retencaoContrato LIKE '%${retencaoContrato}%'
-        AND contrat.negocio LIKE '%${negocio}%'
-        AND contrat.status LIKE '%${status}%'
-        AND contrat.tipoAss LIKE '%${tipoAss}%'
-        AND contrat.valor LIKE '%${validValor}%'
-        ORDER BY contrat.id DESC LIMIT 20 OFFSET ${skipPage}`)
-        .then((values: any) => {
-          return values.map((value: any) => {
-            return {
-              ...value,
-              dataFim: value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4) == '//' ? '' :
-                value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4),
-              dataInicio: value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4) == '//' ? '' :
-                value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4),
-              dataInicioComparar: value.dataInicioComparar.split('-').reverse().join('/'),
-              dataFimComparar: value.dataFimComparar.split('-').reverse().join('/'),
+          ret.forEach(addAction);
+
+          function addAction(element) {
+            if (privilegio == "CORD" && ret.statusPec == 9) {
+                element.acoes = ['visualizar', 'alterar', 'baixar'];
+                aRet.push(element);
+            } else if (privilegio == "LICO" || ret.statusPec == 14){
+              element.acoes = ['visualizar', 'baixar'];
+              aRet.push(element);
             }
-          });
-        });
+          }
 
-      ret.forEach(addAction);
-
-      function addAction(element) {
-        if (privilegio == "CORD") {
-          element.acoes = ['visualizar', 'alterar', 'baixar'];
-          aRet.push(element);
-        } else {
-          element.acoes = ['visualizar', 'baixar'];
-          aRet.push(element);
+          return aRet;
+        
+        } catch (error) {
+          throw new HttpException('Parâmetro inválido, contate a equipe de desenvolvimento.', HttpStatus.INTERNAL_SERVER_ERROR);
         }
-      }
-
-      return aRet;
-
-    } catch (error) {
-      throw new HttpException('Parâmetro inválido, contate a equipe de desenvolvimento.', HttpStatus.BAD_REQUEST);
+    }else {
+      throw new HttpException('Você não possui acesso ao sistema, contate a equipe HelpDesk Portal.', HttpStatus.NOT_FOUND);
     }
   }
 
@@ -190,7 +193,7 @@ export class ContratosService {
 
         return ret;
       } catch (error) {
-        throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new HttpException('Falha ao tentar alterar o contrato, contate a equipe de desenvolvimento.', HttpStatus.INTERNAL_SERVER_ERROR);
       }
 
     } else {
@@ -235,7 +238,7 @@ export class ContratosService {
           resultReajuste3 = validResultReajuste3.name == (null || undefined) ? '' : validResultReajuste3.name
         }
       } catch (error) {
-        throw new HttpException('Falha ao buscar o ID e Name na tabela REAJUSTE.', HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new HttpException('Falha ao buscar os campos na tabela REAJUSTE, contate a equipe de desenvolvimento.', HttpStatus.INTERNAL_SERVER_ERROR);
       }
       //* Realizar a busca das informaçõess da tabela contratos e atualizar o status.
       dataContract = await this.prisma.contrato.findUnique({
@@ -269,7 +272,7 @@ export class ContratosService {
           statusAtualizado = 'ativo'
         }
       } catch (error) {
-        throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new HttpException('Falha ao tentar alterar o contrato, contate a equipe de desenvolvimento.', HttpStatus.INTERNAL_SERVER_ERROR);
       }
 
 
@@ -312,7 +315,7 @@ export class ContratosService {
         return ret;
 
       } catch (error) {
-        throw new HttpException('Falha ao tentar alterar o contrato.', HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new HttpException('Falha ao tentar alterar o contrato, contate a equipe de desenvolvimento.', HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
   }
