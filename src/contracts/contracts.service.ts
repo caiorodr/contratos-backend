@@ -27,7 +27,7 @@ export class ContratosService {
       22789 : Rafael Lopes do Nascimento
       22612 : Igor Souza Maroni
     */
-    const idSiga = '22612'
+    const idSiga = '13919'
 
     return { idSiga }
   }
@@ -36,9 +36,9 @@ export class ContratosService {
     const dataInicioFormato = dataInicio ? dataInicio.substring(6, 10) + dataInicio.substring(3, 5) + dataInicio.substring(0, 2) : ''; //? aaaammdd
     const dataFimFormato = dataFim ? dataFim.substring(6, 10) + dataFim.substring(3, 5) + dataFim.substring(0, 2) : ''; //? aaaammdd
     const aRet: any = [];
-    const validValor = String(valor).split(",").join("") == ('0' || null || undefined) ? '': String(valor).split(",").join("");
+    const validValor = String(valor).split(",").join("") == ('0' || null || undefined) ? '' : String(valor).split(",").join("");
     let skipPage = 0;
-    
+
 
     //*busca o idsiga do usuario logado.
     const buscaIdSiga: any = this.httpService.get(`${process.env.IDSIGA_API}`).pipe(
@@ -47,7 +47,7 @@ export class ContratosService {
     const idSiga: any = await lastValueFrom(buscaIdSiga);
 
     //* Busca o privilegio do usuario logado.
-    const buscaPrivilegio = this.httpService.get(`${process.env.PRIVILEGIO_API + idSiga.idSiga}/OEP_EC`)
+    const buscaPrivilegio = this.httpService.get(`${process.env.PRIVILEGIO_API + idSiga.idSiga}/PRT_GC`)
       .pipe(
         map(
           (res) => res.data));
@@ -71,13 +71,13 @@ export class ContratosService {
       acesso = "AND cr2.cr = ' '"
 
     }
-    
+
     if (!(parseInt(page) == 0)) {
       skipPage = (parseInt(page) * 11);
     }
-    if ((privilegio == "CORD" || privilegio == "LICO" )){
-        try {
-          const ret = await this.prisma.$queryRawUnsafe<any>(`
+    if ((privilegio == "ADM" || privilegio == "USER")) {
+      try {
+        const ret = await this.prisma.$queryRawUnsafe<any>(`
             SELECT 
               DISTINCT contrat.id, contrat.dataInicio, contrat.dataFim,
               contrat.natureza, contrat.grupoCliente, contrat.empresa,
@@ -90,7 +90,7 @@ export class ContratosService {
               contrat.idReajusteComparar1, contrat.reajusteComparar1, contrat.mesReajusteComparar1, contrat.percReajusteComparar1,
               contrat.idReajusteComparar2, contrat.reajusteComparar2, contrat.mesReajusteComparar2,  contrat.percReajusteComparar2,
               contrat.idReajusteComparar3, contrat.reajusteComparar3, contrat.mesReajusteComparar3, contrat.percReajusteComparar3, 
-              contrat.dataInicioComparar, contrat.dataFimComparar, contrat.idSiga, cr.diretorExecCr
+              contrat.dataInicioComparar, contrat.dataFimComparar, contrat.idSiga, contrat.statusPec, cr.diretorExecCr
             FROM CONTRATO AS contrat
               LEFT JOIN CR_CONTRATO AS cr ON cr.numContratoId = contrat.id
               LEFT JOIN CR_CONTRATO AS cr2  ON cr2.numContratoId = contrat.id
@@ -117,39 +117,39 @@ export class ContratosService {
               AND contrat.tipoAss LIKE '%${tipoAss}%'
               AND contrat.valor LIKE '%${validValor}%'
               ORDER BY contrat.id DESC LIMIT 20 OFFSET ${skipPage}`)
-              .then((values: any) => {
-                return values.map((value: any) => {
-                  return {
-                    ...value,
-                    dataFim: value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4) == '//' ? '' :
-                      value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4),
-                    dataInicio: value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4) == '//' ? '' :
-                      value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4),
-                    dataInicioComparar: value.dataInicioComparar.split('-').reverse().join('/'),
-                    dataFimComparar: value.dataFimComparar.split('-').reverse().join('/'),
-                  }
-                });
-              });
+          .then((values: any) => {
+            return values.map((value: any) => {
+              return {
+                ...value,
+                dataFim: value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4) == '//' ? '' :
+                  value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4),
+                dataInicio: value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4) == '//' ? '' :
+                  value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4),
+                dataInicioComparar: value.dataInicioComparar.split('-').reverse().join('/'),
+                dataFimComparar: value.dataFimComparar.split('-').reverse().join('/'),
+              }
+            });
+          });
 
-          ret.forEach(addAction);
+        ret.forEach(addAcoes);
 
-          function addAction(element) {
-            if (privilegio == "CORD" && ret.statusPec == 9) {
-                element.acoes = ['visualizar', 'alterar', 'baixar'];
-                aRet.push(element);
-            } else if (privilegio == "LICO" || ret.statusPec == 14){
-              element.acoes = ['visualizar', 'baixar'];
-              aRet.push(element);
-            }
+        function addAcoes(contrato) {
+          if (privilegio == "ADM" && contrato.statusPec == 9) {
+            contrato.acoes = ['visualizar', 'alterar', 'baixar'];
+            aRet.push(contrato);
+          } else if (privilegio == "USER" || contrato.statusPec == 14) {
+            contrato.acoes = ['visualizar', 'baixar'];
+            aRet.push(contrato);
           }
-
-          return aRet;
-        
-        } catch (error) {
-          throw new HttpException('Parâmetro inválido, contate a equipe de desenvolvimento.', HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }else {
-      throw new HttpException('Você não possui acesso ao sistema, contate a equipe HelpDesk Portal.', HttpStatus.NOT_FOUND);
+
+        return aRet;
+
+      } catch (error) {
+        throw new HttpException('Parâmetro inválido, contate a equipe de desenvolvimento.', HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    } else {
+      throw new HttpException('Você não possui privilégio para acessar o sistema, contate a equipe HelpDesk Portal.', HttpStatus.NOT_FOUND);
     }
   }
 
