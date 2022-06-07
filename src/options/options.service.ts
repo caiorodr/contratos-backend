@@ -10,7 +10,7 @@ export class OptionsService {
     async findSeguros(filter: string, value: string) {
         let validRetSeguros: any;
         let validValue = value == undefined ? '' : value;
-        let validFilter = filter == undefined ? '' : filter;
+        const validFilter = filter == undefined ? '' : filter;
 
         try {
             if (validValue == '' && (validFilter.length > 0 || validFilter == '')) {
@@ -34,7 +34,7 @@ export class OptionsService {
 
         let validRetDocSolidaria: any;
         let validValue = value == undefined ? '' : value;
-        let validFilter = filter == undefined ? '' : filter;
+        const validFilter = filter == undefined ? '' : filter;
 
         try {
             if (validValue == '' && (validFilter.length > 0 || validFilter == '')) {
@@ -60,8 +60,8 @@ export class OptionsService {
     async findReajuste(value?: string, page?: string, pageSize?: number, filter?: string) {
 
         let skipPage = 0
-        let validFilter = filter == null || filter == undefined ? '' : filter;
-        let validValue  = value  == null || value  == undefined ? '' : value;
+        let validFilter = filter == (null || undefined) ? '' : filter;
+        let validValue = value == (null || undefined) ? '' : value;
         let validHasnext = true;
 
         if (!(parseInt(page) == 1)) {
