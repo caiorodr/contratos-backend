@@ -11,7 +11,9 @@ export class CardsHomeController {
   } 
 
   @Get('findData/') // ('preencher aqui') para declarar uma rota alternativa
-  async getStatus(){
-    return this.cardsHomeService.getStatus(); //pegando método da cards-home.service.ts
+  async getStatus(
+    @Query('status')    qtdStatus: number,
+  ){
+    return this.cardsHomeService.getStatus(qtdStatus); //pegando método da cards-home.service.ts
   } 
 } 
