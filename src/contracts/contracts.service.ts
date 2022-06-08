@@ -27,7 +27,7 @@ export class ContratosService {
       22789 : Rafael Lopes do Nascimento
       22612 : Igor Souza Maroni
     */
-    const idSiga = '13919'
+    const idSiga = '22612'
 
     return { idSiga }
   }
