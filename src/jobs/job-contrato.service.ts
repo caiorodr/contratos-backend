@@ -519,10 +519,11 @@ export class JobContratoService {
 
   };
 
-  @Cron('00 16 10 * * 0-6')
+  @Cron('00 49 19 * * 0-6')
   async jobCreateReajuste() {
     let tablePec: Array<any> = [];
     let createData: Array<any> = [];
+    let createAllData: Array<any> = [];
     let tableReajuste: Array<any> = [];
     let dateInitProcess: Date = new Date();
 
@@ -544,7 +545,7 @@ export class JobContratoService {
       }
     });
 
-    if (tablePec.length > 0) {
+    if (tableReajuste.length > 0) {
       dateInitProcess = new Date();
 
       for (let i = 0; i < tablePec.length; i++) {
@@ -562,7 +563,28 @@ export class JobContratoService {
           }
         }
       }
+    } else {
+      tablePec.forEach((reajuste: any) => {
+        createAllData.push({ name: reajuste.indiceReajuste1 })
+      });
     }
+
+
+
+    if (createAllData.length > 0) {
+      try {
+        await this.prisma.reajuste.createMany({
+          data: createAllData
+        });
+      } catch (error) {
+        this.createLogJob(`Erro ao criar os Reajustes:  ${error}`, dateInitProcess, new Date());
+      }
+      setTimeout(() => {
+        this.createLogJob(`JOB CreateReajuste finalizada com sucesso! `, null, new Date());
+      }, 800);
+    }
+
+
 
     if (createData.length > 0) {
       try {
