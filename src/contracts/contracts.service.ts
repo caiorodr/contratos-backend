@@ -258,7 +258,7 @@ export class ContratosService {
         }, where: {
           id: contratoId
         }
-      })
+      });
 
       try {
         if ((dataContract.valor != data.valorComparar) || (dataContract.dataInicio != data.dataInicioComparar.split("-").join("")) || (dataContract.dataFim != data.dataFimComparar.split("-").join("")) ||
@@ -290,9 +290,9 @@ export class ContratosService {
             idReajusteComparar1: data.idReajusteComparar1 == null ? 0 : data.idReajusteComparar1,
             idReajusteComparar2: data.idReajusteComparar2 == null ? 0 : data.idReajusteComparar2,
             idReajusteComparar3: data.idReajusteComparar3 == null ? 0 : data.idReajusteComparar3,
-            reajusteComparar1: resultReajuste1 == undefined ? '' : resultReajuste1.name,
-            reajusteComparar2: resultReajuste2 == undefined ? '' : resultReajuste2.name,
-            reajusteComparar3: resultReajuste3 == undefined ? '' : resultReajuste3.name,
+            reajusteComparar1: resultReajuste1 == undefined ? '' : resultReajuste1,
+            reajusteComparar2: resultReajuste2 == undefined ? '' : resultReajuste2,
+            reajusteComparar3: resultReajuste3 == undefined ? '' : resultReajuste3,
             mesReajusteComparar1: data.mesReajusteComparar1 == undefined || data.mesReajusteComparar1 == null ? '' : data.mesReajusteComparar1,
             mesReajusteComparar2: data.mesReajusteComparar2 == undefined || data.mesReajusteComparar2 == null ? '' : data.mesReajusteComparar2,
             mesReajusteComparar3: data.mesReajusteComparar3 == undefined || data.mesReajusteComparar3 == null ? '' : data.mesReajusteComparar3,
