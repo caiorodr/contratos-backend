@@ -16,22 +16,6 @@ export class ContratosService {
     private prisma: PrismaService,
     private httpService: HttpService) { }
 
-
-  //! API FAKE PARA RETORNO DO IDSIGA DO USUARIO
-  async idSiga() {
-    /*Gestão de Contratos:
-      3646  : Adriana da Silva Siqueira
-      18224 : Patrick Rodrigues Costa
-      4147  : Geyza Porto Pierini
-      13919 : Caio Rodrigues do Nascimento Maroni
-      22789 : Rafael Lopes do Nascimento
-      22612 : Igor Souza Maroni
-    */
-    const idSiga = '22612'
-
-    return { idSiga }
-  }
-
   async findAll(page: string, cr: string, pec: string, grupoCliente: string, diretorExec: string, diretorCr: string, gerente: string, gerenteReg: string, supervisor: string, dataInicio: string, dataFim: string, mesReajuste1: string, mesReajuste2: string, mesReajuste3: string, empresa: string, retencaoContrato: string, negocio: string, regional: string, valor: Decimal, status: string, tipoAss: string): Promise<any> {
     const dataInicioFormato = dataInicio ? dataInicio.substring(6, 10) + dataInicio.substring(3, 5) + dataInicio.substring(0, 2) : ''; //? aaaammdd
     const dataFimFormato = dataFim ? dataFim.substring(6, 10) + dataFim.substring(3, 5) + dataFim.substring(0, 2) : ''; //? aaaammdd
@@ -41,20 +25,20 @@ export class ContratosService {
 
 
     //*busca o idsiga do usuario logado.
-    const buscaIdSiga: any = this.httpService.get(`${process.env.IDSIGA_API}`).pipe(
+    const buscaIdSiga: any = this.httpService.get(`${process.env.IDSIGA_API_PORTAL}`).pipe(
       map(
         (res) => res.data));
     const idSiga: any = await lastValueFrom(buscaIdSiga);
 
     //* Busca o privilegio do usuario logado.
-    const buscaPrivilegio = this.httpService.get(`${process.env.PRIVILEGIO_API + idSiga.idSiga}/PRT_GC`)
+    const buscaPrivilegio = this.httpService.get(`${process.env.PRIVILEGIO_API + idSiga}/PRT_GC`)
       .pipe(
         map(
           (res) => res.data));
     const privilegio = await lastValueFrom(buscaPrivilegio);
 
     //* Busca o acesso de visualização de contratos do usuario logado. 
-    const buscaAcesso = this.httpService.get(`${process.env.ACESSO_API + idSiga.idSiga}`)
+    const buscaAcesso = this.httpService.get(`${process.env.ACESSO_API + idSiga}`)
       .pipe(
         map(
           (res) => res.data));
