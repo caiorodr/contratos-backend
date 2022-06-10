@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Query } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Query, Req } from '@nestjs/common';
 import { Decimal } from '@prisma/client/runtime';
 import { ContratosService } from './contracts.service';
 import { UpdateContratoDto } from './dto/update-contrato.dto';
@@ -30,7 +30,11 @@ export class ContratosController {
     @Query('valor') valor: Decimal,
     @Query('status') status: string,
     @Query('tipoAss') tipoAss: string,
+    @Req() req: any,
   ) {
+
+    const valueCookie = req.header('Cookie-Id-Siga');
+
     return this.contratosService.findAll(
       page,
       cr,
@@ -53,6 +57,7 @@ export class ContratosController {
       valor,
       status,
       tipoAss,
+      valueCookie,
     );
   }
 

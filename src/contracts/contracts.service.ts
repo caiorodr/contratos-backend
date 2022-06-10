@@ -6,6 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateContratoDto } from './dto/update-contrato.dto';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom, map } from 'rxjs';
+import { CookiesService } from 'src/cookies/cookies.service';
 
 
 @Injectable()
@@ -14,9 +15,10 @@ export class ContratosService {
 
   constructor(
     private prisma: PrismaService,
-    private httpService: HttpService) { }
+    private httpService: HttpService,
+    private cookiesService: CookiesService) { }
 
-  async findAll(page: string, cr: string, pec: string, grupoCliente: string, diretorExec: string, diretorCr: string, gerente: string, gerenteReg: string, supervisor: string, dataInicio: string, dataFim: string, mesReajuste1: string, mesReajuste2: string, mesReajuste3: string, empresa: string, retencaoContrato: string, negocio: string, regional: string, valor: Decimal, status: string, tipoAss: string): Promise<any> {
+  async findAll(page: string, cr: string, pec: string, grupoCliente: string, diretorExec: string, diretorCr: string, gerente: string, gerenteReg: string, supervisor: string, dataInicio: string, dataFim: string, mesReajuste1: string, mesReajuste2: string, mesReajuste3: string, empresa: string, retencaoContrato: string, negocio: string, regional: string, valor: Decimal, status: string, tipoAss: string, valueCookie: string): Promise<any> {
     const dataInicioFormato = dataInicio ? dataInicio.substring(6, 10) + dataInicio.substring(3, 5) + dataInicio.substring(0, 2) : ''; //? aaaammdd
     const dataFimFormato = dataFim ? dataFim.substring(6, 10) + dataFim.substring(3, 5) + dataFim.substring(0, 2) : ''; //? aaaammdd
     const aRet: any = [];
@@ -24,11 +26,7 @@ export class ContratosService {
     let skipPage = 0;
 
 
-    //*busca o idsiga do usuario logado.
-    const buscaIdSiga: any = this.httpService.get(`${process.env.IDSIGA_API_PORTAL}`).pipe(
-      map(
-        (res) => res.data));
-    const idSiga: any = await lastValueFrom(buscaIdSiga);
+    const idSiga: any = await this.cookiesService.getIdSiga(valueCookie);
 
     //* Busca o privilegio do usuario logado.
     const buscaPrivilegio = this.httpService.get(`${process.env.PRIVILEGIO_API + idSiga}/PRT_GC`)

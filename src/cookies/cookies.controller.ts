@@ -2,7 +2,7 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Req } from '@nestjs/common';
 import { CookiesService } from './cookies.service';
 import { CreateCookieDto } from './dto/create-cookie.dto';
 
@@ -11,10 +11,10 @@ export class CookiesController {
 
   constructor(private cookiesService: CookiesService) { }
 
-  @Post('idSiga')
-  getIdSiga(@Body() body: CreateCookieDto) {
-    console.log(body);
-    return this.cookiesService.getIdSiga(body);
+  @Get('idSiga')
+  getIdSiga(@Req() req: any) {
+    const valueCookie = req.header('Cookie-Id-Siga');
+    return this.cookiesService.getIdSiga(valueCookie);
   }
 
 }
