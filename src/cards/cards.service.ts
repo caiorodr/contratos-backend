@@ -2,28 +2,25 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { lastValueFrom, map } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+import { CookiesService } from 'src/cookies/cookies.service';
 
 @Injectable()
 export class CardsHomeService {
 
   constructor(
     private prisma: PrismaService,
-    private httpService: HttpService) { }
+    private httpService: HttpService,
+    private cookiesService: CookiesService) { }
 
   //* Métodos
-  async getStatus() {
+  async getStatus(valueCookie: any) {
 
     let statusRevisao: number = 0;
     let statusAtivo: number = 0;
     let statusEncerrado: number = 0;
     let statusAnalise: number = 0;
 
-    //*busca o idsiga do usuario logado.
-    const buscaIdSiga: any = this.httpService.get(`${process.env.IDSIGA_API_PORTAL}`).pipe(
-      map(
-        (res) => res.data));
-
-    const idSiga: any = await lastValueFrom(buscaIdSiga);
+    const idSiga: any = await this.cookiesService.getIdSiga(valueCookie);
 
     //* Busca o acesso de visualização de contratos do usuario logado. 
     const buscaAcesso = this.httpService.get(`${process.env.ACESSO_API + idSiga}`)

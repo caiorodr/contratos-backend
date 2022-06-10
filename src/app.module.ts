@@ -1,3 +1,4 @@
+import { CookiesModule } from './cookies/cookies.module';
 import { Module } from '@nestjs/common';
 import { ContratosModule } from './contracts/contracts.module';
 import { StorageModule } from './storage/storage.module';
@@ -11,6 +12,7 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    CookiesModule,
     ConfigModule.forRoot(),
     ScheduleModule.forRoot(),
     ContratosModule,
@@ -24,4 +26,4 @@ import { ConfigModule } from '@nestjs/config';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
