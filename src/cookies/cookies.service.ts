@@ -13,7 +13,7 @@ export class CookiesService {
   async getIdSiga(valueCookie: any) {
 
     const headersOptions = {
-      'cookie': `${valueCookie.cookie}`
+      'cookie': `${valueCookie}`
     }
 
     const header = {
