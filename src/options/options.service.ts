@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { TipoAss, TipoFaturamento, Reajuste, DocSolidaria, RetencContratual, Seguros, Prisma } from '@prisma/client';
+import { TipoAss, TipoFaturamento, Reajuste, DocSolidaria, RetencContratual, Seguros } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -64,10 +64,8 @@ export class OptionsService {
         let validValue = value == null || value == undefined ? '' : value;
         let validHasnext = true;
 
-        if (!(parseInt(page) == 1)) {
+        if (parseInt(page) != 1) {
             skipPage = (parseInt(page) * 11);
-        } else {
-            skipPage = 0
         }
 
         try {

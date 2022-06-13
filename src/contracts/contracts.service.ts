@@ -54,7 +54,7 @@ export class ContratosService {
 
     }
 
-    if (!(parseInt(page) == 0)) {
+    if (parseInt(page) != 0) {
       skipPage = (parseInt(page) * 11);
     }
     if ((privilegio == "ADM" || privilegio == "USER")) {
@@ -137,7 +137,7 @@ export class ContratosService {
 
 
   async findUnique(idContrato: number): Promise<Contrato> {
-    const result = await this.prisma.contrato.findUnique({
+    return await this.prisma.contrato.findUnique({
       where: {
         id: idContrato
       },
@@ -145,8 +145,6 @@ export class ContratosService {
         fileData: true
       }
     });
-
-    return result;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -166,14 +164,13 @@ export class ContratosService {
     if (data.length == 1) {
 
       try {
-        const ret = await this.prisma.contrato.update({
+        return await this.prisma.contrato.update({
           where: {
             id: contratoId
           },
           data: data[0]
         });
 
-        return ret;
       } catch (error) {
         throw new HttpException('Falha ao tentar alterar o contrato, contate a equipe de desenvolvimento.', HttpStatus.INTERNAL_SERVER_ERROR);
       }
@@ -259,7 +256,7 @@ export class ContratosService {
 
 
       try {
-        const ret = await this.prisma.contrato.update({
+        return await this.prisma.contrato.update({
           where: {
             id: contratoId
           },
@@ -293,8 +290,6 @@ export class ContratosService {
             idSiga: data.idSiga,
           },
         });
-
-        return ret;
 
       } catch (error) {
         throw new HttpException('Falha ao tentar alterar o contrato, contate a equipe de desenvolvimento.', HttpStatus.INTERNAL_SERVER_ERROR);

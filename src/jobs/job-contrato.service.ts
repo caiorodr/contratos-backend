@@ -14,7 +14,7 @@ export class JobContratoService {
   ) { }
 
 
-  @Cron('00 50 09 * * 0-6')
+  @Cron('00 50 00 * * 0-6')
 
   async jobPecContrato() {
     let dateInitProcess: Date = new Date();
@@ -113,7 +113,7 @@ export class JobContratoService {
 
 
 
-  @Cron('00 07 10 * * 0-6')
+  @Cron('00 07 00 * * 0-6')
 
   async jobContrato() {
     let updateData: Array<any> = [];
@@ -124,13 +124,6 @@ export class JobContratoService {
     let allContrato: Array<any> = [];
     let dateInitProcess: Date;
     let dateInitJob: Date = new Date();
-
-    // DATA DE HOJE
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); //Janeiro = 0
-    let yyyy = today.getFullYear();
-    let date = yyyy + '-' + mm + '-' + dd;
 
     // realiza a gravação do inicio do job
     this.createLogJob("Iniciou o processamento do JOB Table Contrato.", dateInitJob);
@@ -199,11 +192,11 @@ export class JobContratoService {
           if (allContrato.length == 0) {
             dateInitProcess = new Date();
 
-            data.forEach(async (element: any, index: number) => {
+            data.forEach(async (contrato: any, index: number) => {
               let statusAtualizado: string = ''
-              let dateApi = element.dataFim.substring(0, 4) + '-' + element.dataFim.substring(4, 6) + '-' + element.dataFim.substring(6, 8) // yyyymmdd
+              let dateApi = contrato.dataFim.substring(0, 4) + '-' + contrato.dataFim.substring(4, 6) + '-' + contrato.dataFim.substring(6, 8) // yyyymmdd
 
-              if (element.status == 14) {
+              if (contrato.status == 14) {
                 statusAtualizado = 'encerrado';
               } else {
                 statusAtualizado = 'revisao';
@@ -216,28 +209,28 @@ export class JobContratoService {
 
                 await this.prisma.contrato.create({
                   data: {
-                    dataFim: element.dataFim,
-                    dataInicio: element.dataInicio,
-                    empresa: element.empresa,
-                    grupoCliente: element.grupoCliente,
-                    reajuste1: element.indiceReajuste1,
-                    mesReajuste1: element.mesReajuste1,
-                    percReajuste1: element.percReajuste1,
-                    reajuste2: element.indiceReajuste2,
-                    mesReajuste2: element.mesReajuste2,
-                    percReajuste2: element.percReajuste2,
-                    reajuste3: element.indiceReajuste3,
-                    mesReajuste3: element.mesReajuste3,
-                    percReajuste3: element.percReajuste3,
-                    pec: element.pec,
-                    descricaoPec: element.descricaoPec,
-                    negocio: element.negocio,
-                    valor: element.valorGlobalPec,
+                    dataFim: contrato.dataFim,
+                    dataInicio: contrato.dataInicio,
+                    empresa: contrato.empresa,
+                    grupoCliente: contrato.grupoCliente,
+                    reajuste1: contrato.indiceReajuste1,
+                    mesReajuste1: contrato.mesReajuste1,
+                    percReajuste1: contrato.percReajuste1,
+                    reajuste2: contrato.indiceReajuste2,
+                    mesReajuste2: contrato.mesReajuste2,
+                    percReajuste2: contrato.percReajuste2,
+                    reajuste3: contrato.indiceReajuste3,
+                    mesReajuste3: contrato.mesReajuste3,
+                    percReajuste3: contrato.percReajuste3,
+                    pec: contrato.pec,
+                    descricaoPec: contrato.descricaoPec,
+                    negocio: contrato.negocio,
+                    valor: contrato.valorGlobalPec,
                     status: statusAtualizado,
-                    statusPec: element.status,
+                    statusPec: contrato.status,
                     crContrato: {
                       createMany: {
-                        data: element.dataCR
+                        data: contrato.dataCR
                       }
                     },
                   },
@@ -252,7 +245,7 @@ export class JobContratoService {
                 }
 
               } catch (error) {
-                this.createLogJob(`Ocorreu um erro ao criar o contrato: ${element.pec} : log - ${error}`, dateInitProcess, new Date());
+                this.createLogJob(`Ocorreu um erro ao criar o contrato: ${contrato.pec} : log - ${error}`, dateInitProcess, new Date());
               }
             });
           }
@@ -405,11 +398,9 @@ export class JobContratoService {
       // Valida se tem algum contrato novo para ser criado
       if (createData.length > 0) {
         let statusAtualizado: string = '';
-        let dateApi: string = '';
 
         try {
           createData.forEach(async (element: any, index: number) => {
-            dateApi = element.dataFim.substring(0, 4) + '-' + element.dataFim.substring(4, 6) + '-' + element.dataFim.substring(6, 8); // yyyymmdd 
 
             if (index == 1) {
               this.createLogJob(`Iniciou o processo de criação de ${createData.length.toString()} novos contratos.`, dateInitProcess);
