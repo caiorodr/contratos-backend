@@ -14,7 +14,7 @@ export class JobContratoService {
   ) { }
 
 
-  @Cron('00 50 00 * * 0-6')
+  @Cron('00 17 18 * * 0-6')
 
   async jobPecContrato() {
     let dateInitProcess: Date = new Date();
@@ -107,13 +107,13 @@ export class JobContratoService {
 
       setTimeout(() => {
         this.createLogJob("JOB PEC_CONTRATO finalizado com sucesso!", null, new Date());
-      }, 500);
+      }, 600);
     }
   }
 
 
 
-  @Cron('00 07 00 * * 0-6')
+  @Cron('00 38 19 * * 0-6')
 
   async jobContrato() {
     let updateData: Array<any> = [];
@@ -510,7 +510,7 @@ export class JobContratoService {
 
   };
 
-  @Cron('00 49 19 * * 0-6')
+  @Cron('00 28 17 * * 0-6')
   async jobCreateReajuste() {
     let tablePec: Array<any> = [];
     let createData: Array<any> = [];
