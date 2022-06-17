@@ -75,7 +75,7 @@ export class MediaController {
   @Delete('deleteFileContrato/:mediaName')
   async deleteFileContrato(
     @Param('mediaName') mediaName: string) {
-    return await this.mediaService.delete(mediaName)
+    return this.mediaService.delete(mediaName)
   }
 
 
@@ -84,7 +84,7 @@ export class MediaController {
     @Query('fileName') fileName: string,
     @Query('contentType') contentType: string,
     @Query('originalName') originalName: string,) {
-    return await this.storageService.delete(fileName)
+    return this.storageService.delete(fileName)
   }
 
 }

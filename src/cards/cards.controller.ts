@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Req } from '@nestjs/common';
+import { Controller, Get, Req } from '@nestjs/common';
 import { CardsHomeService } from './cards.service';
-import { CreateCookieDto } from '../cookies/dto/create-cookie.dto'
+
 
 @Controller('api/v1/cards/')
 export class CardsHomeController {
@@ -11,7 +11,7 @@ export class CardsHomeController {
   }
 
   @Get('findData/') // ('preencher aqui') para declarar uma rota alternativa
-  async getStatus(@Req() req: any ) {
+  async getStatus(@Req() req: any) {
     const valueCookie = req.header('Cookie-Id-Siga');
     return this.cardsHomeService.getStatus(valueCookie); //pegando método da cards-home.service.ts
   }

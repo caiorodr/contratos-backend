@@ -8,7 +8,7 @@ export class ContratosController {
   constructor(private readonly contratosService: ContratosService) { }
 
   @Get('findAll/')
-  async findAll(
+  findAll(
     @Query('page') page: string,
     @Query('cr') cr: string,
     @Query('pec') pec: string,
@@ -62,12 +62,12 @@ export class ContratosController {
   }
 
   @Get('idContrato/:idContrato')
-  async findOne(@Param('idContrato') idContrato: number) {
+  findOne(@Param('idContrato') idContrato: number) {
     return this.contratosService.findUnique(Number(idContrato));
   }
 
   @Patch('changeUnique/:idContrato')
-  async update(
+  update(
     @Param('idContrato') idContrato: number,
     @Body() updateConrtatoDto: UpdateContratoDto,
   ) {

@@ -8,6 +8,7 @@ ENV HOST=0.0.0.0
 WORKDIR /app
 
 COPY package.json ./
+COPY package-lock.json ./
 COPY prisma ./prisma
 
 RUN npm install
@@ -26,6 +27,7 @@ WORKDIR /app
 
 COPY --from=builder /app/node_modules ./node_modules
 COPY package.json ./
+COPY package-lock.json ./
 COPY prisma ./prisma
 COPY start.sh ./
 
