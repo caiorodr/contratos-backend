@@ -120,7 +120,7 @@ export class ContratosService {
             contrato.acoes = ['visualizar', 'alterar', 'baixar'];
             aRet.push(contrato);
           } else if (privilegio == "USER" || contrato.statusPec == 14) {
-            contrato.acoes = ['visualizar', 'baixar'];
+            contrato.acoes = ['visualizar'];
             aRet.push(contrato);
           }
         }
