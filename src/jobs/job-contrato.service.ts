@@ -20,7 +20,7 @@ export class JobContratoService {
   //? Autor   : Web Innovation                                                                                   =
   //? Data    : 20220101                                                                                         =
   //?=================================================winn========================================================
-  @Cron('00 15 10 * * 0-6')
+  @Cron('00 00 00 * * 0-6')
 
   async jobPecContrato() {
     let dateInitProcess: Date = new Date();
@@ -123,7 +123,7 @@ export class JobContratoService {
   //? Autor   : Web Innovation                                                                                   =
   //? Data    : 20220101                                                                                         =
   //?==================================================web========================================================
-  @Cron('00 39 10 * * 0-6')
+  @Cron('00 30 00 * * 0-6')
 
   async jobContrato() {
     let updateData: Array<any> = [];
@@ -535,7 +535,7 @@ export class JobContratoService {
   //? Autor   : Web Innovation                                                                                   =
   //? Data    : 20220101                                                                                         =
   //?==================================================web========================================================
-  @Cron('00 50 10 * * 0-6')
+  @Cron('00 00 01 * * 0-6')
   async jobCreateReajuste() {
     let tablePec: Array<any> = [];
     let createData: Array<any> = [];
