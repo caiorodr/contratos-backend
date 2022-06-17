@@ -2,7 +2,6 @@ import { StorageFile } from "./storage-file";
 import { Injectable } from '@nestjs/common';
 import { DownloadResponse, Storage } from "@google-cloud/storage";
 import StorageConfig from "./storage-config";
-import { extname } from 'path';
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -62,13 +61,13 @@ export class StorageService {
     } catch (error) {
       throw new error
     }
-  };
+  }
 
   async delete(path: string) {
     return await this.storage
       .bucket(this.bucket)
       .file(path)
       .delete({ ignoreNotFound: true });
-  };
-};
+  }
+}
 
