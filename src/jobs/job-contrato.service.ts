@@ -20,7 +20,7 @@ export class JobContratoService {
   //? Autor   : Web Innovation                                                                                   =
   //? Data    : 20220101                                                                                         =
   //?=================================================winn========================================================
-  @Cron('00 17 09 * * 0-6')
+  @Cron('00 15 10 * * 0-6')
 
   async jobPecContrato() {
     let dateInitProcess: Date = new Date();
@@ -123,7 +123,7 @@ export class JobContratoService {
   //? Autor   : Web Innovation                                                                                   =
   //? Data    : 20220101                                                                                         =
   //?==================================================web========================================================
-  @Cron('00 28 09 * * 0-6')
+  @Cron('00 39 10 * * 0-6')
 
   async jobContrato() {
     let updateData: Array<any> = [];
@@ -211,14 +211,14 @@ export class JobContratoService {
             data.forEach(async (contrato: any, index: number) => {
               let statusAtualizado: string = ''
 
-              if (contrato.status == 14) {
+              if (contrato.statusPec == 14) {
                 statusAtualizado = 'encerrado';
               } else {
                 statusAtualizado = 'revisao';
               }
 
               try {
-                if (index == 1) {
+                if (index == 0) {
                   await this.createLogJob('CRIAÇÃO CONTRATOS - INICIADO.', dateInitProcess);
                 }
 
@@ -412,7 +412,7 @@ export class JobContratoService {
                 try {
                   createData.forEach(async (element: any, index: number) => {
 
-                    if (index == 1) {
+                    if (index == 0) {
                       this.createLogJob(`CRIAÇÃO DE ${createData.length.toString()} NOVOS CONTRATOS - INICIADO.`, dateInitProcess);
                     }
 
@@ -467,34 +467,34 @@ export class JobContratoService {
                 try {
                   createDataEncerrado.forEach(async (element: any, index: number) => {
 
-                    if (index == 1) {
+                    if (index == 0) {
                       this.createLogJob(`CRIAÇÃO DE ${createDataEncerrado.length.toString()} NOVOS CONTRATO COM STATUS 14 - INICIADO.`, dateInitProcess);
                     }
 
                     await this.prisma.contrato.create({
                       data: {
-                        dataFim: element.dataFim,
-                        dataInicio: element.dataInicio,
-                        empresa: element.empresa,
-                        grupoCliente: element.grupoCliente,
-                        reajuste1: element.indiceReajuste1,
-                        mesReajuste1: element.mesReajuste1,
-                        percReajuste1: element.percReajuste1,
-                        reajuste2: element.indiceReajuste2,
-                        mesReajuste2: element.mesReajuste2,
-                        percReajuste2: element.percReajuste2,
-                        reajuste3: element.indiceReajuste3,
-                        mesReajuste3: element.mesReajuste3,
-                        percReajuste3: element.percReajuste3,
-                        pec: element.pec,
-                        descricaoPec: element.descricaoPec,
-                        negocio: element.negocio,
-                        valor: element.valorGlobalPec,
+                        dataFim: element[0].dataFim,
+                        dataInicio: element[0].dataInicio,
+                        empresa: element[0].empresa,
+                        grupoCliente: element[0].grupoCliente,
+                        reajuste1: element[0].indiceReajuste1,
+                        mesReajuste1: element[0].mesReajuste1,
+                        percReajuste1: element[0].percReajuste1,
+                        reajuste2: element[0].indiceReajuste2,
+                        mesReajuste2: element[0].mesReajuste2,
+                        percReajuste2: element[0].percReajuste2,
+                        reajuste3: element[0].indiceReajuste3,
+                        mesReajuste3: element[0].mesReajuste3,
+                        percReajuste3: element[0].percReajuste3,
+                        pec: element[0].pec,
+                        descricaoPec: element[0].descricaoPec,
+                        negocio: element[0].negocio,
+                        valor: element[0].valorGlobalPec,
                         status: 'encerrado',
                         statusPec: 14,
                         crContrato: {
                           createMany: {
-                            data: element.dataCR
+                            data: element[0].dataCR
                           }
                         },
                       },
@@ -535,7 +535,7 @@ export class JobContratoService {
   //? Autor   : Web Innovation                                                                                   =
   //? Data    : 20220101                                                                                         =
   //?==================================================web========================================================
-  @Cron('00 28 17 * * 0-6')
+  @Cron('00 50 10 * * 0-6')
   async jobCreateReajuste() {
     let tablePec: Array<any> = [];
     let createData: Array<any> = [];
