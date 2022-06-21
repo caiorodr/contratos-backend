@@ -13,8 +13,6 @@ export class JobContratoService {
     private prisma: PrismaService
   ) { }
 
-
-
   //?=================================================winn========================================================
   //? Objetivo: Responsavel por atualizar a tabela PEC_CONTRATO                                                  =
   //? Autor   : Web Innovation                                                                                   =
