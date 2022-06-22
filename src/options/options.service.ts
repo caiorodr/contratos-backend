@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { TipoAss, TipoFaturamento, Reajuste, DocSolidaria, RetencContratual, Seguros } from '@prisma/client';
+import { Tipo_ass, Tipo_faturamento, Reajuste, Doc_solidaria, Retenc_contratual, Seguros } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -38,13 +38,13 @@ export class OptionsService {
 
         try {
             if (validValue == '' && (validFilter.length > 0 || validFilter == '')) {
-                validRetDocSolidaria = await this.prisma.$queryRawUnsafe<DocSolidaria>(`SELECT name AS value, name AS label FROM DOC_SOLIDARIA
+                validRetDocSolidaria = await this.prisma.$queryRawUnsafe<Doc_solidaria>(`SELECT name AS value, name AS label FROM DOC_SOLIDARIA
                 WHERE name LIKE '%${validFilter}%'
                 ORDER BY name`);
 
             } else if (validFilter == '' && validValue.length > 0) {
                 validValue = validValue.split(",").join("','");
-                validRetDocSolidaria = await this.prisma.$queryRawUnsafe<DocSolidaria>(`SELECT name AS value, name AS label FROM DOC_SOLIDARIA
+                validRetDocSolidaria = await this.prisma.$queryRawUnsafe<Doc_solidaria>(`SELECT name AS value, name AS label FROM DOC_SOLIDARIA
                 WHERE name IN ('${validValue}')
                 ORDER BY name`);
             }
@@ -95,7 +95,7 @@ export class OptionsService {
     }
 
     async findRetencContratual() {
-        const retRetenc = await this.prisma.$queryRaw<RetencContratual>`
+        const retRetenc = await this.prisma.$queryRaw<Retenc_contratual>`
         SELECT name AS value, name AS label FROM RETENC_CONTRATUAL
         ORDER BY name`
 
@@ -103,7 +103,7 @@ export class OptionsService {
     }
 
     async findTipoAss() {
-        const retTipoAss = await this.prisma.$queryRaw<TipoAss>`
+        const retTipoAss = await this.prisma.$queryRaw<Tipo_ass>`
         SELECT name AS value, name AS label FROM TIPO_ASS
         ORDER BY name`
 
@@ -111,7 +111,7 @@ export class OptionsService {
     }
 
     async findTipoFaturamento() {
-        const retTipoFat = await this.prisma.$queryRaw<TipoFaturamento>`
+        const retTipoFat = await this.prisma.$queryRaw<Tipo_faturamento>`
         SELECT name AS value, name AS label FROM TIPO_FATURAMENTO
         ORDER BY name`
 

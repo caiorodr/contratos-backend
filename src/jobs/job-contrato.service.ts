@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { lastValueFrom, map } from 'rxjs';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { PecContrato } from '@prisma/client';
+import { Pec_contrato } from '@prisma/client';
 
 
 @Injectable()
@@ -13,23 +13,17 @@ export class JobContratoService {
     private prisma: PrismaService
   ) { }
 
-
-
   //?=================================================winn========================================================
   //? Objetivo: Responsavel por atualizar a tabela PEC_CONTRATO                                                  =
   //? Autor   : Web Innovation                                                                                   =
   //? Data    : 20220101                                                                                         =
   //?=================================================winn========================================================
-  @Cron('00 00 00 * * 0-6')
+  @Cron('00 12 17 * * 0-6')
 
-  async jobPecContrato() {
+  async jobpec_contrato() {
     let dateInitProcess: Date = new Date();
     let monthValidation: Array<string> = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
     let dateInitJob: Date = new Date();
-
-    //! Alterar o fuso horário do Database
-    await this.prisma.$queryRaw<any>`
-      SET time_zone='America/Sao_Paulo'`
 
     const headersOptions = {
       'Content-Type': 'application/json',
@@ -57,7 +51,7 @@ export class JobContratoService {
     const apiContratos = await lastValueFrom(observable);
 
     // deleta todos os contratos da tabela intermediaria
-    const deleteAllPec = await this.prisma.pecContrato.deleteMany();
+    const deleteAllPec = await this.prisma.pec_contrato.deleteMany();
 
     if (deleteAllPec.count > 0) {
       await this.createLogJob(`TABELA PEC_CONTRATO DELETADO COM SUCESSO!`, new Date());
@@ -71,34 +65,34 @@ export class JobContratoService {
       apiContratos.forEach(async (contrato: any, index: number) => {
         try {
           if ((contrato.status_pec == 14 && Number(contrato.data_fim.substring(0, 4))) > 2022 || contrato.status_pec == 9) {
-            await this.prisma.pecContrato.create({
+            await this.prisma.pec_contrato.create({
               data: {
-                descricaoPec: contrato.desc_contrato == null || contrato.desc_contrato == undefined ? "" : contrato.desc_contrato.trim(),
-                grupoCliente: contrato.grupo_cliente == null || contrato.grupo_cliente == undefined ? "" : contrato.grupo_cliente.trim(),
-                dataInicio: contrato.data_inicio == null || contrato.data_inicio == undefined ? "" : contrato.data_inicio.trim(),
-                dataFim: contrato.data_fim == null || contrato.data_fim == undefined ? "" : contrato.data_fim.trim(),
+                descricao_pec: contrato.desc_contrato == null || contrato.desc_contrato == undefined ? "" : contrato.desc_contrato.trim(),
+                grupo_cliente: contrato.grupo_cliente == null || contrato.grupo_cliente == undefined ? "" : contrato.grupo_cliente.trim(),
+                data_inicio: contrato.data_inicio == null || contrato.data_inicio == undefined ? "" : contrato.data_inicio.trim(),
+                data_fim: contrato.data_fim == null || contrato.data_fim == undefined ? "" : contrato.data_fim.trim(),
                 empresa: contrato.empresa == null || contrato.empresa == undefined ? "" : contrato.empresa.trim(),
                 negocio: contrato.negocio == null || contrato.negocio == undefined ? "" : contrato.negocio.trim(),
-                indiceReajuste1: contrato.indice_reajuste1 == null || contrato.indice_reajuste1 == undefined ? "" : contrato.indice_reajuste1.trim(),
-                mesReajuste1: contrato.mes_reajuste1 == null || 0 || contrato.mes_reajuste1 == undefined ? "" : monthValidation[contrato.mes_reajuste1 - 1],
-                percReajuste1: contrato.perc_reajuste1 == null || contrato.perc_reajuste1 == undefined ? 0 : contrato.perc_reajuste1,
-                indiceReajuste2: contrato.indice_reajuste2 == null || contrato.indice_reajuste2 == undefined ? "" : contrato.indice_reajuste2.trim(),
-                mesReajuste2: contrato.mes_reajuste2 == null || 0 || contrato.mes_reajuste2 == undefined ? "" : monthValidation[contrato.mes_reajuste2 - 1],
-                percReajuste2: contrato.perc_reajuste2 == null || contrato.perc_reajuste2 == undefined ? 0 : contrato.perc_reajuste2,
-                indiceReajuste3: contrato.indice_reajuste3 == null || contrato.indice_reajuste3 == undefined ? "" : contrato.indice_reajuste3.trim(),
-                mesReajuste3: contrato.mes_reajuste3 == null || 0 || contrato.mes_reajuste3 == undefined ? "" : monthValidation[contrato.mes_reajuste3 - 1],
-                percReajuste3: contrato.perc_reajuste3 == null || contrato.perc_reajuste3 == undefined ? 0 : contrato.perc_reajuste3,
-                pecCr: contrato.numero_pec == null || contrato.numero_pec == undefined ? "" : contrato.numero_pec.trim(),
+                indice_reajuste1: contrato.indice_reajuste1 == null || contrato.indice_reajuste1 == undefined ? "" : contrato.indice_reajuste1.trim(),
+                mes_reajuste1: contrato.mes_reajuste1 == null || 0 || contrato.mes_reajuste1 == undefined ? "" : monthValidation[contrato.mes_reajuste1 - 1],
+                perc_reajuste1: contrato.perc_reajuste1 == null || contrato.perc_reajuste1 == undefined ? 0 : contrato.perc_reajuste1,
+                indice_reajuste2: contrato.indice_reajuste2 == null || contrato.indice_reajuste2 == undefined ? "" : contrato.indice_reajuste2.trim(),
+                mes_reajuste2: contrato.mes_reajuste2 == null || 0 || contrato.mes_reajuste2 == undefined ? "" : monthValidation[contrato.mes_reajuste2 - 1],
+                perc_reajuste2: contrato.perc_reajuste2 == null || contrato.perc_reajuste2 == undefined ? 0 : contrato.perc_reajuste2,
+                indice_reajuste3: contrato.indice_reajuste3 == null || contrato.indice_reajuste3 == undefined ? "" : contrato.indice_reajuste3.trim(),
+                mes_reajuste3: contrato.mes_reajuste3 == null || 0 || contrato.mes_reajuste3 == undefined ? "" : monthValidation[contrato.mes_reajuste3 - 1],
+                perc_reajuste3: contrato.perc_reajuste3 == null || contrato.perc_reajuste3 == undefined ? 0 : contrato.perc_reajuste3,
+                pec_cr: contrato.numero_pec == null || contrato.numero_pec == undefined ? "" : contrato.numero_pec.trim(),
                 cr: contrato.cr_reduzido == null || contrato.cr_reduzido == undefined ? "" : contrato.cr_reduzido.trim(),
-                descricaoCr: contrato.descricao_cr == null || contrato.descricao_cr == undefined ? "" : contrato.cr_reduzido.trim() + " - " + contrato.descricao_cr.trim(),
-                regionalCr: contrato.regional_cr == null || contrato.regional_cr == undefined ? "" : contrato.regional_cr.trim(),
-                diretorCr: contrato.diretor_regional == null || contrato.diretor_regional == undefined ? "" : contrato.diretor_regional.trim(),
-                diretorExecCr: contrato.diretor_executivo == null || contrato.diretor_executivo == undefined ? "" : contrato.diretor_executivo.trim(),
-                gerenteRegCr: contrato.gerente_regional == null || contrato.gerente_regional == undefined ? "" : contrato.gerente_regional.trim(),
-                gerenteCr: contrato.gerente == null || contrato.gerente == undefined ? "" : contrato.gerente.trim(),
-                supervisorCr: contrato.supervisor == null || contrato.supervisor == undefined ? "" : contrato.supervisor.trim(),
+                descricao_cr: contrato.descricao_cr == null || contrato.descricao_cr == undefined ? "" : contrato.cr_reduzido.trim() + " - " + contrato.descricao_cr.trim(),
+                regional_cr: contrato.regional_cr == null || contrato.regional_cr == undefined ? "" : contrato.regional_cr.trim(),
+                diretor_cr: contrato.diretor_regional == null || contrato.diretor_regional == undefined ? "" : contrato.diretor_regional.trim(),
+                diretor_exec_cr: contrato.diretor_executivo == null || contrato.diretor_executivo == undefined ? "" : contrato.diretor_executivo.trim(),
+                gerente_reg_cr: contrato.gerente_regional == null || contrato.gerente_regional == undefined ? "" : contrato.gerente_regional.trim(),
+                gerente_cr: contrato.gerente == null || contrato.gerente == undefined ? "" : contrato.gerente.trim(),
+                supervisor_cr: contrato.supervisor == null || contrato.supervisor == undefined ? "" : contrato.supervisor.trim(),
                 status: contrato.status_pec == null || contrato.status_pec == undefined ? 0 : contrato.status_pec,
-                valorCr: contrato.faturamento_por_cr == null || contrato.faturamento_por_cr == undefined ? 0 : contrato.faturamento_por_cr,
+                valor_cr: contrato.faturamento_por_cr == null || contrato.faturamento_por_cr == undefined ? 0 : contrato.faturamento_por_cr,
               }
             });
 
@@ -123,14 +117,14 @@ export class JobContratoService {
   //? Autor   : Web Innovation                                                                                   =
   //? Data    : 20220101                                                                                         =
   //?==================================================web========================================================
-  @Cron('00 30 00 * * 0-6')
+  @Cron('00 39 10 * * 0-6')
 
   async jobContrato() {
     let updateData: Array<any> = [];
     let createDataEncerrado: Array<any> = [];
     let createData: Array<any> = [];
     let data: Array<any> = [];
-    let resultPecContratos: Array<any> = [];
+    let resultpec_contratos: Array<any> = [];
     let allContrato: Array<any> = [];
     let dateInitProcess: Date;
     let dateInitJob: Date = new Date();
@@ -146,62 +140,62 @@ export class JobContratoService {
     });
 
     // monta array para ficar no formato do create e update para tabela contratos.
-    resultPecContratos = await this.prisma.pecContrato.findMany({
-      distinct: "pecCr",
+    resultpec_contratos = await this.prisma.pec_contrato.findMany({
+      distinct: "pec_cr",
     })
 
     dateInitProcess = new Date();
 
-    resultPecContratos.forEach(async (element: any, index: number) => {
+    resultpec_contratos.forEach(async (element: any, index: number) => {
 
       try {
-        const resultValorGlobal = await this.prisma.$queryRaw<PecContrato>`
-        SELECT SUM(valorCr) AS valorGlobal FROM PEC_CONTRATO
-        WHERE pecCr = ${element.pecCr}`
+        const resultValorGlobal = await this.prisma.$queryRaw<Pec_contrato>`
+        SELECT SUM(valor_cr) AS valorGlobal FROM PEC_CONTRATO
+        WHERE pec_cr = ${element.pec_cr}`
 
-        const resultCr = await this.prisma.pecContrato.findMany({
+        const resultCr = await this.prisma.pec_contrato.findMany({
           select: {
-            pecCr: true,
+            pec_cr: true,
             cr: true,
-            descricaoCr: true,
-            regionalCr: true,
-            diretorCr: true,
-            diretorExecCr: true,
-            gerenteRegCr: true,
-            gerenteCr: true,
-            supervisorCr: true,
-            valorCr: true,
+            descricao_cr: true,
+            regional_cr: true,
+            diretor_cr: true,
+            diretor_exec_cr: true,
+            gerente_reg_cr: true,
+            gerente_cr: true,
+            supervisor_cr: true,
+            valor_cr: true,
           }, where: {
-            pecCr: element.pecCr
+            pec_cr: element.pec_cr
           }
         });
 
 
         data.push({
-          pec: element.pecCr == null || element.pecCr == undefined ? "" : element.pecCr,
-          descricaoPec: element.descricaoPec == null || element.descricaoPec == undefined ? "" : element.descricaoPec,
-          grupoCliente: element.grupoCliente == null || element.grupoCliente == undefined ? "" : element.grupoCliente,
-          dataInicio: element.dataInicio == null || element.dataInicio == undefined ? "19990101" : element.dataInicio,
-          dataFim: element.dataFim == null || element.dataFim == undefined ? "19990101" : element.dataFim,
+          pec: element.pec_cr == null || element.pec_cr == undefined ? "" : element.pec_cr,
+          descricao_pec: element.descricao_pec == null || element.descricao_pec == undefined ? "" : element.descricao_pec,
+          grupo_cliente: element.grupo_cliente == null || element.grupo_cliente == undefined ? "" : element.grupo_cliente,
+          data_inicio: element.data_inicio == null || element.data_inicio == undefined ? "19990101" : element.data_inicio,
+          data_fim: element.data_fim == null || element.data_fim == undefined ? "19990101" : element.data_fim,
           empresa: element.empresa == null || element.empresa == undefined ? "" : element.empresa,
           negocio: element.negocio == null || element.negocio == undefined ? "" : element.negocio,
-          reajuste1: element.indiceReajuste1 == null || element.indiceReajuste1 == undefined ? "" : element.indiceReajuste1,
-          mesReajuste1: element.mesReajuste1 == null || element.mesReajuste1 == undefined ? "" : element.mesReajuste1,
-          percReajuste1: element.percReajuste1 == null || element.percReajuste1 == undefined ? 0 : element.percReajuste1,
-          reajuste2: element.indiceReajuste2 == null || element.indiceReajuste2 == undefined ? "" : element.indiceReajuste2,
-          mesReajuste2: element.mesReajuste2 == null || element.mesReajuste2 == undefined ? "" : element.mesReajuste2,
-          percReajuste2: element.percReajuste2 == null || element.percReajuste2 == undefined ? 0 : element.percReajuste2,
-          indiceReajuste3: element.indiceReajuste3 == null || element.indiceReajuste3 == undefined ? "" : element.indiceReajuste3,
-          reajuste3: element.mesReajuste3 == null || element.mesReajuste3 == undefined ? "" : element.mesReajuste3,
-          percReajuste3: element.percReajuste3 == null || element.percReajuste3 == undefined ? "" : element.percReajuste3,
-          statusPec: element.status == null || element.status == undefined ? 0 : element.status,
-          valorGlobalPec: resultValorGlobal[0].valorGlobal,
-          dataCR: resultCr
+          reajuste1: element.indice_reajuste1 == null || element.indice_reajuste1 == undefined ? "" : element.indice_reajuste1,
+          mes_reajuste1: element.mes_reajuste1 == null || element.mes_reajuste1 == undefined ? "" : element.mes_reajuste1,
+          perc_reajuste1: element.perc_reajuste1 == null || element.perc_reajuste1 == undefined ? 0 : element.perc_reajuste1,
+          reajuste2: element.indice_reajuste2 == null || element.indice_reajuste2 == undefined ? "" : element.indice_reajuste2,
+          mes_reajuste2: element.mes_reajuste2 == null || element.mes_reajuste2 == undefined ? "" : element.mes_reajuste2,
+          perc_reajuste2: element.perc_reajuste2 == null || element.perc_reajuste2 == undefined ? 0 : element.perc_reajuste2,
+          indice_reajuste3: element.indice_reajuste3 == null || element.indice_reajuste3 == undefined ? "" : element.indice_reajuste3,
+          reajuste3: element.mes_reajuste3 == null || element.mes_reajuste3 == undefined ? "" : element.mes_reajuste3,
+          perc_reajuste3: element.perc_reajuste3 == null || element.perc_reajuste3 == undefined ? "" : element.perc_reajuste3,
+          status_pec: element.status == null || element.status == undefined ? 0 : element.status,
+          valor_global_pec: resultValorGlobal[0].valorGlobal,
+          data_cr: resultCr
         });
 
 
         // Verifica se finalizou o for para gravar os dados na tabela de CONTRATO.
-        if (resultPecContratos.length - 1 == index) {
+        if (resultpec_contratos.length - 1 == index) {
           await this.createLogJob(`${data.length.toString()} CONTRATOS ADICIONADO NO ARRAY DATA`, dateInitJob, new Date());
 
           // Grava novos contratos quando não ah nenhum contrato na tabela.
@@ -211,7 +205,7 @@ export class JobContratoService {
             data.forEach(async (contrato: any, index: number) => {
               let statusAtualizado: string = ''
 
-              if (contrato.statusPec == 14) {
+              if (contrato.status_pec == 14) {
                 statusAtualizado = 'encerrado';
               } else {
                 statusAtualizado = 'revisao';
@@ -224,28 +218,28 @@ export class JobContratoService {
 
                 await this.prisma.contrato.create({
                   data: {
-                    dataFim: contrato.dataFim,
-                    dataInicio: contrato.dataInicio,
+                    data_fim: contrato.data_fim,
+                    data_inicio: contrato.data_inicio,
                     empresa: contrato.empresa,
-                    grupoCliente: contrato.grupoCliente,
+                    grupo_cliente: contrato.grupo_cliente,
                     reajuste1: contrato.reajuste1,
-                    mesReajuste1: contrato.mesReajuste1,
-                    percReajuste1: contrato.percReajuste1,
+                    mes_reajuste1: contrato.mes_reajuste1,
+                    perc_reajuste1: contrato.perc_reajuste1,
                     reajuste2: contrato.reajuste2,
-                    mesReajuste2: contrato.mesReajuste2,
-                    percReajuste2: contrato.percReajuste2,
+                    mes_reajuste2: contrato.mes_reajuste2,
+                    perc_reajuste2: contrato.perc_reajuste2,
                     reajuste3: contrato.reajuste3,
-                    mesReajuste3: contrato.mesReajuste3,
-                    percReajuste3: contrato.percReajuste3,
+                    mes_reajuste3: contrato.mes_reajuste3,
+                    perc_reajuste3: contrato.perc_reajuste3,
                     pec: contrato.pec,
-                    descricaoPec: contrato.descricaoPec,
+                    descricao_pec: contrato.descricao_pec,
                     negocio: contrato.negocio,
-                    valor: contrato.valorGlobalPec,
+                    valor: contrato.valor_global_pec,
                     status: statusAtualizado,
-                    statusPec: contrato.statusPec,
-                    crContrato: {
+                    status_pec: contrato.status_pec,
+                    cr_contrato: {
                       createMany: {
-                        data: contrato.dataCR
+                        data: contrato.data_cr
                       }
                     },
                   },
@@ -277,7 +271,7 @@ export class JobContratoService {
 
                   if (allContrato[i].pec == data[x].pec && allContrato[i].pec) {
 
-                    if (data[x].statusPec == 14 && allContrato[i].statusPec == 9) {
+                    if (data[x].status_pec == 14 && allContrato[i].status_pec == 9) {
                       arrayCreateEncerrado.push(data[x]);
                       createDataEncerrado.push(arrayCreateEncerrado);
 
@@ -334,21 +328,21 @@ export class JobContratoService {
                   try {
                     const updateContrato = await this.prisma.contrato.update({
                       data: {
-                        dataFim: updateData[i][0].dataFim,
-                        dataInicio: updateData[i][0].dataInicio,
-                        grupoCliente: updateData[i][0].grupoCliente,
+                        data_fim: updateData[i][0].data_fim,
+                        data_inicio: updateData[i][0].data_inicio,
+                        grupo_cliente: updateData[i][0].grupo_cliente,
                         empresa: updateData[i][0].empresa,
                         negocio: updateData[i][0].negocio,
                         reajuste1: updateData[i][0].reajuste1,
-                        mesReajuste1: updateData[i][0].mesReajuste1,
-                        percReajuste1: updateData[i][0].percReajuste1,
+                        mes_reajuste1: updateData[i][0].mes_reajuste1,
+                        perc_reajuste1: updateData[i][0].perc_reajuste1,
                         reajuste2: updateData[i][0].reajuste2,
-                        mesReajuste2: updateData[i][0].mesReajuste2,
-                        percReajuste2: updateData[i][0].percReajuste2,
+                        mes_reajuste2: updateData[i][0].mes_reajuste2,
+                        perc_reajuste2: updateData[i][0].perc_reajuste2,
                         reajuste3: updateData[i][0].reajuste3,
-                        mesReajuste3: updateData[i][0].mesReajuste3,
-                        percReajuste3: updateData[i][0].percReajuste3,
-                        valor: updateData[i][0].valorGlobalPec,
+                        mes_reajuste3: updateData[i][0].mes_reajuste3,
+                        perc_reajuste3: updateData[i][0].perc_reajuste3,
+                        valor: updateData[i][0].valor_global_pec,
                         status: updateData[i][0].status,
                         deleted: updateData[i][0].deleted,
                       },
@@ -356,7 +350,7 @@ export class JobContratoService {
                         id: updateData[i][0].id,
                       },
                       include: {
-                        crContrato: true,
+                        cr_contrato: true,
                       },
                     });
 
@@ -377,17 +371,17 @@ export class JobContratoService {
                   }
 
                   try {
-                    await this.prisma.crContrato.update({
+                    await this.prisma.cr_contrato.update({
                       data: {
-                        descricaoCr: updateCrContrato[i].crContrato[0].descricaoCr,
-                        diretorCr: updateCrContrato[i].crContrato[0].diretorCr,
-                        diretorExecCr: updateCrContrato[i].crContrato[0].diretorExecCr,
-                        gerenteRegCr: updateCrContrato[i].crContrato[0].gerenteRegCr,
-                        gerenteCr: updateCrContrato[i].crContrato[0].gerenteCr,
-                        supervisorCr: updateCrContrato[i].crContrato[0].supervisorCr,
-                        regionalCr: updateCrContrato[i].crContrato[0].regionalCr,
+                        descricao_cr: updateCrContrato[i].crContrato[0].descricao_cr,
+                        diretor_cr: updateCrContrato[i].crContrato[0].diretor_cr,
+                        diretor_exec_cr: updateCrContrato[i].crContrato[0].diretor_exec_cr,
+                        gerente_reg_cr: updateCrContrato[i].crContrato[0].gerente_reg_cr,
+                        gerente_cr: updateCrContrato[i].crContrato[0].gerente_cr,
+                        supervisor_cr: updateCrContrato[i].crContrato[0].supervisor_cr,
+                        regional_cr: updateCrContrato[i].crContrato[0].regional_cr,
                         deleted: updateCrContrato[i].crContrato[0].deleted,
-                        valorCr: updateCrContrato[i].crContrato[0].valorCr,
+                        valor_cr: updateCrContrato[i].crContrato[0].valor_cr,
                       },
                       where: {
                         id: updateCrContrato[i].crContrato[0].id
@@ -416,7 +410,7 @@ export class JobContratoService {
                       this.createLogJob(`CRIAÇÃO DE ${createData.length.toString()} NOVOS CONTRATOS - INICIADO.`, dateInitProcess);
                     }
 
-                    if (element.statusPec == 14) {
+                    if (element.status_pec == 14) {
                       statusAtualizado = 'encerrado';
                     } else {
                       statusAtualizado = 'revisao';
@@ -424,28 +418,28 @@ export class JobContratoService {
 
                     await this.prisma.contrato.create({
                       data: {
-                        dataFim: element.dataFim,
-                        dataInicio: element.dataInicio,
+                        data_fim: element.data_fim,
+                        data_inicio: element.data_inicio,
                         empresa: element.empresa,
-                        grupoCliente: element.grupoCliente,
-                        reajuste1: element.indiceReajuste1,
-                        mesReajuste1: element.mesReajuste1,
-                        percReajuste1: element.percReajuste1,
-                        reajuste2: element.indiceReajuste2,
-                        mesReajuste2: element.mesReajuste2,
-                        percReajuste2: element.percReajuste2,
-                        reajuste3: element.indiceReajuste3,
-                        mesReajuste3: element.mesReajuste3,
-                        percReajuste3: element.percReajuste3,
+                        grupo_cliente: element.grupo_cliente,
+                        reajuste1: element.indice_reajuste1,
+                        mes_reajuste1: element.mes_reajuste1,
+                        perc_reajuste1: element.perc_reajuste1,
+                        reajuste2: element.indice_reajuste2,
+                        mes_reajuste2: element.mes_reajuste2,
+                        perc_reajuste2: element.perc_reajuste2,
+                        reajuste3: element.indice_reajuste3,
+                        mes_reajuste3: element.mes_reajuste3,
+                        perc_reajuste3: element.perc_reajuste3,
                         pec: element.pec,
-                        descricaoPec: element.descricaoPec,
+                        descricao_pec: element.descricao_pec,
                         negocio: element.negocio,
-                        valor: element.valorGlobalPec,
+                        valor: element.valor_global_pec,
                         status: statusAtualizado,
-                        statusPec: element.status,
-                        crContrato: {
+                        status_pec: element.status,
+                        cr_contrato: {
                           createMany: {
-                            data: element.dataCR
+                            data: element.data_cr
                           }
                         },
                       },
@@ -473,28 +467,28 @@ export class JobContratoService {
 
                     await this.prisma.contrato.create({
                       data: {
-                        dataFim: element[0].dataFim,
-                        dataInicio: element[0].dataInicio,
+                        data_fim: element[0].data_fim,
+                        data_inicio: element[0].data_inicio,
                         empresa: element[0].empresa,
-                        grupoCliente: element[0].grupoCliente,
-                        reajuste1: element[0].indiceReajuste1,
-                        mesReajuste1: element[0].mesReajuste1,
-                        percReajuste1: element[0].percReajuste1,
-                        reajuste2: element[0].indiceReajuste2,
-                        mesReajuste2: element[0].mesReajuste2,
-                        percReajuste2: element[0].percReajuste2,
-                        reajuste3: element[0].indiceReajuste3,
-                        mesReajuste3: element[0].mesReajuste3,
-                        percReajuste3: element[0].percReajuste3,
+                        grupo_cliente: element[0].grupo_cliente,
+                        reajuste1: element[0].indice_reajuste1,
+                        mes_reajuste1: element[0].mes_reajuste1,
+                        perc_reajuste1: element[0].perc_reajuste1,
+                        reajuste2: element[0].indice_reajuste2,
+                        mes_reajuste2: element[0].mes_reajuste2,
+                        perc_reajuste2: element[0].perc_reajuste2,
+                        reajuste3: element[0].indice_reajuste3,
+                        mes_reajuste3: element[0].mes_reajuste3,
+                        perc_reajuste3: element[0].perc_reajuste3,
                         pec: element[0].pec,
-                        descricaoPec: element[0].descricaoPec,
+                        descricao_pec: element[0].descricao_pec,
                         negocio: element[0].negocio,
-                        valor: element[0].valorGlobalPec,
+                        valor: element[0].valor_global_pec,
                         status: 'encerrado',
-                        statusPec: 14,
-                        crContrato: {
+                        status_pec: 14,
+                        cr_contrato: {
                           createMany: {
-                            data: element[0].dataCR
+                            data: element[0].data_cr
                           }
                         },
                       },
@@ -535,7 +529,7 @@ export class JobContratoService {
   //? Autor   : Web Innovation                                                                                   =
   //? Data    : 20220101                                                                                         =
   //?==================================================web========================================================
-  @Cron('00 00 01 * * 0-6')
+  @Cron('00 50 10 * * 0-6')
   async jobCreateReajuste() {
     let tablePec: Array<any> = [];
     let createData: Array<any> = [];
@@ -547,10 +541,10 @@ export class JobContratoService {
 
 
     // Result de todos os reajustes da tabela PEC_CONTRATO
-    tablePec = await this.prisma.pecContrato.findMany({
-      distinct: 'indiceReajuste1',
+    tablePec = await this.prisma.pec_contrato.findMany({
+      distinct: 'indice_reajuste1',
       select: {
-        indiceReajuste1: true
+        indice_reajuste1: true
       }
     });
 
@@ -567,21 +561,21 @@ export class JobContratoService {
       for (let i = 0; i < tablePec.length; i++) {
         let validReajuste: boolean = true;
         for (let _n = 0; _n < tableReajuste.length; _n++) {
-          if (tablePec[i].indiceReajuste1 == tableReajuste[_n].name) {
+          if (tablePec[i].indice_reajuste1 == tableReajuste[_n].name) {
             validReajuste = false;
             break;
           }
 
           if (tableReajuste.length - 1 == _n) {
             if (validReajuste) {
-              createData.push({ name: tablePec[i].indiceReajuste1 });
+              createData.push({ name: tablePec[i].indice_reajuste1 });
             }
           }
         }
       }
     } else {
       tablePec.forEach((reajuste: any) => {
-        createAllData.push({ name: reajuste.indiceReajuste1 })
+        createAllData.push({ name: reajuste.indice_reajuste1 })
       });
     }
 
@@ -619,12 +613,17 @@ export class JobContratoService {
 
   //! Grava log do processamento do job.
   async createLogJob(textInfoLog: string, dateInit?: Date, dateFim?: Date) {
-    await this.prisma.logJob.create({
-      data: {
-        infoLog: textInfoLog,
-        dataInicio: dateInit,
-        dataFim: dateFim,
-      },
-    });
+    try {
+      await this.prisma.logJob.create({
+        data: {
+          info_log: textInfoLog,
+          data_inicio: dateInit,
+          data_fim: dateFim,
+        },
+      });
+    }catch(error){
+      console.log(error)
+    }
+    
   }
 }

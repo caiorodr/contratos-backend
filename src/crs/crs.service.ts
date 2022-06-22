@@ -10,10 +10,10 @@ export class CrContratoService {
   async buscaCr(pec: string): Promise<any> {
 
     try {
-      return await this.prisma.crContrato.findMany({
+      return await this.prisma.cr_contrato.findMany({
         distinct: 'cr',
         where: {
-          pecCr: pec,
+          pec_cr: pec,
           AND: {
             deleted: false,
           }

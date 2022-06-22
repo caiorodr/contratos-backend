@@ -142,7 +142,7 @@ export class ContratosService {
         id: idContrato
       },
       include: {
-        fileData: true
+        file_data: true
       }
     });
   }
@@ -223,17 +223,17 @@ export class ContratosService {
       dataContract = await this.prisma.contrato.findUnique({
         select: {
           valor: true,
-          dataInicio: true,
-          dataFim: true,
+          data_inicio: true,
+          data_fim: true,
           reajuste1: true,
           reajuste2: true,
           reajuste3: true,
-          mesReajuste1: true,
-          mesReajuste2: true,
-          mesReajuste3: true,
-          percReajuste1: true,
-          percReajuste2: true,
-          percReajuste3: true,
+          mes_reajuste1: true,
+          mes_reajuste2: true,
+          mes_reajuste3: true,
+          perc_reajuste1: true,
+          perc_reajuste2: true,
+          perc_reajuste3: true,
         }, where: {
           id: contratoId
         }
@@ -261,33 +261,33 @@ export class ContratosService {
             id: contratoId
           },
           data: {
-            dataFimComparar: data.dataFimComparar == undefined || data.dataFimComparar == null ? '19990101' : data.dataFimComparar,
-            dataInicioComparar: data.dataInicioComparar == undefined || data.dataInicioComparar == null ? '19990101' : data.dataInicioComparar,
-            docSolid: data.docSolid == undefined || data.docSolid == null ? '' : data.docSolid,
+            data_fim_comparar: data.data_fim_comparar == undefined || data.data_fim_comparar == null ? '19990101' : data.data_fim_comparar,
+            data_inicio_comparar: data.data_inicio_comparar == undefined || data.data_inicio_comparar == null ? '19990101' : data.data_inicio_comparar,
+            doc_solid: data.doc_solid == undefined || data.doc_solid == null ? '' : data.doc_solid,
             faturamento: data.faturamento == undefined || data.faturamento == null ? '' : data.faturamento,
             natureza: data.natureza == undefined || data.natureza == null ? '' : data.natureza,
-            idReajusteComparar1: data.idReajusteComparar1 == null ? 0 : data.idReajusteComparar1,
-            idReajusteComparar2: data.idReajusteComparar2 == null ? 0 : data.idReajusteComparar2,
-            idReajusteComparar3: data.idReajusteComparar3 == null ? 0 : data.idReajusteComparar3,
-            reajusteComparar1: resultReajuste1 == undefined ? '' : resultReajuste1,
-            reajusteComparar2: resultReajuste2 == undefined ? '' : resultReajuste2,
-            reajusteComparar3: resultReajuste3 == undefined ? '' : resultReajuste3,
-            mesReajusteComparar1: data.mesReajusteComparar1 == undefined || data.mesReajusteComparar1 == null ? '' : data.mesReajusteComparar1,
-            mesReajusteComparar2: data.mesReajusteComparar2 == undefined || data.mesReajusteComparar2 == null ? '' : data.mesReajusteComparar2,
-            mesReajusteComparar3: data.mesReajusteComparar3 == undefined || data.mesReajusteComparar3 == null ? '' : data.mesReajusteComparar3,
-            percReajusteComparar1: data.percReajusteComparar1 == undefined || data.percReajusteComparar1 == null ? 0 : data.percReajusteComparar1,
-            percReajusteComparar2: data.percReajusteComparar2 == undefined || data.percReajusteComparar2 == null ? 0 : data.percReajusteComparar2,
-            percReajusteComparar3: data.percReajusteComparar3 == undefined || data.percReajusteComparar3 == null ? 0 : data.percReajusteComparar3,
-            retencaoContrato: data.retencaoContrato == undefined || data.retencaoContrato == null ? '' : data.retencaoContrato,
+            id_reajuste_comparar1: data.id_reajuste_comparar1 == null ? 0 : data.id_reajuste_comparar1,
+            id_reajuste_comparar2: data.id_reajuste_comparar2 == null ? 0 : data.id_reajuste_comparar2,
+            id_reajuste_comparar3: data.id_reajuste_comparar3 == null ? 0 : data.id_reajuste_comparar3,
+            reajuste_comparar1: resultReajuste1 == undefined ? '' : resultReajuste1,
+            reajuste_comparar2: resultReajuste2 == undefined ? '' : resultReajuste2,
+            reajuste_comparar3: resultReajuste3 == undefined ? '' : resultReajuste3,
+            mes_reajuste_comparar1: data.mes_reajuste_comparar1 == undefined || data.mes_reajuste_comparar1 == null ? '' : data.mes_reajuste_comparar1,
+            mes_reajuste_comparar2: data.mes_reajuste_comparar2 == undefined || data.mes_reajuste_comparar2 == null ? '' : data.mes_reajuste_comparar2,
+            mes_reajuste_comparar3: data.mes_reajuste_comparar3 == undefined || data.mes_reajuste_comparar3 == null ? '' : data.mes_reajuste_comparar3,
+            perc_reajuste_comparar1: data.perc_reajuste_comparar1 == undefined || data.perc_reajuste_comparar1 == null ? 0 : data.perc_reajuste_comparar1,
+            perc_reajuste_comparar2: data.perc_reajuste_comparar2 == undefined || data.perc_reajuste_comparar2 == null ? 0 : data.perc_reajuste_comparar2,
+            perc_reajuste_comparar3: data.perc_reajuste_comparar3 == undefined || data.perc_reajuste_comparar3 == null ? 0 : data.perc_reajuste_comparar3,
+            retencao_contrato: data.retencao_contrato == undefined || data.retencao_contrato == null ? '' : data.retencao_contrato,
             seguros: data.seguros == undefined || data.seguros == null ? '' : data.seguros,
-            tipoAss: data.tipoAss == undefined || data.tipoAss == null ? '' : data.tipoAss,
-            valorComparar: data.valorComparar == undefined || data.valorComparar == null ? 0 : data.valorComparar,
+            tipo_ass: data.tipo_ass == undefined || data.tipo_ass == null ? '' : data.tipo_ass,
+            valor_comparar: data.valor_comparar == undefined || data.valor_comparar == null ? 0 : data.valor_comparar,
             resumo: data.resumo,
             status: statusAtualizado,
-            updatedJuridico: data.updatedJuridico,
+            updated_juridico: data.updated_juridico,
             lgpd: data.lgpd,
-            limiteResponsabilidade: data.limiteResponsabilidade,
-            idSiga: data.idSiga,
+            limite_responsabilidade: data.limite_responsabilidade,
+            id_siga: data.id_siga,
           },
         });
 
