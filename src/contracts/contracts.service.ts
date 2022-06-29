@@ -23,7 +23,7 @@ export class ContratosService {
     const dataFimFormato = dataFim ? dataFim.substring(6, 10) + dataFim.substring(3, 5) + dataFim.substring(0, 2) : ''; //? aaaammdd
     const aRet: any = [];
     const validValor = String(valor).split(",").join("") == ('0' || null || undefined) ? '' : String(valor).split(",").join("");
-    const valorQuery = validValor === '' ? '' : `AND contract.valor ::varchar LIKE '%${validValor}%'`;
+    const valorQuery = validValor === '' ? '' : `AND contract.valor ::VARCHAR LIKE '%${validValor}%'`;
     let skipPage = 0;
 
 
@@ -145,7 +145,7 @@ export class ContratosService {
         id: idContrato
       },
       include: {
-        file_data: true
+        file_data: true,
       }
     });
   }
