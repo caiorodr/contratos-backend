@@ -18,7 +18,7 @@ export class JobContratoService {
   //? Autor   : Web Innovation                                                                                   =
   //? Data    : 20220101                                                                                         =
   //?=================================================winn========================================================
-  @Cron('00 12 17 * * 0-6')
+  @Cron('00 43 10 * * 0-6')
 
   async jobpec_contrato() {
     let dateInitProcess: Date = new Date();
@@ -117,7 +117,7 @@ export class JobContratoService {
   //? Autor   : Web Innovation                                                                                   =
   //? Data    : 20220101                                                                                         =
   //?==================================================web========================================================
-  @Cron('00 39 10 * * 0-6')
+  @Cron('00 31 12 * * 0-6')
 
   async jobContrato() {
     let updateData: Array<any> = [];
@@ -150,7 +150,7 @@ export class JobContratoService {
 
       try {
         const resultValorGlobal = await this.prisma.$queryRaw<Pec_contrato>`
-        SELECT SUM(valor_cr) AS valorGlobal FROM PEC_CONTRATO
+        SELECT SUM(valor_cr) AS valorGlobal FROM "PEC_CONTRATO"
         WHERE pec_cr = ${element.pec_cr}`
 
         const resultCr = await this.prisma.pec_contrato.findMany({
@@ -189,7 +189,7 @@ export class JobContratoService {
           reajuste3: element.mes_reajuste3 == null || element.mes_reajuste3 == undefined ? "" : element.mes_reajuste3,
           perc_reajuste3: element.perc_reajuste3 == null || element.perc_reajuste3 == undefined ? "" : element.perc_reajuste3,
           status_pec: element.status == null || element.status == undefined ? 0 : element.status,
-          valor_global_pec: resultValorGlobal[0].valorGlobal,
+          valor_global_pec: resultValorGlobal[0].valorglobal,
           data_cr: resultCr
         });
 
@@ -373,18 +373,18 @@ export class JobContratoService {
                   try {
                     await this.prisma.cr_contrato.update({
                       data: {
-                        descricao_cr: updateCrContrato[i].crContrato[0].descricao_cr,
-                        diretor_cr: updateCrContrato[i].crContrato[0].diretor_cr,
-                        diretor_exec_cr: updateCrContrato[i].crContrato[0].diretor_exec_cr,
-                        gerente_reg_cr: updateCrContrato[i].crContrato[0].gerente_reg_cr,
-                        gerente_cr: updateCrContrato[i].crContrato[0].gerente_cr,
-                        supervisor_cr: updateCrContrato[i].crContrato[0].supervisor_cr,
-                        regional_cr: updateCrContrato[i].crContrato[0].regional_cr,
-                        deleted: updateCrContrato[i].crContrato[0].deleted,
-                        valor_cr: updateCrContrato[i].crContrato[0].valor_cr,
+                        descricao_cr: updateCrContrato[i].cr_contrato[0].descricao_cr,
+                        diretor_cr: updateCrContrato[i].cr_contrato[0].diretor_cr,
+                        diretor_exec_cr: updateCrContrato[i].cr_contrato[0].diretor_exec_cr,
+                        gerente_reg_cr: updateCrContrato[i].cr_contrato[0].gerente_reg_cr,
+                        gerente_cr: updateCrContrato[i].cr_contrato[0].gerente_cr,
+                        supervisor_cr: updateCrContrato[i].cr_contrato[0].supervisor_cr,
+                        regional_cr: updateCrContrato[i].cr_contrato[0].regional_cr,
+                        deleted: updateCrContrato[i].cr_contrato[0].deleted,
+                        valor_cr: updateCrContrato[i].cr_contrato[0].valor_cr,
                       },
                       where: {
-                        id: updateCrContrato[i].crContrato[0].id
+                        id: updateCrContrato[i].cr_contrato[0].id
                       },
                     });
                   } catch (error) {
@@ -514,7 +514,7 @@ export class JobContratoService {
           }
         }
       } catch (error) {
-        this.createLogJob('ERRO AO FAZER O PUSH NO DATA.', dateInitJob, new Date());
+        this.createLogJob(`ERRO AO FAZER O PUSH NO DATA. LOG: ${error}`, dateInitJob, new Date());
       }
     });
 
@@ -621,9 +621,9 @@ export class JobContratoService {
           data_fim: dateFim,
         },
       });
-    }catch(error){
+    } catch (error) {
       console.log(error)
     }
-    
+
   }
 }

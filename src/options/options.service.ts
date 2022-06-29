@@ -71,13 +71,13 @@ export class OptionsService {
         try {
             if (validValue.length > 0) {
                 const retReajusteValue = await this.prisma.$queryRawUnsafe<Reajuste>(`
-                    SELECT id AS value, name AS label FROM REAJUSTE
+                    SELECT id AS value, name AS label FROM "REAJUSTE"
                     WHERE id LIKE '%${validValue}%'`)
 
                 return retReajusteValue[0]
             } else {
                 const retReajuste = await this.prisma.$queryRawUnsafe<any>(`
-                    SELECT id AS value, name AS label  FROM REAJUSTE
+                    SELECT id AS value, name AS label  FROM "REAJUSTE"
                     WHERE name LIKE '%${validFilter}%'
                     ORDER BY id LIMIT ${pageSize} OFFSET ${skipPage}`)
 
@@ -96,7 +96,7 @@ export class OptionsService {
 
     async findRetencContratual() {
         const retRetenc = await this.prisma.$queryRaw<Retenc_contratual>`
-        SELECT name AS value, name AS label FROM RETENC_CONTRATUAL
+        SELECT name AS value, name AS label FROM "RETENC_CONTRATUAL"
         ORDER BY name`
 
         return { items: retRetenc }
@@ -104,7 +104,7 @@ export class OptionsService {
 
     async findTipoAss() {
         const retTipoAss = await this.prisma.$queryRaw<Tipo_ass>`
-        SELECT name AS value, name AS label FROM TIPO_ASS
+        SELECT name AS value, name AS label FROM "TIPO_ASS"
         ORDER BY name`
 
         return { items: retTipoAss }
@@ -112,7 +112,7 @@ export class OptionsService {
 
     async findTipoFaturamento() {
         const retTipoFat = await this.prisma.$queryRaw<Tipo_faturamento>`
-        SELECT name AS value, name AS label FROM TIPO_FATURAMENTO
+        SELECT name AS value, name AS label FROM "TIPO_FATURAMENTO"
         ORDER BY name`
 
         return { items: retTipoFat }

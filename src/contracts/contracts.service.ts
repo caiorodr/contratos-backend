@@ -23,6 +23,7 @@ export class ContratosService {
     const dataFimFormato = dataFim ? dataFim.substring(6, 10) + dataFim.substring(3, 5) + dataFim.substring(0, 2) : ''; //? aaaammdd
     const aRet: any = [];
     const validValor = String(valor).split(",").join("") == ('0' || null || undefined) ? '' : String(valor).split(",").join("");
+    const valorQuery = validValor === '' ? '' : `AND contract.valor ::varchar  LIKE '%${validValor}%`;
     let skipPage = 0;
 
 
@@ -61,54 +62,54 @@ export class ContratosService {
       try {
         const ret = await this.prisma.$queryRawUnsafe<any>(`
             SELECT 
-              DISTINCT contract.id, contract.dataInicio, contract.dataFim,
-              contract.natureza, contract.grupoCliente, contract.empresa,
-              contract.negocio, contract.docSolid, contract.retencaoContrato, contract.faturamento,
-              contract.seguros, contract.reajuste1, contract.mesReajuste1, contract.percReajuste1,
-              contract.reajuste2, contract.mesReajuste2, contract.percReajuste2,
-              contract.reajuste3, contract.mesReajuste3, contract.percReajuste3, contract.tipoAss, contract.status,
-              contract.resumo, contract.lgpd, contract.limiteResponsabilidade, 
-              contract.valor, contract.descricaoPec, contract.updatedJuridico, contract.valorComparar, 
-              contract.idReajusteComparar1, contract.reajusteComparar1, contract.mesReajusteComparar1, contract.percReajusteComparar1,
-              contract.idReajusteComparar2, contract.reajusteComparar2, contract.mesReajusteComparar2,  contract.percReajusteComparar2,
-              contract.idReajusteComparar3, contract.reajusteComparar3, contract.mesReajusteComparar3, contract.percReajusteComparar3, 
-              contract.dataInicioComparar, contract.dataFimComparar, contract.idSiga, contract.statusPec, cr.diretorExecCr
-            FROM CONTRATO AS contract
-              LEFT JOIN CR_CONTRATO AS cr ON cr.numContratoId = contract.id
-              LEFT JOIN CR_CONTRATO AS cr2  ON cr2.numContratoId = contract.id
-              WHERE contract.deleted = 0 
+              DISTINCT contract.id, contract.data_inicio, contract.data_fim,
+              contract.natureza, contract.grupo_cliente, contract.empresa,
+              contract.negocio, contract.doc_solid, contract.retencao_contrato, contract.faturamento,
+              contract.seguros, contract.reajuste1, contract.mes_reajuste1, contract.perc_reajuste1,
+              contract.reajuste2, contract.mes_reajuste2, contract.perc_reajuste2,
+              contract.reajuste3, contract.mes_reajuste3, contract.perc_reajuste3, contract.tipo_ass, contract.status,
+              contract.resumo, contract.lgpd, contract.limite_responsabilidade, 
+              contract.valor, contract.descricao_pec, contract.updated_juridico, contract.valor_comparar, 
+              contract.id_reajuste_comparar1, contract.reajuste_comparar1, contract.mes_reajuste_comparar1, contract.perc_reajuste_comparar1,
+              contract.id_reajuste_comparar2, contract.reajuste_comparar2, contract.mes_reajuste_comparar2,  contract.perc_reajuste_comparar2,
+              contract.id_reajuste_comparar3, contract.reajuste_comparar3, contract.mes_reajuste_comparar3, contract.perc_reajuste_comparar3, 
+              contract.data_inicio_comparar, contract.data_fim_comparar, contract.id_siga, contract.status_pec, cr.diretor_exec_cr
+            FROM "CONTRATO" AS contract
+              LEFT JOIN "CR_CONTRATO" AS cr ON cr.num_contrato_id = contract.id
+              LEFT JOIN "CR_CONTRATO" AS cr2  ON cr2.num_contrato_id = contract.id
+              WHERE contract.deleted = '0' 
               ${acesso}
-              AND cr.descricaoCr LIKE '%${cr}%'
-              AND cr.diretorExecCr LIKE '%${diretorExec}%'
-              AND cr.diretorCr LIKE '%${diretorCr}%'
-              AND cr.gerenteCr LIKE '%${gerente}%'
-              AND cr.gerenteRegCr LIKE '%${gerenteReg}%'
-              AND cr.supervisorCr LIKE '%${supervisor}%'
-              AND cr.regionalCr LIKE '%${regional}%'
+              AND cr.descricao_cr LIKE '%${cr}%'
+              AND cr.diretor_exec_cr LIKE '%${diretorExec}%'
+              AND cr.diretor_cr LIKE '%${diretorCr}%'
+              AND cr.gerente_cr LIKE '%${gerente}%'
+              AND cr.gerente_reg_cr LIKE '%${gerenteReg}%'
+              AND cr.supervisor_cr LIKE '%${supervisor}%'
+              AND cr.regional_cr LIKE '%${regional}%'
               AND contract.pec LIKE '%${pec}%'
-              AND contract.grupoCliente LIKE '%${grupoCliente}%'
-              AND contract.dataInicio LIKE '%${dataInicioFormato}%'
-              AND contract.dataFim LIKE '%${dataFimFormato}%'
-              AND contract.mesReajuste1 LIKE '%${mesReajuste1}%'
-              AND contract.mesReajuste2 LIKE '%${mesReajuste2}%'
-              AND contract.mesReajuste3 LIKE '%${mesReajuste3}%'
+              AND contract.grupo_cliente LIKE '%${grupoCliente}%'
+              AND contract.data_inicio LIKE '%${dataInicioFormato}%'
+              AND contract.data_fim LIKE '%${dataFimFormato}%'
+              AND contract.mes_reajuste1 LIKE '%${mesReajuste1}%'
+              AND contract.mes_reajuste2 LIKE '%${mesReajuste2}%'
+              AND contract.mes_reajuste3 LIKE '%${mesReajuste3}%'
               AND contract.empresa LIKE '%${empresa}%'
-              AND contract.retencaoContrato LIKE '%${retencaoContrato}%'
+              AND contract.retencao_contrato LIKE '%${retencaoContrato}%'
               AND contract.negocio LIKE '%${negocio}%'
               AND contract.status LIKE '%${status}%'
-              AND contract.tipoAss LIKE '%${tipoAss}%'
-              AND contract.valor LIKE '%${validValor}%'
+              AND contract.tipo_ass LIKE '%${tipoAss}%'
+              ${valorQuery}
               ORDER BY contract.id DESC LIMIT 20 OFFSET ${skipPage}`)
           .then((values: any) => {
             return values.map((value: any) => {
               return {
                 ...value,
-                dataFim: value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4) == '//' ? '' :
-                  value.dataFim.substring(6, 8) + '/' + value.dataFim.substring(4, 6) + '/' + value.dataFim.substring(0, 4),
-                dataInicio: value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4) == '//' ? '' :
-                  value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4),
-                dataInicioComparar: value.dataInicioComparar.split('-').reverse().join('/'),
-                dataFimComparar: value.dataFimComparar.split('-').reverse().join('/'),
+                data_fim: value.data_fim.substring(6, 8) + '/' + value.data_fim.substring(4, 6) + '/' + value.data_fim.substring(0, 4) == '//' ? '' :
+                  value.data_fim.substring(6, 8) + '/' + value.data_fim.substring(4, 6) + '/' + value.data_fim.substring(0, 4),
+                data_inicio: value.data_inicio.substring(6, 8) + '/' + value.data_inicio.substring(4, 6) + '/' + value.data_inicio.substring(0, 4) == '//' ? '' :
+                  value.data_inicio.substring(6, 8) + '/' + value.data_inicio.substring(4, 6) + '/' + value.data_inicio.substring(0, 4),
+                data_inicio_comparar: value.data_inicio_comparar.split('-').reverse().join('/'),
+                data_fim_comparar: value.data_fim_comparar.split('-').reverse().join('/'),
               }
             });
           });
@@ -116,10 +117,10 @@ export class ContratosService {
         ret.forEach(addAcoes);
 
         function addAcoes(contrato) {
-          if (privilegio == "ADM" && contrato.statusPec == 9) {
+          if (privilegio == "ADM" && contrato.status_pec == 9) {
             contrato.acoes = ['visualizar', 'alterar', 'baixar'];
             aRet.push(contrato);
-          } else if (privilegio == "USER" || contrato.statusPec == 14) {
+          } else if (privilegio == "USER" || contrato.status_pec == 14) {
             contrato.acoes = ['visualizar'];
             aRet.push(contrato);
           }
