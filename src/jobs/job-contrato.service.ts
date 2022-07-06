@@ -66,7 +66,7 @@ export class JobContratoService {
       apiContratos.forEach(async (contrato: any, index: number) => {
 
         if ((contrato.status_pec == 14 && Number(contrato.data_fim.substring(0, 4))) > 2022 || contrato.status_pec == 9) {
-          
+
           allPecContrato.push({
             descricao_pec: contrato.desc_contrato == null || contrato.desc_contrato == undefined ? "" : contrato.desc_contrato.trim(),
             grupo_cliente: contrato.grupo_cliente == null || contrato.grupo_cliente == undefined ? "" : contrato.grupo_cliente.trim(),
@@ -183,7 +183,7 @@ export class JobContratoService {
         });
 
         // Verifica se finalizou o for para gravar os dados na tabela de CONTRATO.
-        if (resultPecContratos.length - 1  == index) {
+        if (resultPecContratos.length - 1 == index) {
           await this.createLogJob(`${data.length.toString()} CONTRATOS ADICIONADO NO ARRAY DATA`, dateInitJob, new Date());
 
           // Grava novos contratos quando não ah nenhum contrato na tabela.
@@ -222,16 +222,16 @@ export class JobContratoService {
                 }
               });
 
-              resultCr.forEach((valuesCr: any) =>{
+              resultCr.forEach((valuesCr: any) => {
                 idContrato.forEach((rlContrato: any) => {
-                  if(rlContrato.pec === valuesCr.pec_cr) {
-                    createCrContrato.push({...valuesCr, num_contrato_id: rlContrato.id })
+                  if (rlContrato.pec === valuesCr.pec_cr) {
+                    createCrContrato.push({ ...valuesCr, num_contrato_id: rlContrato.id })
                   }
                 });
               });
-          
+
               await this.prisma.cr_contrato.createMany({
-                data : createCrContrato
+                data: createCrContrato
               })
 
               await this.createLogJob(`CRIOU ${data.length.toString()} CONTRATOS.`, dateInitProcess, new Date());
@@ -253,14 +253,14 @@ export class JobContratoService {
 
                     if (data[x].status_pec == 14 && allContrato[i].status_pec == 9) {
                       createDataEncerrado.push(data[x]);
-                      updateData.push({...allContrato[i], deleted: true});
+                      updateData.push({ ...allContrato[i], deleted: true });
                       validContrato = false;
 
                       break;
 
                     } else {
 
-                      updateData.push({...data[x], id: allContrato[i].id, deleted: false, });
+                      updateData.push({ ...data[x], id: allContrato[i].id, deleted: false, });
 
                       validContrato = false;
                       break;
@@ -394,11 +394,11 @@ export class JobContratoService {
                         valor_cr: true,
                       }
                     });
-                    
 
-                    resultCr.forEach((valuesCr: any) =>{
+
+                    resultCr.forEach((valuesCr: any) => {
                       createData.forEach((rlContrato: any) => {
-                        if(rlContrato.pec === valuesCr.pec_cr) {
+                        if (rlContrato.pec === valuesCr.pec_cr) {
                           createCrContrato.push(valuesCr)
                         }
                       });
@@ -460,7 +460,7 @@ export class JobContratoService {
                     valor_cr: true,
                   }
                 });
-                
+
                 try {
                   createDataEncerrado.forEach(async (element: any, index: number) => {
                     let newCr: Array<any> = [];
@@ -470,7 +470,7 @@ export class JobContratoService {
                     }
 
                     resultCr.forEach((value: any) => {
-                      if(element.pec === value.pec_cr){
+                      if (element.pec === value.pec_cr) {
                         newCr.push(value)
                       }
                     });
@@ -615,6 +615,10 @@ export class JobContratoService {
       } catch (error) {
         this.createLogJob(`ERRO AO CRIAR OS REAJUSTES:  ${error}`, dateInitProcess, new Date());
       }
+    }
+
+    if (createData.length === 0 && createAllData.length === 0) {
+      await this.createLogJob(`NÃO HOUVE ALTERAÇÃO NO JOB REAJUSTE! `, null, new Date());
     }
   }
 
