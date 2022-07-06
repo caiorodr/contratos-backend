@@ -24,7 +24,7 @@ export class MediaController {
 
     const body = JSON.parse(req.body.data)
     await this.storageService.save(
-      body.mediaName,
+      body.media_name,
       file.buffer,
     );
 

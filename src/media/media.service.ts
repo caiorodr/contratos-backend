@@ -8,7 +8,7 @@ export class MediaService {
 
   async createFile(data: CreateFileDto) {
     try {
-      return await this.prisma.contractFileData.create({
+      return await this.prisma.contract_file_data.create({
         data
       })
 
@@ -20,9 +20,9 @@ export class MediaService {
 
   async delete(mediaName: string) {
     try {
-      return await this.prisma.contractFileData.deleteMany({
+      return await this.prisma.contract_file_data.deleteMany({
         where: {
-          mediaName: mediaName
+          media_name: mediaName
         }
       })
     } catch (error) {

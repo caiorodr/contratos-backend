@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { lastValueFrom, map } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
@@ -42,8 +42,8 @@ export class CardsHomeService {
     try {
       const result = await this.prisma.$queryRawUnsafe<any>(`
       SELECT DISTINCT contract.pec, contract.status 
-      FROM CONTRATO contract
-       INNER JOIN CR_CONTRATO AS cr ON cr.numContratoId = contract.id
+      FROM "CONTRATO" contract
+       INNER JOIN "CR_CONTRATO" AS cr ON cr.num_contrato_id = contract.id
        ${acesso}
       GROUP BY contract.pec, contract.status`)
 
@@ -61,7 +61,9 @@ export class CardsHomeService {
 
       return { statusRevisao, statusAtivo, statusEncerrado, statusAnalise }
     } catch (Error) {
-      throw new Error
+      throw new HttpException(
+        `${Error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
   }

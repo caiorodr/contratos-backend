@@ -25,9 +25,7 @@ export class CookiesService {
       map(
         (res) => res.data));
 
-    const idSiga: any = await lastValueFrom(buscaIdSiga);
-
-    return idSiga;
+    return await lastValueFrom(buscaIdSiga);
   }
 
 }
