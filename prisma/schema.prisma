@@ -6,187 +6,187 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Contrato {
-  id                     Int                @id @default(autoincrement())
-  dataInicio             String             @default("20002202")
-  dataFim                String             @default("20002202")
-  natureza               String?            @default("")
-  pec                    String             @default("")
-  descricaoPec           String             @default("")
-  grupoCliente           String             @default("")
-  empresa                String             @default("")
-  negocio                String             @default("")
-  seguros                String             @default("") @db.VarChar(1200)
-  docSolid               String             @default("") @db.VarChar(1200)
-  retencaoContrato       String             @default("")
-  faturamento            String             @default("")
-  tipoFaturamento        String             @default("")
-  reajuste1              String             @default("")
-  mesReajuste1           String             @default("")
-  percReajuste1          Decimal?           @db.Decimal(15, 2)
-  reajuste2              String             @default("")
-  mesReajuste2           String             @default("")
-  percReajuste2          Decimal?           @db.Decimal(15, 2)
-  reajuste3              String             @default("")
-  mesReajuste3           String             @default("")
-  percReajuste3          Decimal?           @db.Decimal(15, 2)
-  tipoAss                String             @default("")
-  status                 String             @default("")
-  statusPec              Int?               @default(0)
-  resumo                 String             @default("")
-  lgpd                   Boolean            @default(false)
-  limiteResponsabilidade Boolean            @default(false)
-  valor                  Decimal?           @db.Decimal(15, 2)
-  createdAt              DateTime           @default(now())
-  updatedAt              DateTime           @updatedAt
-  updatedJuridico        DateTime?
-  valorComparar          Decimal?           @db.Decimal(15, 2)
-  idReajusteComparar1    Int                @default(0)
-  reajusteComparar1      String             @default("")
-  mesReajusteComparar1   String             @default("")
-  percReajusteComparar1  Decimal?           @db.Decimal(15, 2)
-  idReajusteComparar2    Int                @default(0)
-  reajusteComparar2      String             @default("")
-  mesReajusteComparar2   String             @default("")
-  percReajusteComparar2  Decimal?           @db.Decimal(15, 2)
-  idReajusteComparar3    Int                @default(0)
-  reajusteComparar3      String             @default("")
-  mesReajusteComparar3   String             @default("")
-  percReajusteComparar3  Decimal?           @db.Decimal(15, 2)
-  dataInicioComparar     String             @default("")
-  dataFimComparar        String             @default("")
-  deleted                Boolean            @default(false)
-  idSiga                 String             @default("")
-  fileData               ContractFileData[]
-  crContrato             CrContrato[]
+  id                     	Int                @id @default(autoincrement())
+  data_inicio            	String             @default("20002202")
+  data_fim                	String             @default("20002202")
+  natureza               	String?            @default("")
+  pec                    	String             @default("")
+  descricao_pec           	String             @default("")
+  grupo_cliente           	String             @default("")
+  empresa                	String             @default("")
+  negocio                	String             @default("")
+  seguros                	String             @default("") @db.VarChar(1200)
+  doc_solid               	String             @default("") @db.VarChar(1200)
+  retencao_contrato       	String             @default("")
+  faturamento            	String             @default("")
+  tipo_faturamento        	String             @default("")
+  reajuste1              	String             @default("")
+  mes_reajuste1           	String             @default("")
+  perc_reajuste1          	Decimal?           @db.Decimal(15, 2)
+  reajuste2              	String             @default("")
+  mes_reajuste2           	String             @default("")
+  perc_reajuste2          	Decimal?           @db.Decimal(15, 2)
+  reajuste3              	String             @default("")
+  mes_reajuste3           	String             @default("")
+  perc_reajuste3          	Decimal?           @db.Decimal(15, 2)
+  tipo_ass                	String             @default("")
+  status                 	String             @default("")
+  status_pec              	Int?               @default(0)
+  resumo                 	String             @default("")
+  lgpd                   	Boolean            @default(false)
+  limite_responsabilidade 	Boolean            @default(false)
+  valor                  	Decimal?           @db.Decimal(15, 2)
+  created_at              	DateTime           @default(now())
+  updated_at              	DateTime           @updatedAt
+  updated_juridico        	DateTime?
+  valor_comparar          	Decimal?           @db.Decimal(15, 2)
+  id_reajuste_comparar1    	Int                @default(0)
+  reajuste_comparar1      	String             @default("")
+  mes_reajuste_comparar1   	String             @default("")
+  perc_reajuste_comparar1  	Decimal?           @db.Decimal(15, 2)
+  id_reajuste_comparar2    	Int                @default(0)
+  reajuste_comparar2      	String             @default("")
+  mes_reajuste_comparar2   	String             @default("")
+  perc_reajuste_comparar2  	Decimal?           @db.Decimal(15, 2)
+  id_reajuste_comparar3    	Int                @default(0)
+  reajuste_comparar3      	String             @default("")
+  mes_reajuste_comparar3   	String             @default("")
+  perc_reajuste_comparar3  	Decimal?           @db.Decimal(15, 2)
+  data_inicio_comparar     	String             @default("")
+  data_fim_comparar        	String             @default("")
+  deleted                	Boolean            @default(false)
+  id_siga                 	String             @default("")
+  file_data               	Contract_file_data[]
+  cr_contrato             	Cr_contrato[]
 
   @@map("CONTRATO")
 }
 
-model ContractFileData {
-  id           Int       @id @default(autoincrement())
-  originalName String
-  mediaName    String
-  contentType  String
-  sizeFile     Int
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  contrato     Contrato? @relation(fields: [contratoId], references: [id])
-  contratoId   Int
+model Contract_file_data {
+  id           		Int       @id @default(autoincrement())
+  original_name 	String
+  media_name    	String
+  content_type  	String
+  size_file     	Int
+  created_at    	DateTime  @default(now())
+  updated_at    	DateTime  @updatedAt
+  contrato     		Contrato? @relation(fields: [contrato_id], references: [id])
+  contrato_id   	Int
 
   @@map("DADOS_ARQUIVO")
 }
 
-model CrContrato {
-  id             Int       @id @default(autoincrement())
-  pecCr          String?
-  descricaoPecCr String?
-  cr             String?
-  descricaoCr    String?
-  regionalCr     String?
-  diretorCr      String?
-  diretorExecCr  String?
-  gerenteRegCr   String?
-  gerenteCr      String?
-  supervisorCr   String?
-  valorCr        Decimal?  @db.Decimal(15, 2)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  deleted        Boolean   @default(false)
-  numContrato    Contrato? @relation(fields: [numContratoId], references: [id])
-  numContratoId  Int
+model Cr_contrato {
+  id             		Int       @id @default(autoincrement())
+  pec_cr          		String?
+  descricao_pec_cr 		String?
+  cr             		String?
+  descricao_cr   	 	String?
+  regional_cr     		String?
+  diretor_cr      		String?
+  diretor_exec_cr  		String?
+  gerente_reg_cr   		String?
+  gerente_cr      		String?
+  supervisor_cr   		String?
+  valor_cr        		Decimal?  @db.Decimal(15, 2)
+  created_at      		DateTime  @default(now())
+  updated_at      		DateTime  @updatedAt
+  deleted        		Boolean   @default(false)
+  num_contrato    		Contrato? @relation(fields: [num_contrato_id], references: [id])
+  num_contrato_id  		Int
 
   @@map("CR_CONTRATO")
 }
 
-model PecContrato {
-  id              Int      @id @default(autoincrement())
-  pecCr           String?
-  descricaoPec    String?
-  grupoClienteId  String?
-  grupoCliente    String?
-  dataInicio      String?
-  dataFim         String?
-  negocioId       String?
-  negocio         String?
-  cr              String?
-  descricaoCr     String?
-  regionalCr      String?
-  diretorCr       String?
-  diretorExecCr   String?
-  gerenteRegCr    String?
-  gerenteCr       String?
-  supervisorCr    String?
-  empresaId       String?
-  mesReajuste1    String?
-  indiceReajuste1 String?
-  percReajuste1   Decimal? @db.Decimal(15, 2)
-  mesReajuste2    String?
-  indiceReajuste2 String?
-  percReajuste2   Decimal? @db.Decimal(15, 2)
-  mesReajuste3    String?
-  indiceReajuste3 String?
-  percReajuste3   Decimal? @db.Decimal(15, 2)
-  empresa         String?  @db.VarChar(1200)
-  status          Int?
-  valorCr         Decimal? @db.Decimal(15, 2)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+model Pec_contrato {
+  id              		Int      @id @default(autoincrement())
+  pec_cr           		String?
+  descricao_pec    		String?
+  grupo_cliente_id  	String?
+  grupo_cliente    		String?
+  data_inicio      		String?
+  data_fim         		String?
+  negocio_id       		String?
+  negocio         		String?
+  cr              		String?
+  descricao_cr     		String?
+  regional_cr      		String?
+  diretor_cr       		String?
+  diretor_exec_cr   	String?
+  gerente_reg_cr    	String?
+  gerente_cr       		String?
+  supervisor_cr    		String?
+  empresa_id       		String?
+  mes_reajuste1    		String?
+  indice_reajuste1 		String?
+  perc_reajuste1   		Decimal? @db.Decimal(15, 2)
+  mes_reajuste2    		String?
+  indice_reajuste2 		String?
+  perc_reajuste2   		Decimal? @db.Decimal(15, 2)
+  mes_reajuste3    		String?
+  indice_reajuste3 		String?
+  perc_reajuste3   		Decimal? @db.Decimal(15, 2)
+  empresa         		String?  @db.VarChar(1200)
+  status          		Int?
+  valor_cr         		Decimal? @db.Decimal(15, 2)
+  created_at       		DateTime @default(now())
+  updated_at       		DateTime @updatedAt
 
   @@map("PEC_CONTRATO")
 }
 
 model logJob {
-  id         Int       @id @default(autoincrement())
-  infoLog    String    @db.LongText
-  dataInicio DateTime?
-  dataFim    DateTime?
+  id         	Int       @id @default(autoincrement())
+  info_log    	String    @db.Text
+  data_inicio 	DateTime?
+  data_fim    	DateTime?
 
   @@map("LOG_JOB")
 }
 
 model Seguros {
-  id   Int     @id @default(autoincrement())
-  name String?
+  id   	Int     @id @default(autoincrement())
+  name 	String?
 
   @@map("SEGUROS")
 }
 
-model DocSolidaria {
-  id   Int     @id @default(autoincrement())
-  name String?
+model Doc_solidaria {
+  id   	Int     @id @default(autoincrement())
+  name 	String?
 
   @@map("DOC_SOLIDARIA")
 }
 
-model RetencContratual {
-  id   Int     @id @default(autoincrement())
-  name String?
+model Retenc_contratual {
+  id   	Int     @id @default(autoincrement())
+  name 	String?
 
   @@map("RETENC_CONTRATUAL")
 }
 
-model TipoFaturamento {
-  id   Int     @id @default(autoincrement())
-  name String?
+model Tipo_faturamento {
+  id   	Int     @id @default(autoincrement())
+  name 	String?
 
   @@map("TIPO_FATURAMENTO")
 }
 
-model TipoAss {
-  id   Int     @id @default(autoincrement())
-  name String?
+model Tipo_ass {
+  id   	Int     @id @default(autoincrement())
+  name 	String?
 
   @@map("TIPO_ASS")
 }
 
 model Reajuste {
-  id   Int     @id @default(autoincrement())
-  name String?
+  id   	Int     @id @default(autoincrement())
+  name 	String?
 
   @@map("REAJUSTE")
 }

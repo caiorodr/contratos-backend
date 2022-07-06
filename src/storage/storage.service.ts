@@ -2,16 +2,13 @@ import { StorageFile } from "./storage-file";
 import { Injectable } from '@nestjs/common';
 import { DownloadResponse, Storage } from "@google-cloud/storage";
 import StorageConfig from "./storage-config";
-import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class StorageService {
   private storage: Storage;
   private bucket: string;
 
-  constructor(
-    private prismaService: PrismaService,
-  ) {
+  constructor() {
     this.storage = new Storage({
       projectId: StorageConfig.projectId,
       credentials: {

@@ -1,13 +1,13 @@
 // eslint-disable-next-line prettier/prettier
 import { Prisma } from '@prisma/client';
 
-export class CreateFileDto implements Prisma.ContractFileDataCreateInput {
-  originalName: string;
-  mediaName: string;
-  contentType: string;
-  sizeFile: number;
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
-  contrato?: Prisma.ContratoCreateNestedOneWithoutFileDataInput;
- 
+export class CreateFileDto implements Prisma.Contract_file_dataCreateInput {
+  original_name: string;
+  media_name: string;
+  content_type: string;
+  size_file: number;
+  created_at?: string | Date;
+  updated_at?: string | Date;
+  contrato?: Prisma.ContratoCreateNestedOneWithoutFile_dataInput;
+
 }

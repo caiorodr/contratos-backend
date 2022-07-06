@@ -23,6 +23,7 @@ export class ContratosService {
     const dataFimFormato = dataFim ? dataFim.substring(6, 10) + dataFim.substring(3, 5) + dataFim.substring(0, 2) : ''; //? aaaammdd
     const aRet: any = [];
     const validValor = String(valor).split(",").join("") == ('0' || null || undefined) ? '' : String(valor).split(",").join("");
+    const valorQuery = validValor === '' ? '' : `AND contract.valor ::VARCHAR LIKE '%${validValor}%'`;
     let skipPage = 0;
 
 
@@ -61,44 +62,44 @@ export class ContratosService {
       try {
         const ret = await this.prisma.$queryRawUnsafe<any>(`
             SELECT 
-              DISTINCT contract.id, contract.dataInicio, contract.dataFim,
-              contract.natureza, contract.grupoCliente, contract.empresa,
-              contract.negocio, contract.docSolid, contract.retencaoContrato, contract.faturamento,
-              contract.seguros, contract.reajuste1, contract.mesReajuste1, contract.percReajuste1,
-              contract.reajuste2, contract.mesReajuste2, contract.percReajuste2,
-              contract.reajuste3, contract.mesReajuste3, contract.percReajuste3, contract.tipoAss, contract.status,
-              contract.resumo, contract.lgpd, contract.limiteResponsabilidade, 
-              contract.valor, contract.descricaoPec, contract.updatedJuridico, contract.valorComparar, 
-              contract.idReajusteComparar1, contract.reajusteComparar1, contract.mesReajusteComparar1, contract.percReajusteComparar1,
-              contract.idReajusteComparar2, contract.reajusteComparar2, contract.mesReajusteComparar2,  contract.percReajusteComparar2,
-              contract.idReajusteComparar3, contract.reajusteComparar3, contract.mesReajusteComparar3, contract.percReajusteComparar3, 
-              contract.dataInicioComparar, contract.dataFimComparar, contract.idSiga, contract.statusPec, cr.diretorExecCr
-            FROM CONTRATO AS contract
-              LEFT JOIN CR_CONTRATO AS cr ON cr.numContratoId = contract.id
-              LEFT JOIN CR_CONTRATO AS cr2  ON cr2.numContratoId = contract.id
-              WHERE contract.deleted = 0 
+              DISTINCT contract.id, contract.data_inicio AS "dataInicio", contract.data_fim AS "dataFim",
+              contract.natureza, contract.grupo_cliente AS "grupoCliente", contract.empresa,
+              contract.negocio, contract.doc_solid AS "docSolid", contract.retencao_contrato AS "retencaoContrato", contract.faturamento,
+              contract.seguros, contract.reajuste1, contract.mes_reajuste1 AS "mesReajuste1", contract.perc_reajuste1 AS "percReajuste1",
+              contract.reajuste2, contract.mes_reajuste2 AS "mesReajuste2", contract.perc_reajuste2 AS "percReajuste2",
+              contract.reajuste3, contract.mes_reajuste3 AS "mesReajuste3", contract.perc_reajuste3 AS "percReajuste3", contract.tipo_ass AS "tipoAss", contract.status,
+              contract.resumo, contract.lgpd, contract.limite_responsabilidade AS "limiteResponsabilidade", 
+              contract.valor, contract.descricao_pec AS "descricaoPec", contract.updated_juridico AS "updatedJuridico", contract.valor_comparar AS "valorComparar", 
+              contract.id_reajuste_comparar1 AS "idReajusteComparar1", contract.reajuste_comparar1 AS "reajusteComparar1", contract.mes_reajuste_comparar1 AS "mesReajusteComparar1", contract.perc_reajuste_comparar1 AS "percReajusteComparar1",
+              contract.id_reajuste_comparar2 AS "idReajusteComparar2", contract.reajuste_comparar2 AS "reajusteComparar2", contract.mes_reajuste_comparar2 AS "mesReajusteComparar2",  contract.perc_reajuste_comparar2 AS "percReajusteComparar2",
+              contract.id_reajuste_comparar3 AS "idReajusteComparar3", contract.reajuste_comparar3 AS "reajusteComparar3", contract.mes_reajuste_comparar3 AS "mesReajusteComparar3", contract.perc_reajuste_comparar3 AS "percReajusteComparar3", 
+              contract.data_inicio_comparar AS "dataInicioComparar", contract.data_fim_comparar AS "dataFimComparar", contract.id_siga AS "idSiga", contract.status_pec AS "statusPec", cr.diretor_exec_cr AS "diretorExecCr"
+            FROM "CONTRATO" AS contract
+              LEFT JOIN "CR_CONTRATO" AS cr ON cr.num_contrato_id = contract.id
+              LEFT JOIN "CR_CONTRATO" AS cr2  ON cr2.num_contrato_id = contract.id
+              WHERE contract.deleted = '0' 
               ${acesso}
-              AND cr.descricaoCr LIKE '%${cr}%'
-              AND cr.diretorExecCr LIKE '%${diretorExec}%'
-              AND cr.diretorCr LIKE '%${diretorCr}%'
-              AND cr.gerenteCr LIKE '%${gerente}%'
-              AND cr.gerenteRegCr LIKE '%${gerenteReg}%'
-              AND cr.supervisorCr LIKE '%${supervisor}%'
-              AND cr.regionalCr LIKE '%${regional}%'
+              AND cr.descricao_cr LIKE '%${cr}%'
+              AND cr.diretor_exec_cr LIKE '%${diretorExec}%'
+              AND cr.diretor_cr LIKE '%${diretorCr}%'
+              AND cr.gerente_cr LIKE '%${gerente}%'
+              AND cr.gerente_reg_cr LIKE '%${gerenteReg}%'
+              AND cr.supervisor_cr LIKE '%${supervisor}%'
+              AND cr.regional_cr LIKE '%${regional}%'
               AND contract.pec LIKE '%${pec}%'
-              AND contract.grupoCliente LIKE '%${grupoCliente}%'
-              AND contract.dataInicio LIKE '%${dataInicioFormato}%'
-              AND contract.dataFim LIKE '%${dataFimFormato}%'
-              AND contract.mesReajuste1 LIKE '%${mesReajuste1}%'
-              AND contract.mesReajuste2 LIKE '%${mesReajuste2}%'
-              AND contract.mesReajuste3 LIKE '%${mesReajuste3}%'
+              AND contract.grupo_cliente LIKE '%${grupoCliente}%'
+              AND contract.data_inicio LIKE '%${dataInicioFormato}%'
+              AND contract.data_fim LIKE '%${dataFimFormato}%'
+              AND contract.mes_reajuste1 LIKE '%${mesReajuste1}%'
+              AND contract.mes_reajuste2 LIKE '%${mesReajuste2}%'
+              AND contract.mes_reajuste3 LIKE '%${mesReajuste3}%'
               AND contract.empresa LIKE '%${empresa}%'
-              AND contract.retencaoContrato LIKE '%${retencaoContrato}%'
+              AND contract.retencao_contrato LIKE '%${retencaoContrato}%'
               AND contract.negocio LIKE '%${negocio}%'
               AND contract.status LIKE '%${status}%'
-              AND contract.tipoAss LIKE '%${tipoAss}%'
-              AND contract.valor LIKE '%${validValor}%'
-              ORDER BY contract.id DESC LIMIT 20 OFFSET ${skipPage}`)
+              AND contract.tipo_ass LIKE '%${tipoAss}%'
+              ${valorQuery}
+              ORDER BY contract.id DESC LIMIT 11 OFFSET ${skipPage}`)
           .then((values: any) => {
             return values.map((value: any) => {
               return {
@@ -109,6 +110,8 @@ export class ContratosService {
                   value.dataInicio.substring(6, 8) + '/' + value.dataInicio.substring(4, 6) + '/' + value.dataInicio.substring(0, 4),
                 dataInicioComparar: value.dataInicioComparar.split('-').reverse().join('/'),
                 dataFimComparar: value.dataFimComparar.split('-').reverse().join('/'),
+                lgpd: value.lgpd == true ? 1 : 0,
+                limiteResponsabilidade: value.limiteResponsabilidade == true ? 1 : 0,
               }
             });
           });
@@ -142,7 +145,7 @@ export class ContratosService {
         id: idContrato
       },
       include: {
-        fileData: true
+        file_data: true,
       }
     });
   }
@@ -223,17 +226,17 @@ export class ContratosService {
       dataContract = await this.prisma.contrato.findUnique({
         select: {
           valor: true,
-          dataInicio: true,
-          dataFim: true,
+          data_inicio: true,
+          data_fim: true,
           reajuste1: true,
           reajuste2: true,
           reajuste3: true,
-          mesReajuste1: true,
-          mesReajuste2: true,
-          mesReajuste3: true,
-          percReajuste1: true,
-          percReajuste2: true,
-          percReajuste3: true,
+          mes_reajuste1: true,
+          mes_reajuste2: true,
+          mes_reajuste3: true,
+          perc_reajuste1: true,
+          perc_reajuste2: true,
+          perc_reajuste3: true,
         }, where: {
           id: contratoId
         }
@@ -261,33 +264,33 @@ export class ContratosService {
             id: contratoId
           },
           data: {
-            dataFimComparar: data.dataFimComparar == undefined || data.dataFimComparar == null ? '19990101' : data.dataFimComparar,
-            dataInicioComparar: data.dataInicioComparar == undefined || data.dataInicioComparar == null ? '19990101' : data.dataInicioComparar,
-            docSolid: data.docSolid == undefined || data.docSolid == null ? '' : data.docSolid,
+            data_fim_comparar: data.data_fim_comparar == undefined || data.data_fim_comparar == null ? '19990101' : data.data_fim_comparar,
+            data_inicio_comparar: data.data_inicio_comparar == undefined || data.data_inicio_comparar == null ? '19990101' : data.data_inicio_comparar,
+            doc_solid: data.doc_solid == undefined || data.doc_solid == null ? '' : data.doc_solid,
             faturamento: data.faturamento == undefined || data.faturamento == null ? '' : data.faturamento,
             natureza: data.natureza == undefined || data.natureza == null ? '' : data.natureza,
-            idReajusteComparar1: data.idReajusteComparar1 == null ? 0 : data.idReajusteComparar1,
-            idReajusteComparar2: data.idReajusteComparar2 == null ? 0 : data.idReajusteComparar2,
-            idReajusteComparar3: data.idReajusteComparar3 == null ? 0 : data.idReajusteComparar3,
-            reajusteComparar1: resultReajuste1 == undefined ? '' : resultReajuste1,
-            reajusteComparar2: resultReajuste2 == undefined ? '' : resultReajuste2,
-            reajusteComparar3: resultReajuste3 == undefined ? '' : resultReajuste3,
-            mesReajusteComparar1: data.mesReajusteComparar1 == undefined || data.mesReajusteComparar1 == null ? '' : data.mesReajusteComparar1,
-            mesReajusteComparar2: data.mesReajusteComparar2 == undefined || data.mesReajusteComparar2 == null ? '' : data.mesReajusteComparar2,
-            mesReajusteComparar3: data.mesReajusteComparar3 == undefined || data.mesReajusteComparar3 == null ? '' : data.mesReajusteComparar3,
-            percReajusteComparar1: data.percReajusteComparar1 == undefined || data.percReajusteComparar1 == null ? 0 : data.percReajusteComparar1,
-            percReajusteComparar2: data.percReajusteComparar2 == undefined || data.percReajusteComparar2 == null ? 0 : data.percReajusteComparar2,
-            percReajusteComparar3: data.percReajusteComparar3 == undefined || data.percReajusteComparar3 == null ? 0 : data.percReajusteComparar3,
-            retencaoContrato: data.retencaoContrato == undefined || data.retencaoContrato == null ? '' : data.retencaoContrato,
+            id_reajuste_comparar1: data.id_reajuste_comparar1 == null ? 0 : data.id_reajuste_comparar1,
+            id_reajuste_comparar2: data.id_reajuste_comparar2 == null ? 0 : data.id_reajuste_comparar2,
+            id_reajuste_comparar3: data.id_reajuste_comparar3 == null ? 0 : data.id_reajuste_comparar3,
+            reajuste_comparar1: resultReajuste1 == undefined ? '' : resultReajuste1,
+            reajuste_comparar2: resultReajuste2 == undefined ? '' : resultReajuste2,
+            reajuste_comparar3: resultReajuste3 == undefined ? '' : resultReajuste3,
+            mes_reajuste_comparar1: data.mes_reajuste_comparar1 == undefined || data.mes_reajuste_comparar1 == null ? '' : data.mes_reajuste_comparar1,
+            mes_reajuste_comparar2: data.mes_reajuste_comparar2 == undefined || data.mes_reajuste_comparar2 == null ? '' : data.mes_reajuste_comparar2,
+            mes_reajuste_comparar3: data.mes_reajuste_comparar3 == undefined || data.mes_reajuste_comparar3 == null ? '' : data.mes_reajuste_comparar3,
+            perc_reajuste_comparar1: data.perc_reajuste_comparar1 == undefined || data.perc_reajuste_comparar1 == null ? 0 : data.perc_reajuste_comparar1,
+            perc_reajuste_comparar2: data.perc_reajuste_comparar2 == undefined || data.perc_reajuste_comparar2 == null ? 0 : data.perc_reajuste_comparar2,
+            perc_reajuste_comparar3: data.perc_reajuste_comparar3 == undefined || data.perc_reajuste_comparar3 == null ? 0 : data.perc_reajuste_comparar3,
+            retencao_contrato: data.retencao_contrato == undefined || data.retencao_contrato == null ? '' : data.retencao_contrato,
             seguros: data.seguros == undefined || data.seguros == null ? '' : data.seguros,
-            tipoAss: data.tipoAss == undefined || data.tipoAss == null ? '' : data.tipoAss,
-            valorComparar: data.valorComparar == undefined || data.valorComparar == null ? 0 : data.valorComparar,
+            tipo_ass: data.tipo_ass == undefined || data.tipo_ass == null ? '' : data.tipo_ass,
+            valor_comparar: data.valor_comparar == undefined || data.valor_comparar == null ? 0 : data.valor_comparar,
             resumo: data.resumo,
             status: statusAtualizado,
-            updatedJuridico: data.updatedJuridico,
+            updated_juridico: data.updated_juridico,
             lgpd: data.lgpd,
-            limiteResponsabilidade: data.limiteResponsabilidade,
-            idSiga: data.idSiga,
+            limite_responsabilidade: data.limite_responsabilidade,
+            id_siga: data.id_siga,
           },
         });
 

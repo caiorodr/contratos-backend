@@ -1,23 +1,22 @@
 import { Prisma } from '@prisma/client';
 
 
-export class CreateCrContratoDto implements Prisma.CrContratoUncheckedCreateInput {
+export class CreateCrContratoDto implements Prisma.Cr_contratoUncheckedCreateInput {
   id?: number;
-  pecCr?: string;
-  descricaoPecCr?: string;
+  pec_cr?: string;
+  descricao_pec_cr?: string;
   cr?: string;
-  descricaoCr?: string;
-  regionalCr?: string;
-  diretorCr?: string;
-  diretorExecCr?: string;
-  gerenteRegCr?: string;
-  gerenteCr?: string;
-  supervisorCr?: string;
-  valorCr?: string | number | Prisma.Decimal;
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
+  descricao_cr?: string;
+  regional_cr?: string;
+  diretor_cr?: string;
+  diretor_exec_cr?: string;
+  gerente_reg_cr?: string;
+  gerente_cr?: string;
+  supervisor_cr?: string;
+  valor_cr?: string | number | Prisma.Decimal;
+  created_at?: string | Date;
+  updated_at?: string | Date;
   deleted?: boolean;
-  numContratoId: number;
-
+  num_contrato_id: number;
 
 }
