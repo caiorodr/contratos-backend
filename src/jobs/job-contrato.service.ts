@@ -18,7 +18,7 @@ export class JobContratoService {
   //? Autor   : Web Innovation                                                                                   =
   //? Data    : 20220101                                                                                         =
   //?=================================================winn========================================================
-  @Cron('00 20 15 * * 0-6')
+  @Cron('00 00 00 * * 0-6')
 
   async jobpec_contrato() {
     let allPecContrato: Array<any> = [];
@@ -119,11 +119,12 @@ export class JobContratoService {
 
 
   //?=============================================================================================================
+  //?=============================================================================================================
   //? Objetivo: Responsavel por atualizar a tabela CONTRATO                                                      =
   //? Autor   : Web Innovation                                                                                   =
   //? Data    : 20220101                                                                                         =
   //?==================================================web========================================================
-  @Cron('00 17 17 * * 0-6')
+  @Cron('00 30 00 * * 0-6')
 
   async jobContrato() {
     let updateData: Array<any> = [];
@@ -328,29 +329,30 @@ export class JobContratoService {
 
                 // Atualiza a tabela de CR's
                 for (let i = 0; i < updateCrContrato.length; i++) {
-                  if (i == 1) {
+                  if (i === 0) {
                     this.createLogJob('ATUALIZAÇÃO CR_CONTRATO - INICIADO.', dateInitProcess);
                   }
-
-                  try {
-                    await this.prisma.cr_contrato.update({
-                      data: {
-                        descricao_cr: updateCrContrato[i].cr_contrato.descricao_cr,
-                        diretor_cr: updateCrContrato[i].cr_contrato.diretor_cr,
-                        diretor_exec_cr: updateCrContrato[i].cr_contrato.diretor_exec_cr,
-                        gerente_reg_cr: updateCrContrato[i].cr_contrato.gerente_reg_cr,
-                        gerente_cr: updateCrContrato[i].cr_contrato.gerente_cr,
-                        supervisor_cr: updateCrContrato[i].cr_contrato.supervisor_cr,
-                        regional_cr: updateCrContrato[i].cr_contrato.regional_cr,
-                        deleted: updateCrContrato[i].cr_contrato.deleted,
-                        valor_cr: updateCrContrato[i].cr_contrato.valor_cr,
-                      },
-                      where: {
-                        id: updateCrContrato[i].cr_contrato.id
-                      },
-                    });
-                  } catch (error) {
-                    this.createLogJob(`ERRO AO ATUALIZAR A TABELA DE CR: LOG - ${error}`, dateInitJob, new Date());
+                  for (let x = 0; x < updateCrContrato[i].cr_contrato.length; x++) {
+                    try {
+                      await this.prisma.cr_contrato.update({
+                        data: {
+                          descricao_cr: updateCrContrato[i].cr_contrato[x].descricao_cr,
+                          diretor_cr: updateCrContrato[i].cr_contrato[x].diretor_cr,
+                          diretor_exec_cr: updateCrContrato[i].cr_contrato[x].diretor_exec_cr,
+                          gerente_reg_cr: updateCrContrato[i].cr_contrato[x].gerente_reg_cr,
+                          gerente_cr: updateCrContrato[i].cr_contrato[x].gerente_cr,
+                          supervisor_cr: updateCrContrato[i].cr_contrato[x].supervisor_cr,
+                          regional_cr: updateCrContrato[i].cr_contrato[x].regional_cr,
+                          deleted: updateCrContrato[i].cr_contrato[x].deleted,
+                          valor_cr: updateCrContrato[i].cr_contrato[x].valor_cr,
+                        },
+                        where: {
+                          id: updateCrContrato[i].cr_contrato[x].id
+                        },
+                      });
+                    } catch (error) {
+                      this.createLogJob(`ERRO AO ATUALIZAR A TABELA DE CR: LOG - ${error}`, dateInitJob, new Date());
+                    }
                   }
 
                   //! Valida o ultimo Cr a ser atualizado para criar o log.
@@ -537,7 +539,7 @@ export class JobContratoService {
   //? Autor   : Web Innovation                                                                                   =
   //? Data    : 20220101                                                                                         =
   //?==================================================web========================================================
-  @Cron('00 00 11 * * 0-6')
+  @Cron('00 01 04 * * 0-6')
   async jobCreateReajuste() {
     let tablePec: Array<any> = [];
     let createData: Array<any> = [];
@@ -616,6 +618,7 @@ export class JobContratoService {
         this.createLogJob(`ERRO AO CRIAR OS REAJUSTES:  ${error}`, dateInitProcess, new Date());
       }
     }
+
 
     if (createData.length === 0 && createAllData.length === 0) {
       await this.createLogJob(`NÃO HOUVE ALTERAÇÃO NO JOB REAJUSTE! `, null, new Date());

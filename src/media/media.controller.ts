@@ -81,9 +81,7 @@ export class MediaController {
 
   @Delete('deleteFileStorage')
   async deleteFileStorage(
-    @Query('fileName') fileName: string,
-    @Query('contentType') contentType: string,
-    @Query('originalName') originalName: string,) {
+    @Query('fileName') fileName: string) {
     return this.storageService.delete(fileName)
   }
 

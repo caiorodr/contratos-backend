@@ -2,7 +2,7 @@
 FROM node:16 AS builder
 
 ENV NODE_ENV=development
-ENV PORT=3022
+ENV PORT=3032
 ENV HOST=0.0.0.0
 
 WORKDIR /app
@@ -34,6 +34,13 @@ COPY start.sh ./
 RUN npm install
 
 COPY --from=builder /app/dist ./dist
+
+EXPOSE 3032
+
+RUN apt-get update && \
+  apt-get install -yq tzdata && \
+  ln -fs /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
+  dpkg-reconfigure -f noninteractive tzdata
 
 RUN chmod +x ./start.sh
 
