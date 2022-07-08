@@ -73,4 +73,10 @@ export class ContratosController {
   ) {
     return this.contratosService.update(Number(idContrato), updateConrtatoDto);
   }
+  @Get('findExportAll/')
+  findExportAll(@Req() req: any){
+      const valueCookie = req.header('Cookie-Id-Siga');
+      return this.contratosService.findExportAll(valueCookie);
+    }
+
 }
