@@ -34,7 +34,7 @@ export class CardsHomeService {
       acesso = ""
     } else if (acesso.length > 0) {
       acesso = acesso.split(',').join("','");
-      acesso = "WHERE cr.cr IN ('${" + acesso + "}')"
+      acesso = "WHERE cr.cr IN ('" + acesso.replace(/\s/g, "") + "')"
     } else {
       acesso = "WHERE pec = '*****'"
     }

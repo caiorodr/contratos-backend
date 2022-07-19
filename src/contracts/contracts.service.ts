@@ -48,7 +48,7 @@ export class ContratosService {
     } else if (acesso.length > 0) {
 
       acesso = acesso.split(',').join("','");
-      acesso = "AND cr2.cr IN ('${" + acesso + "}')"
+      acesso = "AND cr2.cr IN ('" + acesso.replace(/\s/g, "") + "')"
     } else {
 
       acesso = "AND cr2.cr = '*****'"
@@ -318,7 +318,7 @@ export class ContratosService {
     } else if (acesso.length > 0) {
 
       acesso = acesso.split(',').join("','");
-      acesso = "AND cr.cr IN ('${" + acesso + "}')"
+      acesso = "AND cr.cr IN ('" + acesso.replace(/\s/g, "") + "')"
     } else {
 
       acesso = "AND cr.cr = '*****'"
@@ -329,18 +329,18 @@ export class ContratosService {
     try {
       const exportAllRet = await this.prisma.$queryRawUnsafe<any>(`
             SELECT 
-              DISTINCT contract.id, contract.data_inicio AS "dataInicio", contract.data_fim AS "dataFim",
-              contract.natureza, contract.grupo_cliente AS "grupoCliente", contract.empresa,
-              contract.negocio, contract.doc_solid AS "docSolid", contract.retencao_contrato AS "retencaoContrato", contract.faturamento,
-              contract.seguros, contract.reajuste1, contract.mes_reajuste1 AS "mesReajuste1", contract.perc_reajuste1 AS "percReajuste1",
-              contract.reajuste2, contract.mes_reajuste2 AS "mesReajuste2", contract.perc_reajuste2 AS "percReajuste2",
-              contract.reajuste3, contract.mes_reajuste3 AS "mesReajuste3", contract.perc_reajuste3 AS "percReajuste3", contract.tipo_ass AS "tipoAss", contract.status,
-              contract.resumo, contract.lgpd, contract.limite_responsabilidade AS "limiteResponsabilidade", 
-              contract.valor, contract.descricao_pec AS "descricaoPec", contract.updated_juridico AS "updatedJuridico", contract.valor_comparar AS "valorComparar", 
-              contract.id_reajuste_comparar1 AS "idReajusteComparar1", contract.reajuste_comparar1 AS "reajusteComparar1", contract.mes_reajuste_comparar1 AS "mesReajusteComparar1", contract.perc_reajuste_comparar1 AS "percReajusteComparar1",
-              contract.id_reajuste_comparar2 AS "idReajusteComparar2", contract.reajuste_comparar2 AS "reajusteComparar2", contract.mes_reajuste_comparar2 AS "mesReajusteComparar2",  contract.perc_reajuste_comparar2 AS "percReajusteComparar2",
-              contract.id_reajuste_comparar3 AS "idReajusteComparar3", contract.reajuste_comparar3 AS "reajusteComparar3", contract.mes_reajuste_comparar3 AS "mesReajusteComparar3", contract.perc_reajuste_comparar3 AS "percReajusteComparar3", 
-              contract.data_inicio_comparar AS "dataInicioComparar", contract.data_fim_comparar AS "dataFimComparar", cr.diretor_exec_cr AS "diretorExecCr"
+              DISTINCT contract.id AS "ID", contract.data_inicio AS "Data Inicio", contract.data_fim AS "Data Fim",
+              contract.natureza AS "Natureza", contract.grupo_cliente AS "Grupo Cliente", contract.empresa AS "Empresa",
+              contract.negocio AS "Negocio", contract.doc_solid AS "Documentação Solidaria", contract.retencao_contrato AS "Retenção Contrato", contract.faturamento AS "Faturamento",
+              contract.seguros AS "Seguros", contract.reajuste1 AS "Reajuste", contract.mes_reajuste1 AS "Mes Reajuste 1", contract.perc_reajuste1 AS "Percentagem 1",
+              contract.reajuste2 AS "Reajuste 2", contract.mes_reajuste2 AS "Mes Reajuste 2", contract.perc_reajuste2 AS "Percentagem 2",
+              contract.reajuste3 AS "Reajuste 3", contract.mes_reajuste3 AS "Mes Reajuste 3", contract.perc_reajuste3 AS "Percentagem 3", contract.tipo_ass AS "Tipo Assinatura", contract.status AS "Status",
+              contract.resumo AS "Resumo", contract.lgpd AS "LGPD", contract.limite_responsabilidade AS "Limite Responsabilidade", 
+              contract.valor AS "Valor", contract.descricao_pec AS "Descrição Pec", contract.updated_juridico AS "Updated Jurídico", contract.valor_comparar AS "Valor Comparar", 
+              contract.reajuste_comparar1 AS "Reajuste Jurídico 1", contract.mes_reajuste_comparar1 AS "Mes Reajuste Jurídico 1", contract.perc_reajuste_comparar1 AS "Percentual Jurídico 1",
+              contract.reajuste_comparar2 AS "Reajuste Jurídico 2", contract.mes_reajuste_comparar2 AS "Mes Reajuste Jurídico 2",  contract.perc_reajuste_comparar2 AS "Percentual Jurídico 2",
+              contract.reajuste_comparar3 AS "Reajuste Jurídico 3", contract.mes_reajuste_comparar3 AS "Mes Reajuste Jurídico 3", contract.perc_reajuste_comparar3 AS "Percentual Jurídico 3", 
+              contract.data_inicio_comparar AS "Data Inicio Jurídico", contract.data_fim_comparar AS "Data Fim Jurídico", cr.diretor_exec_cr AS "Diretor Executivo"
             FROM "CONTRATO" AS contract
               LEFT JOIN "CR_CONTRATO" AS cr ON cr.num_contrato_id = contract.id
               WHERE contract.deleted = '0' 
